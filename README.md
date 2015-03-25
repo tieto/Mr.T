@@ -1,2 +1,2 @@
 # Mr.T
-Android frameworks project for internal rampup
+Android internal project for frameworks rampup
