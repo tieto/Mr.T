@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tieto.systemmanagement" >
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".SystemManagementActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".NotificationActivity"
+            android:label="@string/title_activity_notification" >
+        </activity>
+        <activity
+            android:name=".ProcessActivity"
+            android:label="@string/title_activity_process_management" >
+        </activity>
+        <activity
+            android:name=".MemoryActivity"
+            android:label="@string/title_activity_memory" >
+        </activity>
+        <activity
+            android:name=".AppActivity"
+            android:label="@string/title_activity_app" >
+        </activity>
+        <activity
+            android:name=".AuthorityActivity"
+            android:label="@string/title_activity_authority" >
+        </activity>
+        <activity
+            android:name=".SelfStartActivity"
+            android:label="@string/title_activity_self_start" >
+        </activity>
+        <activity
+            android:name=".TrafficActivity"
+            android:label="@string/title_activity_traffic" >
+        </activity>
+        <activity
+            android:name=".DiskActivity"
+            android:label="@string/title_activity_disk" >
+        </activity>
+        <activity
+            android:name=".NoSpamActivity"
+            android:label="@string/title_activity_no_spam" >
+        </activity>
+        <activity
+            android:name=".NetControlActivity"
+            android:label="@string/title_activity_net_control" >
+        </activity>
+        <activity
+            android:name=".BatteryActivity"
+            android:label="@string/title_activity_battery" >
+        </activity>
+    </application>
+
+</manifest>
