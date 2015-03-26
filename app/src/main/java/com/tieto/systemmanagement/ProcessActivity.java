@@ -1,3 +1,12 @@
+
+
+/*
+ *
+ * Will add logic method here just for testing,
+ * Then will split the code to a library
+ *
+ */
+
 package com.tieto.systemmanagement;
 
 import android.app.Activity;
