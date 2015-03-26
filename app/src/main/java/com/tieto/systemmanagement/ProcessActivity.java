@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.tieto.common.util.ShellUtils;
 
 public class ProcessActivity extends Activity {
 
@@ -21,6 +22,8 @@ public class ProcessActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_process_management);
+
+        boolean isRoot=ShellUtils.checkRootPermission();
     }
 
 
