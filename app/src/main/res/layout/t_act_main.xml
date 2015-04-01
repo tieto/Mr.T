@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/act_main_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/act_main_title_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="48.0dip"
+        android:background="@color/n_common_bg_color_2">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/t_title_logo"/>
+
+        <ImageView
+            android:id="@+id/act_main_title_popu"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center|right"
+
+            android:background="@drawable/t_common_layout_title_bg_selector"
+            android:clickable="true"
+            android:padding="10.0dip"
+            android:src="@drawable/t_titlebar_more"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center|left"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1.0px"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginRight="10.0dip"
+                android:background="#1e000000"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1.0px"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginRight="10.0dip"
+                android:background="#1effffff"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <View
+        android:id="@+id/act_main_net_top"
+        android:layout_width="fill_parent"
+        android:layout_height="10.0dip"
+        android:background="@color/n_common_bg_color_2"
+        android:visibility="gone"/>
+
+        <include
+            layout="@layout/t_act_main_part_net"
+            android:layout_width="fill_parent"
+            android:layout_height="192.0dip"/>
+
+    <View
+        android:id="@+id/act_main_net_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="10.0dip"
+        android:background="@color/n_common_bg_color_2"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+         <include
+              layout="@layout/t_act_main_part_plan"
+              android:layout_width="fill_parent"
+              android:layout_height="0.0dip"
+              android:layout_weight="1.0"/>
+
+         <include
+             layout="@layout/t_act_main_part_save"
+             android:layout_width="fill_parent"
+             android:layout_height="0.0dip"
+             android:layout_weight="2.0"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -2,5 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.tieto.systemmanagement.TrafficActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" android:showAsAction="never" />
+        android:orderInCategory="50" android:showAsAction="never" />
+    <item android:id="@+id/t_feedback" android:title="@string/t_feedback"
+          android:showAsAction="never"/>
+    <item android:id="@+id/t_update" android:title="@string/t_update"
+          android:showAsAction="never"/>
+    <item android:id="@+id/t__about" android:title="@string/t_about"
+        android:showAsAction="never"/>
+
 </menu>

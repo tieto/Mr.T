@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">系统管理</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">设置</string>
     <string name="title_activity_notification">通知管理</string>
     <string name="title_activity_process_management">进程管理</string>
     <string name="title_activity_memory">内存管理</string>
@@ -13,4 +13,11 @@
     <string name="title_activity_no_spam">骚扰拦截</string>
     <string name="title_activity_net_control">联网控制</string>
     <string name="title_activity_battery">电池管理</string>
+
+    <string name="t_about">关于我们</string>
+    <string name="t_feedback">问题反馈</string>
+    <string name="t_update">检查更新</string>
+
+
+
 </resources>

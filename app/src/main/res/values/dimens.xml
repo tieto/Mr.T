@@ -3,4 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_vertical_padding">4dp</dimen>
+
+    //traffic
+    <dimen name="t_common_font_size">14sp</dimen>>
 </resources>

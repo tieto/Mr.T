@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/act_main_plan_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/t_common_layout_bg_selector"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="left"
+            android:clickable="false"
+            android:gravity="center|left"
+            android:orientation="vertical"
+            android:paddingLeft="14.0dip">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0.0dip"
+                android:layout_weight="1.0"
+                android:gravity="bottom|center|left"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/act_main_plan_traffic_detail_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:singleLine="true"
+                    android:text="流量已用"
+                    android:textColor="@color/n_common_font_color_3"
+                    android:textSize="@dimen/t_common_font_size"/>
+
+                <TextView
+                    android:id="@+id/act_main_plan_sim_label_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2.0dip"
+                    android:layout_marginLeft="4.0dip"
+                    android:background="@drawable/t_sim1"
+                    android:clickable="false"
+                    android:text="联通"
+                    android:textSize="10sp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0.0dip"
+                android:layout_weight="1.0"
+                android:gravity="center|left|top"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/act_main_plan_traffic_value_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.0"
+                    android:textColor="@color/n_common_font_color_3"
+                    android:textSize="@dimen/t_common_font_size"/>
+
+                <TextView
+                    android:id="@+id/act_main_plan_traffic_unit_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="K"
+                    android:textColor="@color/n_common_font_color_3"
+                    android:textSize="@dimen/t_common_font_size"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right"
+            android:layout_marginLeft="30.0dip"
+            android:orientation="horizontal"
+            android:paddingRight="14.0dip">
+
+            <ImageView
+                android:id="@+id/act_main_plan_mack_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/t_arrow_right"/>
+
+            <TextView
+                android:id="@+id/act_main_plan_setting_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8.0dip"
+                android:layout_toLeftOf="@id/act_main_plan_mack_iv"
+                android:text="点击设置运营商"
+                android:visibility="gone"/>
+
+            <ProgressBar
+                android:id="@+id/act_main_plan_traffic_value_pb"
+                style="@style/t_ProgressBar_Green"
+                android:layout_width="fill_parent"
+                android:layout_height="12.0dip"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8.0dip"
+                android:layout_toLeftOf="@id/act_main_plan_mack_iv"
+                android:max="100"
+                android:progress="80"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/act_main_plan_total_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/act_main_plan_traffic_value_pb"
+                android:layout_below="@id/act_main_plan_traffic_value_pb"
+                android:text="共0M"
+                android:textColor="@color/n_common_font_color_4"
+                android:textSize="@dimen/t_common_font_size"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_gravity="bottom"
+        android:background="#ffdddddd"/>
+</FrameLayout>

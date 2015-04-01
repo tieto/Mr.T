@@ -2,4 +2,14 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Material.Light">
     </style>
+
+    //traffic
+    <style name="t_ProgressBar_Green" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:maxHeight">50.0dip</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
+        <item name="android:progressDrawable">@drawable/t_notification_progressbar_horizontal_green</item>
+        <item name="android:minHeight">16.0dip</item>
+    </style>
+
 </resources>

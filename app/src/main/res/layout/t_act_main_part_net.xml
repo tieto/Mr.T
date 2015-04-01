@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/act_main_net_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="192.0dip"
+    android:background="@color/n_common_bg_color_2"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="54.0dip"
+        android:layout_marginTop="24.0dip"
+        android:gravity="bottom|center"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <LinearLayout
+                android:id="@+id/act_main_speed_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/act_main_large_number_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="123"
+                    android:textColor="@android:color/white"
+                    android:textSize="36sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/act_main_speed_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@id/act_main_speed_layout"
+                android:paddingBottom="4.0dip"
+                android:text="当前网速"
+                android:textColor="@color/n_common_font_color_2"
+                android:textSize="14sp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/act_main_speed_layout"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/act_main_speed_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center|left"
+                        android:paddingBottom="1.0dip"
+                        android:text="B/s"
+                        android:textColor="@color/n_common_font_color_2"
+                        android:textSize="14sp"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:id="@+id/act_main_speed_unit_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center|left"
+                        android:background="@drawable/t_unit_bs"/>
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/act_main_speed_btn"
+                    android:layout_width="46.0dip"
+                    android:layout_height="22.0dip"
+                    android:layout_marginBottom="4.0dip"
+                    android:layout_marginLeft="10.0dip"
+                    android:background="@drawable/t_act_main_cesu_btn_selector"
+                    android:text="测速"
+                    android:textColor="@color/n_common_font_color_2"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22.0dip"
+        android:gravity="center|top"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/act_main_tip_iv"
+                android:layout_width="20.0dip"
+                android:layout_height="20.0dip"
+                android:src="@drawable/t_act_main_net_normal"/>
+
+            <TextView
+                android:id="@+id/act_main_tip_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="网络运行正常"
+                android:textColor="@color/n_common_font_color_1"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/act_main_app_msg_btn"
+            android:layout_width="110.0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14.0dip"
+            android:background="@drawable/t_act_main_btn_selector"
+            android:text="联网管理"
+            android:textColor="@color/n_common_font_color_1"
+            android:textSize="14sp"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/act_main_save_detail_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0"
+        android:background="@drawable/t_common_layout_bg_selector"
+        android:clickable="true">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center|left|top"
+            android:layout_marginLeft="15.0dip"
+            android:layout_marginRight="15.0dip">
+
+            <ImageView
+                android:id="@+id/act_main_save_mack_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/t_arrow_right"/>
+
+            <LinearLayout
+                android:id="@+id/act_main_save_value_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8.0dip"
+                android:layout_toLeftOf="@id/act_main_save_mack_iv"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/act_main_save_time_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1.0dip"
+                    android:text="今日节省"
+                    android:textColor="@color/n_common_font_color_4"
+                    android:textSize="@dimen/t_common_font_size"/>
+
+                <TextView
+                    android:id="@+id/act_main_save_value_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20"
+                    android:textColor="@color/n_common_font_color_9"
+                    android:textSize="@dimen/t_common_font_size"/>
+
+                <TextView
+                    android:id="@+id/act_main_save_unit_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="M"
+                    android:textColor="@color/n_common_font_color_9"
+                    android:textSize="@dimen/t_common_font_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/act_main_save_value_layout"
+                android:layout_alignParentLeft="true"
+                android:gravity="bottom|center|left">
+
+                <TextView
+                    android:id="@+id/act_main_save_label_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2.0dip"
+                    android:text="节省流量"
+                    android:textColor="@color/n_common_font_color_3"
+                    android:textSize="@dimen/t_common_font_size"/>
+
+                <TextView
+                    android:id="@+id/act_main_save_level_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2.0dip"
+                    android:text="(节省等级中)"
+                    android:textColor="@color/n_common_font_color_4"
+                    android:textSize="@dimen/t_common_font_size"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1.0px"
+            android:layout_gravity="bottom"
+            android:background="@color/n_common_bg_color_d_3_4"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center|left"
+            android:layout_marginLeft="30.0dip"
+            android:background="@drawable/t_tip_jieshengxiangqing"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0"
+        android:background="#ffededed"
+        android:orientation="horizontal"
+        android:paddingLeft="16.0dip"
+        android:paddingRight="16.0dip">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="5.0dip"
+            android:paddingRight="5.0dip">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/t_act_main_btn_tj"
+                android:gravity="center"
+                android:text="关"
+                android:textColor="@android:color/transparent"
+                android:textSize="@dimen/t_common_font_size"/>
+
+            <View
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.0"
+                android:visibility="invisible"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/t_act_main_btn_tj"
+                android:gravity="center"
+                android:text="低"
+                android:textColor="@android:color/transparent"
+                android:textSize="@dimen/t_common_font_size"/>
+
+            <View
+                android:layout_width="1.0dip"
+                android:layout_height="fill_parent"
+                android:background="@android:color/transparent"
+                android:visibility="invisible"/>
+
+            <View
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.0"
+                android:visibility="invisible"/>
+
+            <View
+                android:layout_width="1.0dip"
+                android:layout_height="fill_parent"
+                android:background="@android:color/transparent"
+                android:visibility="invisible"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/t_act_main_btn_tj"
+                android:gravity="center"
+                android:text="中"
+                android:textColor="@android:color/transparent"
+                android:textSize="@dimen/t_common_font_size"/>
+
+            <View
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.0"
+                android:visibility="invisible"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/t_act_main_btn_tj"
+                android:gravity="center"
+                android:text="高"
+                android:textColor="@android:color/transparent"
+                android:textSize="@dimen/t_common_font_size"/>
+        </LinearLayout>
+
+       <!-- <com.qihoo.vpnmaster.views.MySeekBar
+            android:id="@+id/act_main_save_mode_sbr"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:max="100"
+            android:maxHeight="2.0dip"
+            android:paddingLeft="7.0dip"
+            android:paddingRight="7.0dip"
+            android:progress="0"
+            android:progressDrawable="@drawable/t_vpn_suretouch_seekbar_img"
+            android:thumb="@drawable/t_act_main_tj_bar"/>-->
+
+      <!--  <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="5.0dip"
+            android:paddingRight="5.0dip">
+
+            <com.qihoo.vpnmaster.views.DisableTouchTextView
+                android:id="@+id/act_main_save_vpn_open_close_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/t_act_main_btn_tj_text_bg"
+                android:gravity="center"
+                android:text="关"
+                android:textColor="@color/n_common_font_color_7"
+                android:textSize="@dimen/t_act_main_tj_bar"/>
+
+            <View
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.0"
+                android:clickable="false"
+                android:visibility="invisible"/>
+
+            <com.qihoo.vpnmaster.views.DisableTouchTextView
+                android:id="@+id/act_main_save_mode_low_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/t_act_main_btn_tj_text_bg"
+                android:gravity="center"
+                android:text="低"
+                android:textColor="@color/n_common_font_color_5"
+                android:textSize="@dimen/t_act_main_btn_tj_text_bg"/>
+
+            <View
+                android:layout_width="1.0dip"
+                android:layout_height="fill_parent"
+                android:background="@android:color/transparent"
+                android:visibility="invisible"/>
+
+            <View
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.0"
+                android:clickable="false"
+                android:visibility="invisible"/>
+
+            <View
+                android:layout_width="1.0dip"
+                android:layout_height="fill_parent"
+                android:background="@android:color/transparent"
+                android:visibility="invisible"/>
+
+            <com.qihoo.vpnmaster.views.DisableTouchTextView
+                android:id="@+id/act_main_save_mode_low_middle_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/act_main_btn_tj_text_bg"
+                android:gravity="center"
+                android:text="中"
+                android:textColor="@color/n_common_font_color_5"
+                android:textSize="@dimen/n_common_font_size_f"/>
+
+            <View
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.0"
+                android:clickable="false"
+                android:visibility="invisible"/>
+
+            <com.qihoo.vpnmaster.views.DisableTouchTextView
+                android:id="@id/act_main_save_mode_high_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/act_main_btn_tj_text_bg"
+                android:gravity="center"
+                android:text="高"
+                android:textColor="@color/n_common_font_color_5"
+                android:textSize="@dimen/t_act_main_tj_bar"/>
+        </LinearLayout>-->
+    </FrameLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:background="#ffdddddd"/>
+</LinearLayout>
