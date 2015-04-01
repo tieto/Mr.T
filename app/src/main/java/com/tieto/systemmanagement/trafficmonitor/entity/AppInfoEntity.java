@@ -7,7 +7,7 @@ import com.tieto.systemmanagement.trafficmonitor.constant.CommonConstant;
 /**
  * Created by jane on 15-3-24.
  */
-public class AppInfoEntiy {
+public class AppInfoEntity {
     private int uid;
     private Drawable appIcon;
     private String appName;
@@ -17,10 +17,10 @@ public class AppInfoEntiy {
     private float appNetSpeeed;
     private float appTrafficSneaked;
 
-    public AppInfoEntiy() {
+    public AppInfoEntity() {
     }
 
-    public AppInfoEntiy(String appName, float appTrafficUsed, float appTrafficUsedBg, int isNetworkAllowed, float appNetSpeeed, float appTrafficSneaked) {
+    public AppInfoEntity(String appName, float appTrafficUsed, float appTrafficUsedBg, int isNetworkAllowed, float appNetSpeeed, float appTrafficSneaked) {
 
         this.appName = appName;
         this.appTrafficUsed = appTrafficUsed;

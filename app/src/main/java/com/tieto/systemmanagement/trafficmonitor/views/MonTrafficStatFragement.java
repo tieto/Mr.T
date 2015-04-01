@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.trafficmonitor.adapter.MonthTrafficStaticAdapter;
-import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntiy;
+import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntity;
 import com.tieto.systemmanagement.trafficmonitor.entity.TrafficStatsImpl;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class MonTrafficStatFragement extends Fragment {
     private ListView listView;
-    private List<AppInfoEntiy> appInfos;
+    private List<AppInfoEntity> appInfos;
     private MonthTrafficStaticAdapter adapter;
     private TrafficStatsImpl trafficStats;
 
@@ -33,7 +33,7 @@ public class MonTrafficStatFragement extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = (ListView) view.findViewById(R.id.firewall_listView);
-        appInfos = new ArrayList<AppInfoEntiy>();
+        appInfos = new ArrayList<AppInfoEntity>();
         trafficStats = new TrafficStatsImpl(this.getActivity());
         appInfos = trafficStats.getTrafficInfoForEachApp();
 //        appInfos.add(new MyAppInfo("QQ",20,20,3,23,45));

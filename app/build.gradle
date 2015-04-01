@@ -19,13 +19,13 @@ apt {
 }
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 21
     buildToolsVersion "22.0.0"
 
     defaultConfig {
         applicationId "com.tieto.systemmanagement"
         minSdkVersion 21
-        targetSdkVersion 22
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }

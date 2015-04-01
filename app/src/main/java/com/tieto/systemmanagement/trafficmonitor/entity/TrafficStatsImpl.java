@@ -27,7 +27,7 @@ public class TrafficStatsImpl {
     private Context context;
 
     private float TrafficLeft;
-    private List<AppInfoEntiy> trafficInfoForEachApp;
+    private List<AppInfoEntity> trafficInfoForEachApp;
 
     public TrafficStatsImpl(Context context) {
         this.context = context;
@@ -49,8 +49,8 @@ public class TrafficStatsImpl {
      * get all the info about each app
      * @return
      */
-    public List<AppInfoEntiy> getTrafficInfoForEachApp() {
-        trafficInfoForEachApp = new ArrayList<AppInfoEntiy>();
+    public List<AppInfoEntity> getTrafficInfoForEachApp() {
+        trafficInfoForEachApp = new ArrayList<AppInfoEntity>();
         List<PackageInfo> packageInfos = mPackageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
 
         for(PackageInfo p:packageInfos) {
@@ -62,7 +62,7 @@ public class TrafficStatsImpl {
                         if ((appInfo.flags & ApplicationInfo.FLAG_INSTALLED) > 0) {
                             //0-non-system   1-system
                             // ( appInfo.flags & ApplicationInfo.FLAG_SYSTEM )>0---system app,here we get all apps
-                            AppInfoEntiy appInfoEntiy = new AppInfoEntiy();
+                            AppInfoEntity appInfoEntiy = new AppInfoEntity();
                             appInfoEntiy.setAppIcon(appInfo.loadIcon(mPackageManager));
                             appInfoEntiy.setAppName(appInfo.loadLabel(mPackageManager).toString() + "-" + appInfo.uid);
 //                myAppInfo.setAppName(mPackageManager.getNameForUid(appInfo.uid));

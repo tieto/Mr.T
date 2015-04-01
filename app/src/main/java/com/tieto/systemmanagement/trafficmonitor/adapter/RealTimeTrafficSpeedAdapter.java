@@ -4,15 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntiy;
+import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntity;
+import com.tieto.systemmanagement.trafficmonitor.entity.TrafficSpeed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +19,12 @@ import java.util.List;
  * Created by jane on 15-3-26.
  */
 public class RealTimeTrafficSpeedAdapter extends BasicAdapter {
-//    private Context context;
-    private List<AppInfoEntiy> appInfos;
+    private List<AppInfoEntity> appInfos;
     private LayoutInflater inflater;
 
-    public RealTimeTrafficSpeedAdapter(Context context, List<AppInfoEntiy> appInfos) {
+    public RealTimeTrafficSpeedAdapter(Context context, List<AppInfoEntity> appInfos) {
         if(appInfos == null) {
-            appInfos = new ArrayList<AppInfoEntiy>();
+            appInfos = new ArrayList<AppInfoEntity>();
         }
         this.context = context;
         this.appInfos = appInfos;
@@ -60,33 +57,55 @@ public class RealTimeTrafficSpeedAdapter extends BasicAdapter {
             holder.appNetSpeed = (TextView) view.findViewById(R.id.realtime_app_netspeed);
             holder.net_allowed_info = (TextView) view.findViewById(R.id.realtime_net_allowed);
             holder.allowNetwork = (LinearLayout) view.findViewById(R.id.realtime_allow_net);
-            view.setTag(holder);
 
+            holder.trafficSpeed = new TrafficSpeed();
+            holder.speedListener = new SpeedListener(holder.appNetSpeed);
+            view.setTag(holder);
         }else {
             holder = (ViewHolder) view.getTag();
         }
 
-        AppInfoEntiy appInfo = appInfos.get(i);
+        AppInfoEntity appInfo = appInfos.get(i);
+
+        holder.trafficSpeed.setUid(appInfo.getUid());
+        holder.trafficSpeed.registerUpdate(1000, holder.speedListener);
+
         holder.appIcon.setImageDrawable(appInfo.getAppIcon());
         holder.appName.setText(appInfo.getAppName());
-        holder.appNetSpeed.setText(appInfo.getAppNetSpeeed()+"B/s");
         holder.net_allowed_info.setText(appInfo.getIsNetworkAllowed());
         holder.allowNetwork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //popupWindow()
-//                Toast.makeText(context,"启用防火墙",Toast.LENGTH_SHORT).show();
-//                PopupWindow popupWindow = new Pop
                 showWindow(view);
             }
         });
         return view;
     }
-    private class ViewHolder {
+
+    private final static class ViewHolder {
+        // Views
         private ImageView appIcon;
         private TextView appName;
         private TextView appNetSpeed;
         private TextView net_allowed_info;
         private LinearLayout allowNetwork;
+
+        // Other objects
+        private TrafficSpeed trafficSpeed;
+        private SpeedListener speedListener;
+    }
+
+    private final static class SpeedListener implements TrafficSpeed.OnSpeedUpdatedListener {
+
+        private TextView mTarget = null;
+
+        public SpeedListener(TextView target) {
+            mTarget = target;
+        }
+
+        @Override
+        public void onSpeedUpdated(TrafficSpeed.Speeds speeds) {
+            mTarget.setText(speeds.getRxSpeedReadable());
+        }
     }
 }

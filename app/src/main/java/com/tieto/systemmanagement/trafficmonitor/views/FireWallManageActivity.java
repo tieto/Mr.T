@@ -1,23 +1,19 @@
 package com.tieto.systemmanagement.trafficmonitor.views;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.trafficmonitor.adapter.ViewPagerAdapter;
-import com.tieto.systemmanagement.trafficmonitor.entity.Api;
 import com.tieto.systemmanagement.trafficmonitor.entity.IptablesForDroidWall;
 
 import java.util.ArrayList;
@@ -58,7 +54,7 @@ public class FireWallManageActivity  extends FragmentActivity implements ViewPag
         offset = (int) (screenW / 2.0 - offset);
 
         fragments = new ArrayList<Fragment>();
-        fragments.add(new RtNetSpeedFragement());
+        fragments.add(new RtNetSpeedFragment());
         fragments.add(new MonTrafficStatFragement());
         adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
         viewPager.setAdapter(adapter);

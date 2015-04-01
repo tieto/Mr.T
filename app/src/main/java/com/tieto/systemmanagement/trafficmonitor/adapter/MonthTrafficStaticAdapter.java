@@ -4,13 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntiy;
+import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +18,13 @@ import java.util.List;
  * Created by jane on 15-3-26.
  */
 public class MonthTrafficStaticAdapter extends BasicAdapter {
-    private List<AppInfoEntiy> appInfos;
+    private List<AppInfoEntity> appInfos;
     private Context context;
     private LayoutInflater inflater;
 
-    public MonthTrafficStaticAdapter(Context context, List<AppInfoEntiy> appInfos) {
+    public MonthTrafficStaticAdapter(Context context, List<AppInfoEntity> appInfos) {
         if(appInfos == null) {
-            appInfos = new ArrayList<AppInfoEntiy>();
+            appInfos = new ArrayList<AppInfoEntity>();
         }
         this.appInfos = appInfos;
         this.context = context;
@@ -66,7 +65,7 @@ public class MonthTrafficStaticAdapter extends BasicAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        AppInfoEntiy appInfo = appInfos.get(i);
+        AppInfoEntity appInfo = appInfos.get(i);
         holder.appIcon.setImageDrawable(appInfo.getAppIcon());
         holder.appName.setText(appInfo.getAppName());
         holder.traffic_used.setText("已用"+appInfo.getAppTrafficUsed()+"M");
