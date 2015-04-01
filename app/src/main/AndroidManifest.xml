@@ -45,7 +45,7 @@
             android:label="@string/title_activity_traffic" >
         </activity>
         <activity
-            android:name=".DiskActivity"
+            android:name=".diskmonitor.DiskActivity"
             android:label="@string/title_activity_disk" >
         </activity>
         <activity

@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class DiskActivity extends Activity {
+public class DiskActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
