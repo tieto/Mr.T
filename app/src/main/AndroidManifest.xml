@@ -24,7 +24,7 @@
             android:label="@string/title_activity_notification" >
         </activity>
         <activity
-            android:name=".ProcessActivity"
+            android:name=".processmanage.ProcessActivity"
             android:label="@string/title_activity_process_management" >
         </activity>
         <activity

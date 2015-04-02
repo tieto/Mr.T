@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.tieto.systemmanagement.diskmonitor.DiskActivity;
+import com.tieto.systemmanagement.processmanage.ProcessActivity;
 import com.tieto.systemmanagement.trafficmonitor.TrafficActivity;
 
 import java.util.ArrayList;
