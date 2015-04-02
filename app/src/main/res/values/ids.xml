@@ -1,0 +1,5 @@
+<resources>
+    <item type="id" name="notification_notify_switch"/>
+    <item type="id" name="notification_app_icon"/>
+    <item type="id" name="notification_app_name"/>
+</resources>
