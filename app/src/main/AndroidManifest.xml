@@ -52,7 +52,7 @@
             android:label="@string/title_activity_disk" >
         </activity>
         <activity
-            android:name=".NoSpamActivity"
+            android:name=".intercept.views.InterceptActivity"
             android:label="@string/title_activity_no_spam" >
         </activity>
         <activity
