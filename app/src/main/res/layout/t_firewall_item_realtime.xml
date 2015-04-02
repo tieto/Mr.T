@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="3dip"
+    android:paddingLeft="10dip"
+    android:paddingRight="10dip"
+    android:paddingBottom="3dip">
 
     <ImageView
         android:id="@+id/realtime_app_icon"
         android:layout_width="45dp"
-        android:layout_height="45dp"/>
+        android:layout_height="45dp"
+        android:layout_margin="5dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/realtime_app_icon"
+        android:layout_centerVertical="true"
         android:gravity="center_vertical"
         android:layout_marginLeft="5dip"
         android:orientation="vertical">
@@ -25,20 +27,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="QQ"
-            android:textSize="14sp"/>
+            android:textColor="#000"
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/realtime_app_netspeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0B/S"
-            android:textSize="12sp"/>
+            android:text="0B/s"
+            android:textSize="12dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:gravity="center_vertical"
         android:id="@+id/realtime_allow_net"
         android:orientation="horizontal">
@@ -48,11 +52,11 @@
             android:layout_height="wrap_content"
             android:text="允许联网"
             android:textSize="12sp"
-            android:id="@+id/realtime_net_allowed"/>
+            android:id="@+id/realtime_net_allowed" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/t_nettraffic_list_tip_arrow_close"/>
+            android:src="@drawable/t_nettraffic_list_tip_arrow_close" />
     </LinearLayout>
 </RelativeLayout>

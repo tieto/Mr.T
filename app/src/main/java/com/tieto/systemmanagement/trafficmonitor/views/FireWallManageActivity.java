@@ -25,8 +25,9 @@ public class FireWallManageActivity  extends FragmentActivity implements ViewPag
     private ArrayList<Fragment> fragments;
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
-    private TextView realtimeNetSpeed,monthlyTrafficStastic;
-    private ImageView cursor;
+    private TextView realtimeNetSpeed;
+    private TextView monthlyTrafficStastic;
+    private View cursor;
 
     private int currentIndex = 0;
     private long offset = 0;
@@ -40,7 +41,7 @@ public class FireWallManageActivity  extends FragmentActivity implements ViewPag
     @Override
     protected void onResume() {
         super.onResume();
-        cursor = (ImageView) findViewById(R.id.activity_firewall_cursor);
+        cursor = findViewById(R.id.activity_firewall_cursor);
         viewPager = (ViewPager) findViewById(R.id.activity_firewall_viewpager);
         realtimeNetSpeed = (TextView) findViewById(R.id.activity_firewall_realtime);
         monthlyTrafficStastic = (TextView) findViewById(R.id.activity_firewall_monthly);
