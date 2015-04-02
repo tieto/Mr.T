@@ -65,7 +65,7 @@ public class RealTimeTrafficSpeedAdapter extends BasicAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        AppInfoEntity appInfo = appInfos.get(i);
+        final AppInfoEntity appInfo = appInfos.get(i);
 
         holder.trafficSpeed.setUid(appInfo.getUid());
         holder.trafficSpeed.registerUpdate(1000, holder.speedListener);
@@ -76,7 +76,7 @@ public class RealTimeTrafficSpeedAdapter extends BasicAdapter {
         holder.allowNetwork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showWindow(view);
+                showWindow(view,appInfo);
             }
         });
         return view;

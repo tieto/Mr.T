@@ -32,6 +32,4 @@ public class AppNetInfoPreferrence {
         SharedPreferences pref = context.getSharedPreferences(PREFERRENCE_NAME, Context.MODE_PRIVATE);
         pref.edit().clear().commit();
     }
-
-
 }
