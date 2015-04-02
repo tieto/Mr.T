@@ -1,10 +1,11 @@
-package com.tieto.systemmanagement;
+package com.tieto.systemmanagement.diskmonitor;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.tieto.systemmanagement.BasicActivity;
+import com.tieto.systemmanagement.R;
 
 public class DiskActivity extends BasicActivity {
 

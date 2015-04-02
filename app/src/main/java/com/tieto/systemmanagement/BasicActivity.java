@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.trafficmonitor;
+package com.tieto.systemmanagement;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -2,7 +2,7 @@ package com.tieto.systemmanagement.trafficmonitor;
 
 import android.content.Intent;
 import android.net.TrafficStats;
-import android.os.*;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.tieto.systemmanagement.BasicActivity;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.trafficmonitor.views.FireWallManageActivity;
-
 /**
  * Created by jane on 15-3-24.
  */
