@@ -24,4 +24,9 @@
     <string name="disk_space_system_tip1">包含操作,应用软件以及使用软件产生的缓存数据</string>
     <string name="disk_space_system_tip2">可通过以下方式释放空间:</string>
 
+    <!-- Authority management -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="auth_unknown_permission">未知权限</string>
+    <string name="auth_permission_count_format"><![CDATA[<font color=\'#880000\'>%1$d</font>&nbsp;项危险权限]]></string>
+    <string name="auth_empty_loading">正在加载</string>
 </resources>
