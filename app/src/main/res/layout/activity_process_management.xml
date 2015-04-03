@@ -8,9 +8,101 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="com.tieto.systemmanagement.processmanage.ProcessActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world"/>
 
+    <LinearLayout
+        android:id="@+id/process_mgr_container_layout"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="160dp"
+            android:layout_column="13">
+
+            <TextView
+                android:id="@+id/txt_process_mgr_process_count"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textSize="16dp"
+                android:text="总进程: "
+                android:gravity="center"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/txt_process_mgr_process_count2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textSize="56pt"
+                android:text="30"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:layout_gravity="center"
+                 />
+
+            <TextView
+                android:id="@+id/txt_process_mgr_process_count3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textSize="10pt"
+                android:text=""
+                android:gravity="bottom"
+                android:layout_weight="1"
+                android:layout_gravity="end" />
+        </LinearLayout>
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:columnCount="3">
+            <TextView
+                android:id="@+id/txt_process_mgr_process_app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="10pt"
+                android:layout_column="0"
+                android:text="Large" />
+            <TextView
+                android:id="@+id/txt_process_mgr_process_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="10pt"
+                android:layout_column="1"
+                android:text="Large" />
+            <TextView
+                android:id="@+id/txt_process_mgr_process_native"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_column="2"
+                android:textSize="10pt"
+                android:text="Large" />
+        </GridLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/process_mgr_container_layout"
+        android:layout_alignEnd="@+id/process_mgr_container_layout"
+        android:layout_marginEnd="149dp"
+        android:visibility="gone"
+        >
+
+    </RelativeLayout>
 </RelativeLayout>
