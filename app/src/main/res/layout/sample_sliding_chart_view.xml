@@ -4,8 +4,6 @@
 
     <com.tieto.systemmanagement.processmanage.views.SlidingChartView android:background="#ccc"
         android:layout_width="300dp" android:layout_height="300dp" android:paddingLeft="20dp"
-        android:paddingBottom="40dp" app:exampleDimension="24sp" app:exampleColor="#33b5e5"
-        app:exampleString="Hello, SlidingChartView"
-        app:exampleDrawable="@android:drawable/ic_menu_add" />
+        android:paddingBottom="40dp" />
 
 </FrameLayout>
