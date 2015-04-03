@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tieto.systemmanagement" >
 
+    <uses-permission android:name="android.permission.UPDATE_APP_OPS_STATS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -52,7 +54,7 @@
             android:label="@string/title_activity_disk" >
         </activity>
         <activity
-            android:name=".NoSpamActivity"
+            android:name=".intercept.views.InterceptActivity"
             android:label="@string/title_activity_no_spam" >
         </activity>
         <activity

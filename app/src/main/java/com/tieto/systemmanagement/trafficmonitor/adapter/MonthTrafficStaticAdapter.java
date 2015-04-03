@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class MonthTrafficStaticAdapter extends BasicAdapter {
     private List<AppInfoEntity> appInfos;
-    private Context context;
     private LayoutInflater inflater;
 
     public MonthTrafficStaticAdapter(Context context, List<AppInfoEntity> appInfos) {
@@ -65,7 +64,7 @@ public class MonthTrafficStaticAdapter extends BasicAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        AppInfoEntity appInfo = appInfos.get(i);
+        final AppInfoEntity appInfo = appInfos.get(i);
         holder.appIcon.setImageDrawable(appInfo.getAppIcon());
         holder.appName.setText(appInfo.getAppName());
         holder.traffic_used.setText("已用"+appInfo.getAppTrafficUsed()+"M");
@@ -76,6 +75,7 @@ public class MonthTrafficStaticAdapter extends BasicAdapter {
             @Override
             public void onClick(View view) {
                 //popup window,and when  the item is clicked ,the info should be changed.
+                showWindow(view,appInfo);
             }
         });
         return view;

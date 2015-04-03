@@ -1,9 +1,16 @@
 package com.tieto.systemmanagement;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import com.tieto.systemmanagement.notifications.NotifactionManagerAdapter;
+
+import java.util.List;
 
 
 public class NotificationActivity extends Activity {
@@ -12,6 +19,11 @@ public class NotificationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+        PackageManager pm = getPackageManager();
+        List<ApplicationInfo> apps= pm.getInstalledApplications(PackageManager.GET_META_DATA);
+        NotifactionManagerAdapter adapter = new NotifactionManagerAdapter(this, apps);
+        ListView listView = (ListView) findViewById(R.id.list_app);
+        listView.setAdapter(adapter);
     }
 
 
@@ -36,4 +48,6 @@ public class NotificationActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

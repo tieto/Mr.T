@@ -72,7 +72,7 @@ public class SystemManagementActivity extends Activity {
         acitivities.add(new FunEntity(res.getString(R.string.title_activity_self_start), res.getDrawable(R.mipmap.ic_launcher, null), SelfStartActivity.class));
         acitivities.add(new FunEntity(res.getString(R.string.title_activity_traffic), res.getDrawable(R.mipmap.ic_launcher, null), TrafficActivity.class));
         acitivities.add(new FunEntity(res.getString(R.string.title_activity_disk), res.getDrawable(R.mipmap.ic_launcher, null), DiskActivity.class));
-        acitivities.add(new FunEntity(res.getString(R.string.title_activity_no_spam), res.getDrawable(R.mipmap.ic_launcher, null), NoSpamActivity.class));
+        acitivities.add(new FunEntity(res.getString(R.string.title_activity_no_spam), res.getDrawable(R.mipmap.ic_launcher, null), com.tieto.systemmanagement.intercept.views.InterceptActivity.class));
         acitivities.add(new FunEntity(res.getString(R.string.title_activity_net_control), res.getDrawable(R.mipmap.ic_launcher, null), NetControlActivity.class));
         acitivities.add(new FunEntity(res.getString(R.string.title_activity_battery), res.getDrawable(R.mipmap.ic_launcher, null), BatteryActivity.class));
     }

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme" parent="android:Theme.Material.Light">
+        <item name="android:actionBarStyle">@style/ActionBarNoBackground</item>
+        <item name="android:colorPrimaryDark">#ff2f8f58</item>
     </style>
 
     //traffic

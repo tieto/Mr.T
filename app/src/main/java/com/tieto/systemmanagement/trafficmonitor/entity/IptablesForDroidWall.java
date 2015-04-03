@@ -69,13 +69,13 @@ public final class IptablesForDroidWall {
 	public static final String PREFS_NAME 		= "DroidWallPrefs";
 	public static final String PREF_3G_UIDS		= "AllowedUids3G";
 	public static final String PREF_WIFI_UIDS	= "AllowedUidsWifi";
-	public static final String PREF_PASSWORD 	= "Password";
+//	public static final String PREF_PASSWORD 	= "Password";
 	public static final String PREF_MODE 		= "BlockMode";
 	public static final String PREF_ENABLED		= "Enabled";
 	public static final String PREF_LOGENABLED	= "LogEnabled";
 	// Modes
 	public static final String MODE_WHITELIST = "whitelist";
-	public static final String MODE_BLACKLIST = "blacklist";
+//	public static final String MODE_BLACKLIST = "blacklist";
 	// Messages
 	public static final String STATUS_CHANGED_MSG 	= "com.googlecode.droidwall.intent.action.STATUS_CHANGED";
 	public static final String TOGGLE_REQUEST_MSG	= "com.googlecode.droidwall.intent.action.TOGGLE_REQUEST";
