@@ -4,7 +4,6 @@ import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +17,15 @@ import com.tieto.systemmanagement.R;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 /**
  * Created by gujiao on 02/04/15.
  */
 public class NotifactionManagerAdapter extends BaseAdapter {
+
     private List<ApplicationInfo> mApps;
 
     private Context mContext;
@@ -38,14 +39,13 @@ public class NotifactionManagerAdapter extends BaseAdapter {
             Integer.TYPE
     };
     private Class[] argsForOps = new Class[] {
-            Integer.TYPE,
-            String.class,
             int[].class
     };
 
     private int[] ops = new int[] {
             11
     };
+    Map<String, Integer> modes = new HashMap<String, Integer>();
 
     public NotifactionManagerAdapter(Context context, List<ApplicationInfo> apps) {
         this.mApps = apps;
@@ -53,6 +53,9 @@ public class NotifactionManagerAdapter extends BaseAdapter {
         this.mInflater = LayoutInflater.from(this.mContext);
         this.pm = this.mContext.getPackageManager();
         appOpsManager = (AppOpsManager) mContext.getSystemService(Context.APP_OPS_SERVICE);
+        initMode();
+        getMode(ops);
+
     }
 
     @Override
@@ -82,6 +85,9 @@ public class NotifactionManagerAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        ApplicationInfo info = mApps.get(position);
+        viewHolder.imageView.setImageDrawable(info.loadIcon(pm));
+        viewHolder.textView.setText(info.loadLabel(pm));
         bindView(viewHolder, position);
         return convertView;
     }
@@ -92,10 +98,12 @@ public class NotifactionManagerAdapter extends BaseAdapter {
         Switch aSwitch;
     }
     private void bindView(ViewHolder viewHolder, int position) {
-        ApplicationInfo info = mApps.get(position);
+        final ApplicationInfo info = mApps.get(position);
         viewHolder.imageView.setImageDrawable(info.loadIcon(pm));
         viewHolder.textView.setText(info.loadLabel(pm));
-        viewHolder.aSwitch.setOnCheckedChangeListener(new SwitchChangeListener(mApps.get(position)));
+        Integer mode = modes.get(info.packageName);
+        viewHolder.aSwitch.setOnCheckedChangeListener(new SwitchChangeListener(info));
+        viewHolder.aSwitch.setChecked(mode == AppOpsManager.MODE_IGNORED);
     }
 
 
@@ -111,7 +119,6 @@ public class NotifactionManagerAdapter extends BaseAdapter {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             switch (buttonView.getId()) {
                 case R.id.notification_notify_switch:
-                    Log.d("=======", "notification_notify_switch");
                     banNotification(appInfo, isChecked);
                     break;
                 default:
@@ -127,11 +134,10 @@ public class NotifactionManagerAdapter extends BaseAdapter {
                 appInfo.packageName,
                 isChecked ? AppOpsManager.MODE_IGNORED : AppOpsManager.MODE_ALLOWED
         };
-        Log.d("=======", "target app id : " + appInfo.uid);
-        Log.d("=======", "my id : " + android.os.Process.myUid());
         try {
             Method setMode = appOpsManager.getClass().getMethod("setMode", args);
             setMode.invoke(appOpsManager, params);
+            modes.put(appInfo.packageName, isChecked ? AppOpsManager.MODE_IGNORED : AppOpsManager.MODE_ALLOWED);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -141,26 +147,34 @@ public class NotifactionManagerAdapter extends BaseAdapter {
         }
     }
 
-    private int getMode(int uid, String packageName, int[] ops) {
+    private void getMode(int[] ops) {
         Object[] params = new Object[] {
-               uid,
-               packageName,
                ops
         };
         try {
-            Class packageOpsCls = Class.forName("android.app.AppOpsManager$PackageOps");
-            Method getOpsForPackage = appOpsManager.getClass().getMethod("getOpsForPackage", argsForOps);
+            Method getOpsForPackage = appOpsManager.getClass().getMethod("getPackagesForOps", argsForOps);
             List packageOps = (List) getOpsForPackage.invoke(appOpsManager, params);
             if (packageOps != null && packageOps.size() > 0) {
                 for (int i = 0; i < packageOps.size(); i ++) {
                     Object packageOp = packageOps.get(i);
                     Method getOps = packageOp.getClass().getMethod("getOps");
                     List opsEntry = (List) getOps.invoke(packageOp);
+                    if (opsEntry.size() == 1) {
+                        Object entry = opsEntry.get(0);
+                        Method getMode = entry.getClass().getMethod("getMode");
+                        int mode = (int) getMode.invoke(entry);
+                        modes.put(String.valueOf(packageOp.getClass().getMethod("getPackageName").invoke(packageOp)), mode);
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0;
+    }
+
+    private void initMode() {
+        for (int i = 0; i < mApps.size(); i ++) {
+            modes.put(mApps.get(i).packageName, AppOpsManager.MODE_ALLOWED);
+        }
     }
 }
