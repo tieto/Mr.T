@@ -24,19 +24,6 @@ public class SystemManagementAdapter extends BaseAdapter {
         this.inflater = LayoutInflater.from(this.context);
         this.data = data;
     }
-    public void setData(List<FunEntity> data) {
-        this.data = data;
-        try {
-
-        } catch (Exception e) {
-
-        }
-        notifyDataSetInvalidated();
-    }
-
-    public List<FunEntity> getData() {
-        return this.data;
-    }
 
     @Override
     public int getCount() {
@@ -44,7 +31,7 @@ public class SystemManagementAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public FunEntity getItem(int position) {
         return this.data == null ? null : data.get(position);
     }
 
@@ -65,15 +52,13 @@ public class SystemManagementAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.image.setImageDrawable(data.get(position).getIcon());
-        viewHolder.text.setText(data.get(position).getTitle());
+        viewHolder.image.setImageResource(data.get(position).getIconRes());
+        viewHolder.text.setText(data.get(position).getTitleRes());
         return convertView;
     }
 
-    private class ViewHolder {
+    private static class ViewHolder {
         ImageView image;
         TextView text;
     }
-
-
 }

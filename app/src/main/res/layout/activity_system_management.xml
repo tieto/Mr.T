@@ -1,9 +1,11 @@
-<GridView android:id="@+id/container"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:layout_marginTop="@dimen/activity_vertical_margin"
-          android:numColumns="3"
-          tools:context=".SystemManagementActivity"
-          tools:ignore="MergeRootFrame"/>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <GridView
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="3"
+        tools:context=".SystemManagementActivity"
+        tools:ignore="MergeRootFrame" />
+</merge>

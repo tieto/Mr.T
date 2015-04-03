@@ -1,48 +1,30 @@
 package com.tieto.systemmanagement;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 
-/**
- * Created by gujiao on 24/03/15.
- */
 public class FunEntity {
-    private CharSequence title;
-    private Drawable icon;
-    private Class< ? extends Activity> activityclass;
+    private int mTitle;
+    private int mIcon;
+    private Class< ? extends Activity> mActivity;
 
-    public FunEntity(String title, Drawable icon, Class<? extends Activity> activityclass) {
-        this.title = title;
-        this.icon = icon;
-        this.activityclass = activityclass;
+    public FunEntity(@StringRes int title, @DrawableRes int icon,
+                     Class<? extends Activity> activity) {
+        mTitle = title;
+        mIcon = icon;
+        mActivity = activity;
     }
 
-    public CharSequence getTitle() {
-        return title;
+    public int getTitleRes() {
+        return mTitle;
     }
 
-    public void setTitle(CharSequence title) {
-        this.title = title;
+    public int getIconRes() {
+        return mIcon;
     }
 
-    public Drawable getIcon() {
-        return icon;
-    }
-
-    public void setIcon(Drawable icon) {
-        this.icon = icon;
-    }
-
-    public Class<? extends Activity> getActivityclass() {
-        return activityclass;
-    }
-
-    public void setActivityclass(Class<? extends Activity> activityclass) {
-        this.activityclass = activityclass;
-    }
-
-    @Override
-    public String toString() {
-        return title.toString();
+    public Class<? extends Activity> getActivity() {
+        return mActivity;
     }
 }
