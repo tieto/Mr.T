@@ -18,6 +18,10 @@
     <string name="t_feedback">问题反馈</string>
     <string name="t_update">检查更新</string>
 
-
+    //disk
+    <string name="disk_space_store">存储空间</string>
+    <string name="disk_space_system">系统空间</string>
+    <string name="disk_space_system_tip1">包含操作,应用软件以及使用软件产生的缓存数据</string>
+    <string name="disk_space_system_tip2">可通过以下方式释放空间:</string>
 
 </resources>
