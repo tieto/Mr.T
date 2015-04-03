@@ -64,7 +64,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|center|left"
                         android:paddingBottom="1.0dip"
-                        android:text="B/s"
+                        android:text="B/S"
                         android:textColor="@color/n_common_font_color_2"
                         android:textSize="14sp"
                         android:visibility="gone"/>
@@ -124,7 +124,7 @@
             android:layout_width="110.0dip"
             android:layout_height="wrap_content"
             android:layout_marginTop="14.0dip"
-            android:background="@drawable/t_act_main_btn_selector"
+            android:src="@drawable/t_act_main_btn_selector"
             android:text="联网管理"
             android:textColor="@color/n_common_font_color_1"
             android:textSize="14sp"/>

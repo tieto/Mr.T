@@ -18,6 +18,11 @@ public final class TrafficSpeed {
     private long mLastTxBytes = 0;
     private long mUpdateTime = 1000;
 
+    //for mobile netspeed info
+    private long mSpeed;
+    private int mTotalBytes;
+    private int mHadReadBytes;
+
     private boolean mIsShutdown = false;
     private static final ArrayList<TrafficSpeed> INSTANCES = new ArrayList<TrafficSpeed>();
 
@@ -138,5 +143,37 @@ public final class TrafficSpeed {
                 return String.format("%.1fMB/s", byteSize / (float)(1024 * 1024));
             }
         }
+    }
+
+    public int getmUid() {
+        return mUid;
+    }
+
+    public void setmUid(int mUid) {
+        this.mUid = mUid;
+    }
+
+    public int getmTotalBytes() {
+        return mTotalBytes;
+    }
+
+    public void setmTotalBytes(int mTotalBytes) {
+        this.mTotalBytes = mTotalBytes;
+    }
+
+    public long getmSpeed() {
+        return mSpeed;
+    }
+
+    public void setmSpeed(long mSpeed) {
+        this.mSpeed = mSpeed;
+    }
+
+    public int getmHadReadBytes() {
+        return mHadReadBytes;
+    }
+
+    public void setmHadReadBytes(int mHadReadBytes) {
+        this.mHadReadBytes = mHadReadBytes;
     }
 }

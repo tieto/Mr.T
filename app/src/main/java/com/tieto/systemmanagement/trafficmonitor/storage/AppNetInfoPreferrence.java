@@ -17,7 +17,6 @@ public class AppNetInfoPreferrence {
     //default value for each app's networking state
     private static final int DEFAULT = AppNetWorkInfo.NETWORK_ALLOWED.ordinal();
 
-
     public static void saveAppNetState(Context ctx, int uid,int value) {
         SharedPreferences pref = ctx.getSharedPreferences(PREFERRENCE_NAME, Context.MODE_PRIVATE);
         pref.edit().putInt(APPNETSTATE+uid,value).commit();
