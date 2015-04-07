@@ -12,7 +12,7 @@ public class AuthorityActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authority);
         getSupportFragmentManager().beginTransaction().
-                replace(android.R.id.content, AuthorityFragment.newInstance()).commit();
+                replace(android.R.id.content, AuthorityAppListFragment.newInstance()).commit();
         //noinspection ConstantConditions
         getActionBar().setIcon(0);
     }

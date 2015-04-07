@@ -1,11 +1,9 @@
 package com.tieto.systemmanagement.authority;
 
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,26 +24,26 @@ import java.util.concurrent.Executors;
 /**
  * @author Jiang Ping
  */
-public class AuthorityFragment extends ListFragment {
+public class AuthorityAppListFragment extends ListFragment {
 
     private ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private AppInfoAdapter mAdapter;
 
-    public static AuthorityFragment newInstance() {
-        AuthorityFragment fragment = new AuthorityFragment();
+    public static AuthorityAppListFragment newInstance() {
+        AuthorityAppListFragment fragment = new AuthorityAppListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public AuthorityFragment() {
+    public AuthorityAppListFragment() {
         // Reserved for system
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_authority, container, false);
+        return inflater.inflate(R.layout.fragment_authority_list, container, false);
     }
 
     @Override
@@ -71,10 +69,10 @@ public class AuthorityFragment extends ListFragment {
 
     private static class AppLoader extends AsyncTask<Void, Void, List<AppInfo>> {
 
-        private WeakReference<AuthorityFragment> mContextRef;
+        private WeakReference<AuthorityAppListFragment> mContextRef;
 
-        public AppLoader(AuthorityFragment fragment) {
-            mContextRef = new WeakReference<AuthorityFragment>(fragment);
+        public AppLoader(AuthorityAppListFragment fragment) {
+            mContextRef = new WeakReference<AuthorityAppListFragment>(fragment);
         }
 
         @Override
@@ -85,7 +83,7 @@ public class AuthorityFragment extends ListFragment {
         @Override
         protected void onPostExecute(List<AppInfo> apps) {
             super.onPostExecute(apps);
-            AuthorityFragment fragment = mContextRef.get();
+            AuthorityAppListFragment fragment = mContextRef.get();
             if (fragment != null && fragment.isAdded()) {
                 fragment.updateAppList(apps);
             }
