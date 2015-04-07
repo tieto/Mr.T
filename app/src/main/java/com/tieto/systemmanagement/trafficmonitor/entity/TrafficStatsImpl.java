@@ -5,16 +5,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.TrafficStats;
+import android.widget.TextView;
 
 import com.tieto.systemmanagement.trafficmonitor.storage.AppNetInfoPreferrence;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
-//1,how to save the value of isNetworkAllowed for each app.
-//2,
-
 
 /**
  * Created by jane on 15-3-24.
@@ -52,6 +48,8 @@ public class TrafficStatsImpl {
     public List<AppInfoEntity> getTrafficInfoForEachApp() {
         trafficInfoForEachApp = new ArrayList<AppInfoEntity>();
         List<PackageInfo> packageInfos = mPackageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
+        List<PackageInfo> packageInfos1 = mPackageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
+        List<PackageInfo> packageInfos2 = mPackageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
 
         for(PackageInfo p:packageInfos) {
             String[] permissions = p.requestedPermissions;
@@ -128,5 +126,6 @@ public class TrafficStatsImpl {
     private int getAppNetSpeed(int uid) {
         return 0;
     }
+
 
 }

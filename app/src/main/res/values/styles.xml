@@ -16,4 +16,11 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <!-- Base ListView style of the application -->
+    <style name="AppTheme.ListView">
+        <item name="android:cacheColorHint">#00000000</item>
+        <item name="android:background">#fff</item>
+        <item name="android:dividerHeight">0.5dp</item>
+        <item name="android:divider">#11000000</item>
+    </style>
 </resources>

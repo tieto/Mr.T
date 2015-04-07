@@ -3,25 +3,34 @@ package com.tieto.systemmanagement.trafficmonitor;
 import android.content.Intent;
 import android.net.TrafficStats;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tieto.systemmanagement.BasicActivity;
 import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.SysManageApplication;
+import com.tieto.systemmanagement.trafficmonitor.entity.TrafficStatsImpl;
 import com.tieto.systemmanagement.trafficmonitor.views.FireWallManageActivity;
+import com.tieto.systemmanagement.trafficmonitor.views.NetSpeedActivity;
+
+
 /**
  * Created by jane on 15-3-24.
  */
 public class TrafficActivity extends BasicActivity implements View.OnClickListener{
    //main
-    private TextView current_net_speed;
-    private Button measure_net_speed;
-    private TextView net_detail_info;
-    private Button net_manage;
+    private TextView mCurrentNetSpededText;
+    private Button mMeasureNetSpeedButton;
+    private TextView mNetStateInfoText;
+    private Button mNetManageButton;
+
     //part_net
     private TextView current_traffic_left;
     private TextView traffic_unit;
@@ -33,13 +42,18 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
     private TextView save_value;
     private TextView save_value_unit;
 
+    private String mNetType;
+    private SysManageApplication mSysApplication;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.t_act_main);
-        //init all source id
+
         setupView();
+        mSysApplication = (SysManageApplication) this.getApplication();
+        mNetType  = mSysApplication.isNetConnected();
     }
 
 
@@ -47,33 +61,39 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
     protected void onResume() {
         super.onResume();
         setContent();
-//        String cmd = "chmod 777"+getPackageCodePath();
-//                IptablesForDroidWall.RootCommand(cmd);
-
-
     }
 
-    /**
-     * display the net info on the main_page
-     */
+    //display the net info on the main_page
     private void setContent() {
-        //if network is connected
-        if(isNetConnected()) {
-            net_detail_info.setText("网络连接正常");
-            TrafficStats mTrafficStats = new TrafficStats();
-            getCurrentNetInfo(mTrafficStats);
-        }else {
+        mNetStateInfoText.setText(mNetType);
+        final TrafficStats trafficStats = new TrafficStats();
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                mCurrentNetSpededText.setText(msg.arg1+"");
+            }
+        };
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                while(true) {
+                    long currentRxBytes = trafficStats.getTotalRxBytes();
+                    try {
+                        sleep(1000);
+                        Message msg = Message.obtain();
+                        long temp = trafficStats.getTotalRxBytes();
+                        msg.arg1 = (int)(temp - currentRxBytes);
+                        handler.sendMessage(msg);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
 
-        }
-
-
-
-
-
-    }
-
-    private void getCurrentNetInfo(TrafficStats trafficStats) {
-
+//        mCurrentNetSpededText.setText("");
     }
 
     /**
@@ -81,10 +101,10 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
      */
     private void setupView() {
 
-        current_net_speed = (TextView)findViewById(R.id.act_main_large_number_view);
-        measure_net_speed = (Button)findViewById(R.id.act_main_speed_btn);
-        net_detail_info = (TextView)findViewById(R.id.act_main_tip_tv);
-        net_manage = (Button)findViewById(R.id.act_main_app_msg_btn);
+        mCurrentNetSpededText = (TextView)findViewById(R.id.act_main_large_number_view);
+        mMeasureNetSpeedButton = (Button)findViewById(R.id.act_main_speed_btn);
+        mNetStateInfoText = (TextView)findViewById(R.id.act_main_tip_tv);
+        mNetManageButton = (Button)findViewById(R.id.act_main_app_msg_btn);
 
         current_traffic_left = (TextView)findViewById(R.id.act_main_plan_traffic_value_tv);
         traffic_unit = (TextView)findViewById(R.id.act_main_plan_traffic_unit_tv);
@@ -92,7 +112,8 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
         traffic_total = (TextView)findViewById(R.id.act_main_plan_total_value_tv);
         traffic_progress_bar = (ProgressBar)findViewById(R.id.act_main_plan_traffic_value_pb);
 
-        net_manage.setOnClickListener(this);
+        mNetManageButton.setOnClickListener(this);
+        mMeasureNetSpeedButton.setOnClickListener(this);
     }
 
 
@@ -120,17 +141,24 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        int id = v.getId();
-        switch (id){
-            case R.id.act_main_app_msg_btn:
-                Intent intent = new Intent();
-                intent.setClass(TrafficActivity.this,FireWallManageActivity.class);
-                TrafficActivity.this.startActivity(intent);
-                break;
-
+        if(SysManageApplication.TYPE_NONE.equals(mNetType)) {
+            Toast.makeText(this,"无网络连接，请检查你的联网状态",Toast.LENGTH_SHORT).show();
+        } else {
+            int id = v.getId();
+            switch (id){
+                case R.id.act_main_app_msg_btn:
+                    Intent intent = new Intent();
+                    intent.setClass(TrafficActivity.this,FireWallManageActivity.class);
+                    TrafficActivity.this.startActivity(intent);
+                    break;
+                case R.id.act_main_speed_btn:
+                    Intent intent_speed = new Intent();
+                    intent_speed.setClass(TrafficActivity.this, NetSpeedActivity.class);
+                    TrafficActivity.this.startActivity(intent_speed);
+                    break;
+            }
         }
     }
-
 
 
 }

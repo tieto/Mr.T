@@ -10,9 +10,10 @@
         android:id="@+id/act_main_title_layout"
         android:layout_width="fill_parent"
         android:layout_height="48.0dip"
+        android:visibility="gone"
         android:background="@color/n_common_bg_color_2">
 
-        <ImageView
+<!--        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -27,7 +28,7 @@
             android:background="@drawable/t_common_layout_title_bg_selector"
             android:clickable="true"
             android:padding="10.0dip"
-            android:src="@drawable/t_titlebar_more"/>
+            android:src="@drawable/t_titlebar_more"/>-->
 
         <LinearLayout
             android:layout_width="fill_parent"

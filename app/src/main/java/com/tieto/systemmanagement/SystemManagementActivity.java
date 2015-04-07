@@ -3,6 +3,7 @@ package com.tieto.systemmanagement;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +38,7 @@ public class SystemManagementActivity extends Activity {
         ACTIVITIES.add(new FunEntity(R.string.title_activity_self_start
                 , R.mipmap.ic_launcher, SelfStartActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_traffic
-                , R.mipmap.ic_launcher, TrafficActivity.class));
+                , R.mipmap.t_app_icon, TrafficActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_disk
                 , R.mipmap.card_icon_media, DiskActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_no_spam
@@ -61,6 +62,7 @@ public class SystemManagementActivity extends Activity {
                 Intent intent = new Intent(SystemManagementActivity.this,
                         adapter.getItem(position).getActivity());
                 startActivity(intent);
+
             }
         });
     }

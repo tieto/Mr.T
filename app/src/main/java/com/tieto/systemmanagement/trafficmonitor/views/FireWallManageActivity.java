@@ -61,8 +61,6 @@ public class FireWallManageActivity  extends FragmentActivity implements ViewPag
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(currentIndex);
         viewPager.setOnPageChangeListener(this);
-
-//        IptablesForDroidWall.applySavedIptablesRules(FireWallManageActivity.this, true);
     }
 
     @Override
