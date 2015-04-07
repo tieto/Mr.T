@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.diskmonitor.entity.SpaceInfo;
@@ -42,6 +44,15 @@ public class DiskSpaceAdapter extends BaseAdapter {
         if (convertView == null)
             v = mInflater.inflate(R.layout.item_disk_space, null);
 
+        SpaceInfo info = mSpaceArray.get(position);
+        ImageView iv = (ImageView)v.findViewById(R.id.icon);
+        iv.setImageDrawable(info.getIcon());
+
+        TextView tv = (TextView)v.findViewById(R.id.title);
+        tv.setText(info.getTitle());
+
+        TextView summary = (TextView)v.findViewById(R.id.summary);
+        summary.setText(info.getTotal());
         return v;
     }
 }

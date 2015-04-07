@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.UPDATE_APP_OPS_STATS" />
 
     <application
+        android:name=".TApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -18,8 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".BasicActivity" >
+        <activity android:name=".BasicActivity" >
         </activity>
         <activity
             android:name=".NotificationActivity"
@@ -65,11 +65,22 @@
             android:name=".BatteryActivity"
             android:label="@string/title_activity_battery" >
         </activity>
-        <activity android:name=".trafficmonitor.views.FireWallManageActivity"
-            android:label="联网管理">
+        <activity
+            android:name=".trafficmonitor.views.FireWallManageActivity"
+            android:label="联网管理" >
         </activity>
-
-
+        <activity
+            android:name=".diskmonitor.views.DiskPackagesActivity"
+            android:label="@string/title_activity_disk_packages" >
+        </activity>
+        <activity
+            android:name=".diskmonitor.views.DiskAlbumActivity"
+            android:label="@string/title_activity_disk_abulm" >
+        </activity>
+        <activity
+            android:name=".diskmonitor.views.DiskAudioActivity"
+            android:label="@string/title_activity_disk_audio">
+        </activity>
     </application>
 
 </manifest>

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ffffff" >
+    android:background="#e9eef3" >
 
     <include
         android:id="@+id/container_disk_summary"
@@ -14,10 +14,23 @@
         android:layout_alignParentStart="true" />
 
     <include
+        android:id="@+id/container_disk_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/container_disk_summary"
         layout="@layout/container_disk_list"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_below="@id/container_disk_list"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_centerVertical="true"
+        android:textSize="12sp"
+        android:text="@string/disk_space_store_tip1"
+        android:id="@+id/space_tips"
+        android:textColor="@color/gray"/>
 </RelativeLayout>
