@@ -1,16 +1,21 @@
 package com.tieto.systemmanagement.intercept.views;
 
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.tieto.systemmanagement.R;
 
@@ -56,8 +61,8 @@ public class InterceptActivity extends FragmentActivity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-
     }
+
 
     private void setSelectionTitle(int position){
 
@@ -125,8 +130,23 @@ public class InterceptActivity extends FragmentActivity {
 
             View rootView = inflater.inflate(R.layout.activity_intercept_pager,container,false) ;
             TextView textView = (TextView)rootView.findViewById(R.id.fragment_content) ;
+            Button singleButton = (Button)rootView.findViewById(R.id.left_button) ;
+            Button deleteButton = (Button)rootView.findViewById(R.id.right_button) ;
             Bundle args = getArguments() ;
-            textView.setText("Selected Page " + args.getInt(SELECT_PAGE));
+            int pagerIndex = args.getInt(SELECT_PAGE);
+
+            switch (pagerIndex){
+
+                case 1 :
+                    singleButton.setText("标记");
+                    deleteButton.setText("删除");
+                    break;
+                case 2 :
+
+
+                    break;
+            }
+            textView.setText("Selected Page " + pagerIndex);
             return rootView ;
         }
 

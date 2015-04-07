@@ -132,4 +132,7 @@
     <color name="common_bg_color_4">#fff5f5f5</color>
     <color name="common_bg_color_5">#fffbfbfb</color>
     <color name="common_grey_color1">#ffdddddd</color>
+
+    <!-- app colors -->
+    <color name="app_actionbar_background_color">#ff2f8f58</color>
 </resources>

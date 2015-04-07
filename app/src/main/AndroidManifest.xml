@@ -8,6 +8,13 @@
     <uses-permission android:name="android.permission.UPDATE_APP_OPS_STATS" />
     <uses-permission android:name="android.permission.GET_APP_OPS_STATS" />
 
+    <!--permission for intercept. Monitor all coming calls -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"></uses-permission>
+    <user-permission android:name="android.permission.MODIFY_PHONE_STATE"></user-permission>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name=".SysManageApplication"
         android:allowBackup="true"
@@ -89,6 +96,17 @@
         <activity android:name=".trafficmonitor.views.NetSpeedActivity"
             android:label="网络测速"
             android:icon="@drawable/t_common_title_icon"></activity>
+
+        <!-- Intercept-->
+        <receiver android:name=".intercept.service.PhoneCallReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE"/>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".intercept.service.PhoneFilterServer" android:process=":remote" />
+
     </application>
 
 </manifest>
