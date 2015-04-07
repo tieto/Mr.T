@@ -10,7 +10,6 @@
 
                 tools:context="com.tieto.systemmanagement.processmanage.ProcessActivity">
 
-
     <LinearLayout
         android:id="@+id/process_mgr_container_layout"
         android:orientation="vertical"

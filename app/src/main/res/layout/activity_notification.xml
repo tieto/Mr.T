@@ -9,5 +9,4 @@
                 tools:context="com.tieto.systemmanagement.NotificationActivity"
     android:id="@+id/list_app">
 
-
 </ListView>

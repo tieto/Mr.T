@@ -5,6 +5,11 @@
         <item name="android:colorPrimaryDark">#ff2f8f58</item>
     </style>
 
+    <!-- Customer application theme. -->
+    <style name="CustomerTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+    </style>
+
     //traffic
     <style name="t_ProgressBar_Green" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:maxHeight">50.0dip</item>

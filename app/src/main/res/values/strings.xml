@@ -37,4 +37,20 @@
     <string name="auth_unknown_permission">未知权限</string>
     <string name="auth_permission_count_format"><![CDATA[<font color=\'#880000\'>%1$d</font>&nbsp;项危险权限]]></string>
     <string name="auth_empty_loading">正在加载</string>
+    <!-- App管理 Zhou Jinpei -->
+    <string name="app_downloaded">已下载</string>
+    <string name="app_running">正在运行</string>
+    <string name="app_all">全部</string>
+    <string name="app_detail">应用详细</string>
+
+    <string name="app_total_size">全部</string>
+    <string name="app_data_size">数据</string>
+    <string name="app_application_size">应用</string>
+    <string name="app_cache_size">缓存</string>
+    <string name="app_detail_notification_visible">显示通知</string>
+    <string name="app_detail_force_stop">强制停止</string>
+    <string name="app_detail_uninstall">卸载</string>
+    <string name="app_detail_clear_data">清理数据</string>
+    <string name="app_detail_clear_cache">清理缓存</string>
+
 </resources>

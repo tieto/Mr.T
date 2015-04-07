@@ -14,6 +14,7 @@
     <user-permission android:name="android.permission.MODIFY_PHONE_STATE"></user-permission>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
 
     <application
         android:name=".SysManageApplication"
@@ -34,20 +35,19 @@
         </activity>
         <activity
             android:name=".NotificationActivity"
-            android:label="@string/title_activity_notification" >
-        </activity>
+            android:label="@string/title_activity_notification" />
         <activity
             android:name=".processmanage.ProcessActivity"
             android:label="@string/title_activity_process_management" >
         </activity>
         <activity
             android:name=".MemoryActivity"
-            android:label="@string/title_activity_memory" >
-        </activity>
+            android:label="@string/title_activity_memory" />
         <activity
             android:name=".AppActivity"
-            android:label="@string/title_activity_app" >
-        </activity>
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden|uiMode|locale|layoutDirection"
+            android:label="@string/title_activity_app"
+            android:theme="@style/CustomerTheme" />
         <activity
             android:name=".authority.AuthorityActivity"
             android:label="@string/title_activity_authority" >
@@ -58,8 +58,7 @@
         </activity>
         <activity
             android:name=".SelfStartActivity"
-            android:label="@string/title_activity_self_start" >
-        </activity>
+            android:label="@string/title_activity_self_start" />
         <activity
             android:name=".trafficmonitor.TrafficActivity"
             android:label="@string/title_activity_traffic"
@@ -74,12 +73,22 @@
             android:label="@string/title_activity_no_spam" >
         </activity>
         <activity
+            android:name=".DiskActivity"
+            android:label="@string/title_activity_disk" />
+        <activity
+            android:name=".NoSpamActivity"
+            android:label="@string/title_activity_no_spam" />
+        <activity
             android:name=".NetControlActivity"
-            android:label="@string/title_activity_net_control" >
-        </activity>
+            android:label="@string/title_activity_net_control" />
         <activity
             android:name=".BatteryActivity"
-            android:label="@string/title_activity_battery" >
+            android:label="@string/title_activity_battery" />
+        <activity
+            android:name=".app.ui.AppDetailActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden|uiMode|locale|layoutDirection"
+            android:label="@string/app_detail"
+            android:theme="@style/CustomerTheme">
         </activity>
          <activity
             android:name=".diskmonitor.views.DiskPackagesActivity"
