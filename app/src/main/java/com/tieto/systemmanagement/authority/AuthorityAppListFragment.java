@@ -1,6 +1,7 @@
 package com.tieto.systemmanagement.authority;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.AdapterView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.authority.adapter.AppInfoAdapter;
@@ -61,6 +63,14 @@ public class AuthorityAppListFragment extends ListFragment {
 
         View empty = getView().findViewById(R.id.empty_view);
         getListView().setEmptyView(empty);
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                Intent intent = new Intent(getActivity(), AuthorityDetailActivity.class);
+                intent.putExtra("app_info", mAdapter.getItem(pos));
+                startActivity(intent);
+            }
+        });
     }
 
     protected void updateAppList(List<AppInfo> apps) {

@@ -5,7 +5,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.tieto.systemmanagement.R;
@@ -18,7 +22,7 @@ import java.util.List;
 /**
  * @author Jiang Ping
  */
-public final class AppInfo {
+public final class AppInfo implements Parcelable {
 
     private Drawable mIcon;
     private String mName;
@@ -44,6 +48,33 @@ public final class AppInfo {
     public void addPermission(AppPermission permission) {
         mPermissions.add(permission);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        Bitmap bitmap = ((BitmapDrawable) mIcon).getBitmap();
+        parcel.writeParcelable(bitmap, i);
+        parcel.writeString(mName);
+    }
+
+    public static final Creator<AppInfo> CREATOR = new Creator<AppInfo>() {
+        @Override
+        public AppInfo createFromParcel(Parcel parcel) {
+            Bitmap icon = parcel.readParcelable(Bitmap.class.getClassLoader());
+            String label = parcel.readString();
+            AppInfo info = new AppInfo(label, new BitmapDrawable(icon));
+            return info;
+        }
+
+        @Override
+        public AppInfo[] newArray(int size) {
+            return new AppInfo[size];
+        }
+    };
 
     public static List<AppInfo> getApplicationList(Context context) {
         PackageManager pm = context.getPackageManager();

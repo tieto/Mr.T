@@ -53,6 +53,10 @@
             android:label="@string/title_activity_authority" >
         </activity>
         <activity
+            android:name=".authority.AuthorityDetailActivity"
+            android:label="@string/title_activity_authority" >
+        </activity>
+        <activity
             android:name=".SelfStartActivity"
             android:label="@string/title_activity_self_start" >
         </activity>
