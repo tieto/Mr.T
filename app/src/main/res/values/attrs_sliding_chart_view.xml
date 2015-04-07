@@ -1,8 +1,12 @@
 <resources>
     <declare-styleable name="SlidingChartView">
-        <attr name="exampleString" format="string" />
-        <attr name="exampleDimension" format="dimension" />
-        <attr name="exampleColor" format="color" />
-        <attr name="exampleDrawable" format="color|reference" />
+        <attr name="xRange" format="integer" />
+        <attr name="xUnit" format="float" />
+        <attr name="yRange" format="integer" />
+        <attr name="yUnit" format="float" />
+        <attr name="borderColor" format="color" />
+        <attr name="coordinateLineColor" format="color" />
+        <attr name="valueStrokeColor" format="color" />
+        <attr name="valueFillColor" format="color" />
     </declare-styleable>
 </resources>

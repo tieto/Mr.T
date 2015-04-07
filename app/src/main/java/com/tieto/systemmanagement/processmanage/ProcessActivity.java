@@ -7,6 +7,7 @@
 
 package com.tieto.systemmanagement.processmanage;
 
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -15,40 +16,54 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.text.TextUtils;
 import android.util.Log;
+import android.os.Handler;
+import android.os.Debug.MemoryInfo;
+
+import java.lang.Thread;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.tieto.common.util.ShellUtils;
 import com.tieto.common.util.ShellUtils.CommandResult;
 import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.processmanage.views.SlidingChartView;
 
 public class ProcessActivity extends Activity {
 
     protected static final String ACTIVITY_TAG="ProcessActivity";
 
-    private ActivityManager mActivityManager = null;
+    private Random random=new Random();
+    private SlidingChartView mCharView=null;
+
+    private Handler handler = new Handler();
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if(null!=mCharView) {
+                float val=random.nextFloat()*mCharView.getYRange();
+                mCharView.append(val);
+                Log.d(ProcessActivity.ACTIVITY_TAG,"new char val="+val);
+            }
+
+            handler.postDelayed(runnable, 1500);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_process_management);
 
-        boolean isRoot=ShellUtils.checkRootPermission();
+        mCharView=(SlidingChartView)findViewById(R.id.chart_cpu);
 
-        mActivityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ProcessManagerDefault processMgr=new ProcessManagerDefault();
 
-        List<ActivityManager.RunningAppProcessInfo> runAppProcessList= mActivityManager
-                .getRunningAppProcesses();
+        processMgr.getRunningProcessInfo(PROCESS_TYPE_MANAGED);
 
-        List<ActivityManager.RunningServiceInfo> runServiceList = mActivityManager
-                .getRunningServices(20);
-
-        List<String> commandList = new ArrayList<String>();
-        commandList.add("ps");
-        CommandResult result = ShellUtils.execCommand(commandList, false, true);
-
-        Log.d(ProcessActivity.ACTIVITY_TAG, result.successMsg);
+        handler.post(runnable);
     }
 
     @Override
@@ -154,41 +169,43 @@ public class ProcessActivity extends Activity {
             if(!TextUtils.isEmpty(rawStr))
             {
                 String rawStr2= replaceMultiSpaceToSingleSpace(rawStr);
-                String[] rows=TextUtils.split(rawStr2,System.getProperty("line.separator"));
+                String[] rows=TextUtils.split(rawStr2,"\n");
                 boolean appProcessRootFound=false;
+
                 int appProcessRootPid=-1;
-                for (String row : rows) {
+                for (int i=1;i<rows.length; i++) {
                     if(!TextUtils.isEmpty(rawStr)) {
-                        String[] cols=TextUtils.split(row,System.getProperty("line.separator"));
+                        String[] cols=TextUtils.split(rows[i]," ");
 
-                        String user=cols[0];
-                        int pid=Integer.parseInt(cols[1]);
-                        int ppid=Integer.parseInt(cols[2]);
-                        int vsize=Integer.parseInt(cols[3]);
-                        int rss=Integer.parseInt(cols[4]);
-                        int wchan=Integer.parseInt(cols[5]);
-                        String type=cols[7];
-                        String name=cols[8];
+                        if(cols.length>7) {
+                            String user=cols[0];
+                            int pid=Integer.parseInt(cols[1]);
+                            int ppid=Integer.parseInt(cols[2]);
+                            int vsize=Integer.parseInt(cols[3]);
+                            int rss=Integer.parseInt(cols[4]);
 
-                        int processType=PROCESS_TYPE_NATIVE;
+                            String type=cols[7];
+                            String name=cols[8];
 
-                        if(!appProcessRootFound) {
-                            if(appProcessRoot.equalsIgnoreCase(name)) {
-                                appProcessRootFound=true;
-                                appProcessRootPid=pid;
+                            int processType=PROCESS_TYPE_NATIVE;
+
+                            if(!appProcessRootFound) {
+                                if(appProcessRoot.equalsIgnoreCase(name)) {
+                                    appProcessRootFound=true;
+                                    appProcessRootPid=pid;
+                                }
+                            }
+                            else {
+                                if(ppid==appProcessRootPid) {
+                                    processType=PROCESS_TYPE_MANAGED;
+                                }
+                            }
+
+                            ProcessInfo processInfo=createProcessInfo(processType,pid,ppid,name,vsize,rss);
+                            if(null!=processInfo) {
+                                result.add(processInfo);
                             }
                         }
-                        else {
-                            if(ppid==appProcessRootPid) {
-                                processType=PROCESS_TYPE_MANAGED;
-                            }
-                        }
-
-                        ProcessInfo processInfo=createProcessInfo(processType,pid,ppid,name);
-                        if(null!=processInfo) {
-                            result.add(processInfo);
-                        }
-
                     }
                 }
             }
@@ -196,50 +213,37 @@ public class ProcessActivity extends Activity {
             return result;
         }
 
-        private ProcessInfo createProcessInfo(int processType, int pid, int ppid, String name) {
+        private ProcessInfo createProcessInfo(int processType, int pid, int ppid, String name,int vsize,int rss) {
 
             ProcessInfo result=null;
             switch (processType)
             {
                 case PROCESS_TYPE_NATIVE:
-                    result=new NativeProcessInfo(name, 0, pid, ppid);
+                    result=new NativeProcessInfo(name, 0, pid, ppid, vsize, rss);
                     break;
                 case PROCESS_TYPE_MANAGED:
-                    result= new ManagedProcessInfo(name, 0, pid, ppid);
+                    result= new ManagedProcessInfo(name, 0, pid, ppid, vsize, rss);
                     break;
             }
             return result;
         }
 
         private String replaceMultiSpaceToSingleSpace(String inputStr) {
-
-            String result=inputStr;
-            while(result.indexOf("    ")>-1) {
-                result=result.replaceAll(" ", "    ");
-            }
-
-            while(result.indexOf("   ")>-1) {
-                result=result.replaceAll(" ", "   ");
-            }
-
-            while(result.indexOf("  ")>-1) {
-                result=result.replaceAll(" ", "  ");
-            }
-
-            return result;
+            return inputStr.replaceAll(" {2,}"," ");
         }
     }
 
     public class ProcessManagerDefault
     {
         private CommandExecutorManager mCmdExecutor;
-
-        protected IProcessParser mProcessParser;
+        private IProcessParser mProcessParser;
+        private ActivityManager mActivityManager = null;
 
         public ProcessManagerDefault() {
             mCmdExecutor=new CommandExecutorManager();
             mCmdExecutor.config(new CommandExecutorDefault());
             mProcessParser=new ProcessParserDefault();
+            mActivityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         }
 
         public List<ProcessInfo> getRunningProcessInfo(int processTypeFlags) {
@@ -249,7 +253,10 @@ public class ProcessActivity extends Activity {
         public List<ProcessInfo> searchRunningProcessInfo(Iterable<String> searchStrings) {
 
             if(null!=searchStrings) {
-                return mProcessParser.parse(String.format("ps | grep -i '%s'", TextUtils.join("|", searchStrings)));
+
+                CommandExecutorResult res= mCmdExecutor.executeCommand(String.format("ps | grep -i '%s'", TextUtils.join("|", searchStrings)));
+
+                return mProcessParser.parse(res.successMsg);
             }
 
             return new ArrayList<ProcessInfo>();
@@ -257,11 +264,109 @@ public class ProcessActivity extends Activity {
 
         public boolean tryKillProcess(ProcessInfo processInfo) {
 
-            String cmd = String.format("%s %d","kill -SIGTERM",processInfo.getPid() );
+            if(isRoot()) {
+                String cmd = String.format("%s %d","kill -SIGTERM",processInfo.getPid() );
+                CommandExecutorResult result=mCmdExecutor.executeCommand(cmd);
+                return result.result==0;
+            } else {
 
-            CommandExecutorResult result=mCmdExecutor.executeCommand(cmd);
+                String packageName=getPackageNameByPID(processInfo.getPid());
+                if(null!=packageName) {
+
+                    mActivityManager.killBackgroundProcesses(packageName);
+
+                    CommandExecutorResult res= mCmdExecutor.executeCommand(String.format("ps | grep -i '%s'", processInfo.getName()));
+
+                    if(null!=res.successMsg&&
+                            res.successMsg.indexOf(processInfo.getName()) >=0 &&
+                            res.successMsg.indexOf(" "+processInfo.getPid()+" ")>0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        public boolean isRoot() {
+
+            CommandExecutorResult result=mCmdExecutor.executeCommand("echo root");
 
             return result.result==0;
+        }
+
+        public float getCpuUsage() {
+
+            String cmd = "cat /proc/stat | grep \'cpu \'";
+            CommandExecutorResult result=mCmdExecutor.executeCommand(cmd);
+
+            String raw= result.successMsg.replaceAll(" {2,}"," ");
+            String[] cols=raw.split(" ");
+
+            int total1=0;
+            int idle1=0;
+            for(int i=1;i<cols.length;i++) {
+                total1+=Integer.parseInt(cols[i]);
+            }
+
+            idle1=Integer.parseInt(cols[3]);
+
+            try {
+                Thread.sleep(1500);
+            } catch (Exception e) {
+
+            }
+
+            result=mCmdExecutor.executeCommand(cmd);
+            raw= result.successMsg.replaceAll(" {2,}"," ");
+            cols=raw.split(" ");
+
+            int total2=0;
+            int idle2=0;
+            for(int i=1;i<cols.length;i++) {
+                total2+=Integer.parseInt(cols[i]);
+            }
+
+            idle2=Integer.parseInt(cols[3]);
+
+            int total=total2-total1;
+            int idle=idle2-idle1;
+
+            return ((float)(total-idle))/(float)idle;
+        }
+
+        public float getMemoryUsage() {
+
+            return 0.0f;
+        }
+
+        public void getCpuInfo() {
+
+//cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+        }
+
+        private String getPackageNameByPID(int pid) {
+
+            String packageName=null;
+            List<RunningAppProcessInfo> runningAppProcesses = mActivityManager.getRunningAppProcesses();
+            for(RunningAppProcessInfo runningAppProcessInfo : runningAppProcesses) {
+                try {
+                    if(runningAppProcessInfo.pid == pid) {
+                        packageName = runningAppProcessInfo.pkgList[0];
+                    }
+                } catch(Exception e) {
+
+                }
+            }
+            return packageName;
+        }
+
+        private int getCpuInfoByPID() {
+
+            return 0;
+        }
+
+        private int getMemInfoByPID() {
+            return 0;
         }
     }
     //endregion
@@ -279,6 +384,8 @@ public class ProcessActivity extends Activity {
         private int mUid;
         private int mPid;
         private int mPPid;
+        private int mVSize;
+        private int mRSS;
 
         public String getName() {
             return mName;
@@ -293,6 +400,16 @@ public class ProcessActivity extends Activity {
             return mUid;
         }
 
+        public int getVSize() {
+
+            return mVSize;
+        }
+
+        public int getRSS() {
+
+            return mRSS;
+        }
+
         public int getPid() {
 
             return mPid;
@@ -304,26 +421,28 @@ public class ProcessActivity extends Activity {
         }
 
 
-        public ProcessInfo(int processType,String name,int uid, int pid, int ppid) {
+        public ProcessInfo(int processType,String name,int uid, int pid, int ppid,int vSize, int rss) {
 
             this.mProcessType = processType;
             this.mName=name;
             this.mUid=uid;
             this.mPid=pid;
             this.mPPid=ppid;
+            this.mVSize=vSize;
+            this.mRSS=rss;
         }
     }
 
     public class NativeProcessInfo extends ProcessInfo {
-        public NativeProcessInfo(String name,int uid, int pid, int ppid) {
-            super(PROCESS_TYPE_NATIVE,name,uid, pid, ppid);
+        public NativeProcessInfo(String name,int uid, int pid, int ppid,int vSize, int rss) {
+            super(PROCESS_TYPE_NATIVE,name,uid, pid, ppid, vSize, rss);
         }
     }
 
     public class ManagedProcessInfo extends ProcessInfo {
 
-        public ManagedProcessInfo(String name,int uid, int pid, int ppid) {
-            super(PROCESS_TYPE_MANAGED,name,uid, pid, ppid);
+        public ManagedProcessInfo(String name,int uid, int pid, int ppid,int vSize, int rss) {
+            super(PROCESS_TYPE_MANAGED,name,uid, pid, ppid, vSize, rss);
         }
     }
 
