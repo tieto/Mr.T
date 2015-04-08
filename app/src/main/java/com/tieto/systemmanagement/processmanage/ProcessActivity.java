@@ -12,6 +12,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.text.TextUtils;
@@ -36,8 +38,52 @@ public class ProcessActivity extends Activity {
 
     private Random random=new Random();
     private SlidingChartView mCharView=null;
+    private Handler mMainHandler =null;
+    private ProcessManagerDefault mProcessMgr=null;
+    private ResourceUsageThread mResourceUsageThread=null;
+    private ResourceInfo mResourceInfo=new ResourceInfo();
 
-    private Handler handler = new Handler();
+    public static final int WHAT_UPDATE_CPU_INFO=1;
+    public static final int WHAT_UPDATE_MEM_INFO=2;
+
+    private class ResourceInfo {
+        public int cpuSpeed;
+        public float cpuUsage;
+        public int memoryUsageInKB;
+    }
+
+    private class ResourceUsageThread extends Thread {
+
+        private Handler mResourceUsageHandler = null;
+
+        private static final String CHILD_TAG = "CPUUsageThread";
+
+        public Handler getHandler() {
+            return mResourceUsageHandler;
+        }
+
+        public void run() {
+            this.setName("CPUUsageThread");
+
+            Looper.prepare();
+
+            mResourceUsageHandler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    Message toMain = new Message();
+
+                    mResourceInfo.cpuUsage= mProcessMgr.getCpuUsage();
+                    toMain.obj=mResourceInfo;
+                    mMainHandler.sendMessage(toMain);
+                }
+            };
+
+            mResourceUsageHandler.sendEmptyMessageDelayed(
+                    WHAT_UPDATE_CPU_INFO|WHAT_UPDATE_MEM_INFO,1500);
+
+            Looper.loop();
+        }
+    }
 
     private Runnable runnable = new Runnable() {
         @Override
@@ -47,8 +93,6 @@ public class ProcessActivity extends Activity {
                 mCharView.append(val);
                 Log.d(ProcessActivity.ACTIVITY_TAG,"new char val="+val);
             }
-
-            handler.postDelayed(runnable, 1500);
         }
     };
 
@@ -59,11 +103,28 @@ public class ProcessActivity extends Activity {
 
         mCharView=(SlidingChartView)findViewById(R.id.chart_cpu);
 
-        ProcessManagerDefault processMgr=new ProcessManagerDefault();
+        mProcessMgr=new ProcessManagerDefault();
 
-        processMgr.getRunningProcessInfo(PROCESS_TYPE_MANAGED);
+        mResourceUsageThread=new ResourceUsageThread();
+        mResourceUsageThread.start();
 
-        handler.post(runnable);
+        mMainHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                ResourceInfo info=(ResourceInfo)msg.obj;
+
+                if(null!=mCharView) {
+                    float val=info.cpuUsage*mCharView.getYRange();
+                    mCharView.append(val);
+                    Log.d(ProcessActivity.ACTIVITY_TAG,"new cpu val="+val);
+                }
+
+                mResourceUsageThread.getHandler().sendEmptyMessageDelayed(
+                        WHAT_UPDATE_CPU_INFO|WHAT_UPDATE_MEM_INFO,1500);
+                //mMainHandler.postDelayed(runnable, 1500);
+            }
+        };
     }
 
     @Override
@@ -143,7 +204,7 @@ public class ProcessActivity extends Activity {
 
         public CommandExecutorResult execute(String command) {
             List<String> commandList = new ArrayList<String>();
-            commandList.add("ps");
+            commandList.add(command);
             CommandResult result = ShellUtils.execCommand(commandList, false, true);
 
             return new CommandExecutorResult(result.result, result.successMsg, result.errorMsg);
@@ -299,7 +360,7 @@ public class ProcessActivity extends Activity {
             String cmd = "cat /proc/stat | grep \'cpu \'";
             CommandExecutorResult result=mCmdExecutor.executeCommand(cmd);
 
-            String raw= result.successMsg.replaceAll(" {2,}"," ");
+            String raw= result.successMsg.trim().replaceAll(" {2,}"," ");
             String[] cols=raw.split(" ");
 
             int total1=0;
@@ -317,7 +378,7 @@ public class ProcessActivity extends Activity {
             }
 
             result=mCmdExecutor.executeCommand(cmd);
-            raw= result.successMsg.replaceAll(" {2,}"," ");
+            raw= result.successMsg.trim().replaceAll(" {2,}"," ");
             cols=raw.split(" ");
 
             int total2=0;
@@ -331,7 +392,7 @@ public class ProcessActivity extends Activity {
             int total=total2-total1;
             int idle=idle2-idle1;
 
-            return ((float)(total-idle))/(float)idle;
+            return ((float)(total-idle))/(float)total;
         }
 
         public float getMemoryUsage() {
