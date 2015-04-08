@@ -6,17 +6,16 @@ import android.support.v4.app.FragmentActivity;
 
 import com.tieto.systemmanagement.R;
 
-public class AuthorityDetailActivity extends FragmentActivity {
+public class AuthorityDetailActivity extends AbsFragmentActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_authority);
+    protected Fragment onCreateFragment(Bundle savedInstanceState) {
+        if (getActionBar() != null) {
+            getActionBar().hide();
+        }
+
         Fragment fragment = AuthorityDetailFragment.newInstance();
         fragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().
-                replace(android.R.id.content, fragment).commit();
-        //noinspection ConstantConditions
-        getActionBar().setIcon(0);
+        return fragment;
     }
 }

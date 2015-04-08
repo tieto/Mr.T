@@ -1,5 +1,7 @@
 package com.tieto.systemmanagement.authority;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.authority.entity.AppInfo;
+import com.tieto.systemmanagement.authority.entity.BitmapUtils;
 
 /**
  * @author Jiang Ping
@@ -52,6 +55,9 @@ public class AuthorityDetailFragment extends Fragment {
         mTextName = (TextView) getView().findViewById(R.id.text_app_name);
         mImageIcon = (ImageView) getView().findViewById(R.id.image_app_icon);
         mTextName.setText(mAppInfo.getName());
-        mImageIcon.setImageDrawable(mAppInfo.getIcon());
+
+        Bitmap original = ((BitmapDrawable)mAppInfo.getIcon()).getBitmap();
+        Bitmap bitmap = BitmapUtils.createReflectBitmap(original, original.getHeight() / 3);
+        mImageIcon.setImageBitmap(bitmap);
     }
 }
