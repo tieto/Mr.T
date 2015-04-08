@@ -64,7 +64,7 @@ public class AppInfoAdapter extends BaseAdapter {
             holder = (ConvertHolder) convertView.getTag();
         }
         AppInfo info = mData.get(pos);
-        holder.icon.setImageDrawable(info.getIcon());
+        holder.icon.setImageBitmap(info.getIcon());
         holder.name.setText(info.getName());
         holder.permissionCount.setText(Html.fromHtml(
                 String.format(FORMATTER_HTML, info.getPermissionCount())));

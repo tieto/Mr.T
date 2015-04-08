@@ -56,7 +56,7 @@ public class AuthorityDetailFragment extends Fragment {
         mImageIcon = (ImageView) getView().findViewById(R.id.image_app_icon);
         mTextName.setText(mAppInfo.getName());
 
-        Bitmap original = ((BitmapDrawable)mAppInfo.getIcon()).getBitmap();
+        Bitmap original = mAppInfo.getIcon();
         Bitmap bitmap = BitmapUtils.createReflectBitmap(original, original.getHeight() / 3);
         mImageIcon.setImageBitmap(bitmap);
     }

@@ -6,10 +6,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.*;
+import android.os.Process;
 import android.util.Log;
 
 import com.tieto.systemmanagement.R;
@@ -24,16 +25,16 @@ import java.util.List;
  */
 public final class AppInfo implements Parcelable {
 
-    private Drawable mIcon;
+    private Bitmap mIcon;
     private String mName;
     private List<AppPermission> mPermissions = new ArrayList<AppPermission>();
 
-    public AppInfo(String name, Drawable icon) {
+    public AppInfo(String name, Bitmap icon) {
         mName = name;
         mIcon = icon;
     }
 
-    public Drawable getIcon() {
+    public Bitmap getIcon() {
         return mIcon;
     }
 
@@ -56,8 +57,7 @@ public final class AppInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        Bitmap bitmap = ((BitmapDrawable) mIcon).getBitmap();
-        parcel.writeParcelable(bitmap, i);
+        parcel.writeParcelable(mIcon, i);
         parcel.writeString(mName);
     }
 
@@ -66,7 +66,7 @@ public final class AppInfo implements Parcelable {
         public AppInfo createFromParcel(Parcel parcel) {
             Bitmap icon = parcel.readParcelable(Bitmap.class.getClassLoader());
             String label = parcel.readString();
-            AppInfo info = new AppInfo(label, new BitmapDrawable(icon));
+            AppInfo info = new AppInfo(label, icon);
             return info;
         }
 
@@ -76,35 +76,32 @@ public final class AppInfo implements Parcelable {
         }
     };
 
-    public static List<AppInfo> getApplicationList(Context context) {
+    public static List<AppInfo> getApplicationList(Context context, boolean hasSystem) {
         PackageManager pm = context.getPackageManager();
         List<PackageInfo> packageInfo = pm.getInstalledPackages(
                 PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
         List<AppInfo> list = new ArrayList<AppInfo>();
         for (final PackageInfo pkg : packageInfo) {
             ApplicationInfo app = pkg.applicationInfo;
-            AppInfo item = new AppInfo(app.loadLabel(pm).toString(), app.loadIcon(pm));
 
+            // Ignore the system app
+            if (!hasSystem && (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                continue;
+            }
+
+            // Load app icon and name
+            String label = app.loadLabel(pm).toString();
+            Drawable iconDrawable = app.loadIcon(pm);
+            Bitmap icon = BitmapUtils.convertDrawableToBitmap(iconDrawable);
+            AppInfo item = new AppInfo(label, icon);
+
+            // Load app permissions
             String[] permissions = pkg.requestedPermissions;
             if (permissions != null && permissions.length > 0) {
                 for (String per : permissions) {
-                    try {
-                        PermissionInfo permissionInfo =
-                                pm.getPermissionInfo(per, PackageManager.GET_META_DATA);
-                        int level = permissionInfo.protectionLevel;
-                        if (level == PermissionInfo.PROTECTION_DANGEROUS) {
-                            int label = permissionInfo.labelRes == 0?
-                                    R.string.auth_unknown_permission : permissionInfo.labelRes;
-                            String labelString = "";
-                            try {
-                                labelString = context.getString(label);
-                            } catch (Exception e) {
-                                Log.e("AppInfo", e.toString());
-                            }
-                            item.addPermission(new AppPermission(labelString, ""));
-                        }
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
+                    AppPermission ap = loadPermission(context, pm, per);
+                    if (ap != null) {
+                        item.addPermission(ap);
                     }
                 }
             }
@@ -112,5 +109,29 @@ public final class AppInfo implements Parcelable {
             list.add(item);
         }
         return list;
+    }
+
+    private static AppPermission loadPermission(Context context,
+                PackageManager pm, String permission) {
+        try {
+            PermissionInfo permissionInfo =
+                    pm.getPermissionInfo(permission, PackageManager.GET_META_DATA);
+            int level = permissionInfo.protectionLevel;
+            if (level == PermissionInfo.PROTECTION_DANGEROUS) {
+                int labelRes = permissionInfo.labelRes == 0?
+                        R.string.auth_unknown_permission : permissionInfo.labelRes;
+                String labelString = "";
+                try {
+                    labelString = context.getString(labelRes);
+                } catch (Exception e) {
+                    Log.e("AppInfo", e.toString());
+                }
+                // Currently left the description as empty
+                return new AppPermission(labelString, "");
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e("AppInfo", e.toString());
+        }
+        return null;
     }
 }

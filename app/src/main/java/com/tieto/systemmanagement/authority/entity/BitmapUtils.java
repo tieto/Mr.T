@@ -9,6 +9,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
 /**
  * @author Jiang Ping
@@ -16,6 +18,18 @@ import android.graphics.Shader;
 public final class BitmapUtils {
     private BitmapUtils() {
         throw new UnsupportedOperationException("Utility class do not allow new instance");
+    }
+
+    public static Bitmap convertDrawableToBitmap(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
     public static Bitmap createReflectBitmap(Bitmap bitmap, int refHeight){

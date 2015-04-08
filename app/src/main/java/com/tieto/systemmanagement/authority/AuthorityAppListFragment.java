@@ -87,7 +87,7 @@ public class AuthorityAppListFragment extends ListFragment {
 
         @Override
         protected List<AppInfo> doInBackground(Void... voids) {
-            return AppInfo.getApplicationList(mContextRef.get().getActivity());
+            return AppInfo.getApplicationList(mContextRef.get().getActivity(), false);
         }
 
         @Override
