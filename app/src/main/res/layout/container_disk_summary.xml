@@ -4,4 +4,67 @@
     android:layout_height="150dp"
     android:background="#1e83d1">
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:layout_width="105dp"
+            android:layout_height="105dp"
+            android:layout_marginLeft="48dp"
+            android:id="@+id/imageView"
+            android:background="@drawable/super_mode_rotate_ring"
+            android:layout_centerVertical="true" />
+
+        <FrameLayout
+            android:id="@+id/percent"
+            android:layout_width="105dp"
+            android:layout_height="105dp"
+            android:layout_marginLeft="48dp"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="32sp"
+                android:text="25%"
+                android:textAlignment="center"
+                android:background="@android:color/transparent"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:id="@+id/used_percent" />
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_toRightOf="@+id/percent"
+            android:layout_marginLeft="24dp"
+            android:layout_marginBottom="32dp">
+
+            <TextView
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/disk_space_store"
+                android:id="@+id/title" />
+
+            <TextView
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:layout_below="@+id/title"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/used" />
+        </RelativeLayout>
+
+    </RelativeLayout>
 </FrameLayout>

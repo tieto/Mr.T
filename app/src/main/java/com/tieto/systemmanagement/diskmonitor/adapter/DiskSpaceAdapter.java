@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.diskmonitor.entity.SpaceInfo;
+import com.tieto.systemmanagement.diskmonitor.entity.DMemInfo;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import java.util.List;
  */
 public class DiskSpaceAdapter extends BaseAdapter {
     private Context mContext = null;
-    private List<SpaceInfo> mSpaceArray = null;
+    private List<DMemInfo> mSpaceArray = null;
     private static LayoutInflater mInflater = null;
 
-    public DiskSpaceAdapter(Context context, List<SpaceInfo> list) {
+    public DiskSpaceAdapter(Context context, List<DMemInfo> list) {
         mContext = context;
         mSpaceArray = list;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -44,7 +44,7 @@ public class DiskSpaceAdapter extends BaseAdapter {
         if (convertView == null)
             v = mInflater.inflate(R.layout.item_disk_space, null);
 
-        SpaceInfo info = mSpaceArray.get(position);
+        DMemInfo info = mSpaceArray.get(position);
         ImageView iv = (ImageView)v.findViewById(R.id.icon);
         iv.setImageDrawable(info.getIcon());
 

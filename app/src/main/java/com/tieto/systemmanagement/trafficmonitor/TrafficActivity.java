@@ -15,8 +15,7 @@ import android.widget.Toast;
 
 import com.tieto.systemmanagement.BasicActivity;
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.SysManageApplication;
-import com.tieto.systemmanagement.trafficmonitor.entity.TrafficStatsImpl;
+import com.tieto.systemmanagement.TApp;
 import com.tieto.systemmanagement.trafficmonitor.views.FireWallManageActivity;
 import com.tieto.systemmanagement.trafficmonitor.views.NetSpeedActivity;
 
@@ -43,7 +42,7 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
     private TextView save_value_unit;
 
     private String mNetType;
-    private SysManageApplication mSysApplication;
+    private TApp mSysApplication;
 
 
     @Override
@@ -52,7 +51,7 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
         setContentView(R.layout.t_act_main);
 
         setupView();
-        mSysApplication = (SysManageApplication) this.getApplication();
+        mSysApplication = (TApp) this.getApplication();
         mNetType  = mSysApplication.isNetConnected();
     }
 
@@ -141,7 +140,7 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if(SysManageApplication.TYPE_NONE.equals(mNetType)) {
+        if(TApp.TYPE_NONE.equals(mNetType)) {
             Toast.makeText(this,"无网络连接，请检查你的联网状态",Toast.LENGTH_SHORT).show();
         } else {
             int id = v.getId();

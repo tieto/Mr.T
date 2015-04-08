@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.TApp;
 import com.tieto.systemmanagement.diskmonitor.adapter.DiskSpaceAdapter;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
 
@@ -29,6 +31,8 @@ public class StoreSpaceFragment extends Fragment {
         listView = (ListView)view.findViewById(R.id.disk_list);
         adapter = new DiskSpaceAdapter((Context)(this.getActivity()), DiskData.getInstance().getStoreSpaceInfos());
         listView.setAdapter(adapter);
+        TextView tv_summary_title = (TextView)view.findViewById(R.id.title);
+        tv_summary_title.setText(TApp.getInstance().getString(R.string.disk_space_store));
 
         // Click event for single list row
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -58,6 +62,16 @@ public class StoreSpaceFragment extends Fragment {
 
             }
         });
+
+
+        //configured mem usage-> how to refactor
+        TextView tv_summary_men_percent_used = (TextView)view.findViewById(R.id.used_percent);
+        tv_summary_men_percent_used.setText(DiskData.getInstance().getMemPercentUserd()+"%");
+
+        TextView tv_summary_men_free = (TextView)view.findViewById(R.id.used);
+        tv_summary_men_free.setText(TApp.getInstance().getString(R.string.disk_space_used_title)
+                +DiskData.getInstance().getMemAvailable()+"G/"
+                +DiskData.getInstance().getMemTotal()+"G");
     }
 
 	@Override

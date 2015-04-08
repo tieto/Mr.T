@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 /**
  * Created by jane on 15-4-3.
  */
-public class SysManageApplication extends Application {
+public class TApp extends Application {
     public static final String TYPE_WIFI = "wifi连接正常";
     public static final String TYPE_MOBILE = "手机网络连接";
     public static final String TYPE_NONE = "无网络连接";
@@ -16,8 +16,8 @@ public class SysManageApplication extends Application {
     private ConnectivityManager mConnectivityManager;
     private NetworkInfo mNetworkInfo;
 
-    private static SysManageApplication ourInstance = new SysManageApplication();
-    public static SysManageApplication getInstance() {
+    private static TApp ourInstance = new TApp();
+    public static TApp getInstance() {
         return ourInstance;
     }
 

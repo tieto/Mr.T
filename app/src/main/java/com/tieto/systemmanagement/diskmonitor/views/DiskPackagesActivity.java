@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 
 import com.tieto.systemmanagement.BasicTabbedActivity;
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.SysManageApplication;
+import com.tieto.systemmanagement.TApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,8 @@ public class DiskPackagesActivity  extends BasicTabbedActivity {
         fs.add(DiskPackagesUninstalledFragment.class);
 
         List<String> ts = new ArrayList<String>();
-        ts.add(SysManageApplication.getInstance().getString(R.string.disk_space_store_package_title_1));
-        ts.add(SysManageApplication.getInstance().getString(R.string.disk_space_store_package_title_2));
+        ts.add(TApp.getInstance().getString(R.string.disk_space_store_package_title_1));
+        ts.add(TApp.getInstance().getString(R.string.disk_space_store_package_title_2));
 
         try {
             set2Tabs(fs, ts);
