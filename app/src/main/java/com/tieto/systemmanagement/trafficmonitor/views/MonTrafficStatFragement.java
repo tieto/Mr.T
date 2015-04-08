@@ -20,10 +20,10 @@ import java.util.List;
  * Created by jane on 15-3-26.
  */
 public class MonTrafficStatFragement extends Fragment {
-    private ListView listView;
-    private List<AppInfoEntity> appInfos;
-    private MonthTrafficStaticAdapter adapter;
-    private TrafficStatsImpl trafficStats;
+    private ListView mListView;
+    private List<AppInfoEntity> mAppInfos;
+    private MonthTrafficStaticAdapter mAdapter;
+    private TrafficStatsImpl mTrafficStats;
 
     public MonTrafficStatFragement() {
         super();
@@ -32,14 +32,12 @@ public class MonTrafficStatFragement extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        listView = (ListView) view.findViewById(R.id.firewall_listView);
-        appInfos = new ArrayList<AppInfoEntity>();
-        trafficStats = new TrafficStatsImpl(this.getActivity());
-        appInfos = trafficStats.getTrafficInfoForEachApp();
-//        appInfos.add(new MyAppInfo("QQ",20,20,3,23,45));
-//        appInfos.add(new MyAppInfo("WeChat",20,20,3,23,45));
-        adapter = new MonthTrafficStaticAdapter(this.getActivity(),appInfos);
-        listView.setAdapter(adapter);
+        mListView = (ListView) view.findViewById(R.id.firewall_listView);
+        mAppInfos = new ArrayList<AppInfoEntity>();
+        mTrafficStats = new TrafficStatsImpl(this.getActivity());
+        mAppInfos = mTrafficStats.getTrafficInfoForEachApp();
+        mAdapter = new MonthTrafficStaticAdapter(this.getActivity(), mAppInfos);
+        mListView.setAdapter(mAdapter);
     }
 
     @Override

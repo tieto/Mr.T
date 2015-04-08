@@ -71,7 +71,7 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                mCurrentNetSpededText.setText(msg.arg1+"");
+                mCurrentNetSpededText.setText(getReadableString(msg.arg1));
             }
         };
         new Thread() {

@@ -44,19 +44,20 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
-        android:id="@+id/realtime_allow_net"
+
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="允许联网"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:id="@+id/realtime_net_allowed" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/t_nettraffic_list_tip_arrow_close" />
+        <ImageButton
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:id="@+id/realtime_allow_net"
+            android:background="@drawable/t_nettraffic_list_tip_arrow_close" />
     </LinearLayout>
 </RelativeLayout>

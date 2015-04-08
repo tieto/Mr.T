@@ -24,9 +24,9 @@ import java.util.List;
  */
 public class NetSpeedActivity extends BasicActivity implements View.OnClickListener{
 
-    private TextView current_speed;
-    private TextView average_speed;
-    private Button calculate_speed;
+    private TextView mCurrentSpeedTextView;
+    private TextView mAveragSpeedTextView;
+    private Button mCalSpeedTextView;
 
     private static final String URL = "http://apk.hiapk.com/appdown/com.pianke.client?planid=692894" +
             "&seid=c68e2360-3720-0001-11d6-13201cb01f3f";
@@ -35,50 +35,55 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
     private static final int FINISHED =1;
 
     private boolean mFlag = true;
-    private TrafficSpeed trafficSpeed;
-    private Handler handler;
-    private List<Long> speedList ;
+    private TrafficSpeed mTrafficSpeed;
+    private Handler mHandler;
+    private List<Long> mSpeedList;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.t_netspeed_display);
-        current_speed = (TextView) findViewById(R.id.netspeed_current);
-        average_speed = (TextView) findViewById(R.id.netspeed_average);
-        calculate_speed = (Button) findViewById(R.id.netspeed_calculate);
+        mCurrentSpeedTextView = (TextView) findViewById(R.id.netspeed_current);
+        mAveragSpeedTextView = (TextView) findViewById(R.id.netspeed_average);
+        mCalSpeedTextView = (Button) findViewById(R.id.netspeed_calculate);
+        mCalSpeedTextView.setOnClickListener(this);
 
-        calculate_speed.setOnClickListener(this);
 
-
-        handler = new Handler() {
+        mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                long realtime_speed = trafficSpeed.getmSpeed()/1024;
+                long realtime_speed = mTrafficSpeed.getmSpeed();
                 long average = 0;
                 switch (msg.what){
                     case UPDATE://update the realtime speedInfo
-                        current_speed.setText(realtime_speed+"");
-                        speedList.add(realtime_speed);
-                        Log.e("TAG","RT:"+realtime_speed);
+                        mCurrentSpeedTextView.setText(getReadableString(realtime_speed));
+                        if(realtime_speed!=0) {
+                            mSpeedList.add(realtime_speed);
+//                        Log.e("TAG","RT:"+realtime_speed);
+                        }
                         break;
                     case FINISHED://update the realtime netspeed info and average netspeed info
-                        current_speed.setText(realtime_speed+"");
-                        speedList.add(realtime_speed);
-                        int total = 0;
+                        mCurrentSpeedTextView.setText(getReadableString(realtime_speed));
+                        if(realtime_speed != 0) {
+                            mSpeedList.add(realtime_speed);
+                        }
+                        long total = 0;
                         int totalCount = 0;
-                        for (int i=0;i<speedList.size();i++) {
-                            long temp = speedList.get(i);
+                        for (int i=0;i< mSpeedList.size();i++) {
+                            long temp = mSpeedList.get(i);
                             if(temp != 0) {
-                                total += speedList.get(i);
-                                totalCount ++;
+                                total =total + mSpeedList.get(i);
+                                totalCount += 1;
                             }
 
                         }
+                        Log.e("TAG","totalCount = "+totalCount+" ,total = "+total);
                         average = total/totalCount;
-                        average_speed.setText(average+"");
-                        calculate_speed.setClickable(true);
+                        Log.e("TAG","average:"+average);
+                        mAveragSpeedTextView.setText(getReadableString(average));
+                        mCalSpeedTextView.setClickable(true);
                         Log.e("TAG","AV:"+average);
                         break;
                 }
@@ -98,18 +103,17 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
         //start to download file
         //每隔1000ms,更新一次当前的网速 temp,并保存当前的网速list
         //下载完成时,计算平均网速，并显示当前的网速
-        current_speed.setText("   ");
-        average_speed.setText("   ");
+        mCurrentSpeedTextView.setText("   ");
+        mAveragSpeedTextView.setText("   ");
         Log.e("TAG","Begin to downLoad!!!");
-        trafficSpeed = new TrafficSpeed();
-        speedList = new ArrayList<Long>();
-        calculate_speed.setClickable(false);
+        mTrafficSpeed = new TrafficSpeed();
+        mSpeedList = new ArrayList<Long>();
+        mCalSpeedTextView.setClickable(false);
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                //download file form assigned url,and update trafficSpeed info
-                downLoadFile(URL, trafficSpeed);
+                downLoadFile(URL, mTrafficSpeed);
             }
 
         }.start();
@@ -118,17 +122,14 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
             @Override
             public void run() {
                 super.run();
-                while(trafficSpeed.getmHadReadBytes()<trafficSpeed.getmTotalBytes()|| trafficSpeed.getmHadReadBytes()==0){
+                while(mTrafficSpeed.getmHadReadBytes()< mTrafficSpeed.getmTotalBytes()|| mTrafficSpeed.getmHadReadBytes()==0){
                     if(mFlag) {
-//                        if(trafficSpeed.getmHadReadBytes() != 0) {
-                            handler.sendEmptyMessageDelayed(UPDATE,POST_DELAY);
-//                        }
-
+                            mHandler.sendEmptyMessageDelayed(UPDATE, POST_DELAY);
                     } else {
                         break;
                     }
                 }
-                handler.sendEmptyMessage(FINISHED);
+                mHandler.sendEmptyMessage(FINISHED);
             }
         }.start();
     }
@@ -186,9 +187,9 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //shasixiancheng
         mFlag = false;
-        Log.e("TAG","destroy");
-
     }
+
+
+
 }

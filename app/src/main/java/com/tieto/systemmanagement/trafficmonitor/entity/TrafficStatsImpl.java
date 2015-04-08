@@ -5,7 +5,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.TrafficStats;
-import android.widget.TextView;
 
 import com.tieto.systemmanagement.trafficmonitor.storage.AppNetInfoPreferrence;
 
@@ -20,13 +19,13 @@ public class TrafficStatsImpl {
     private static final int BACKGROUND = 1;
     private TrafficStats mTrafficStats;
     private PackageManager mPackageManager;
-    private Context context;
+    private Context mContext;
 
     private float TrafficLeft;
     private List<AppInfoEntity> trafficInfoForEachApp;
 
     public TrafficStatsImpl(Context context) {
-        this.context = context;
+        this.mContext = context;
         mPackageManager = context.getPackageManager();
         mTrafficStats = new TrafficStats();
     }
@@ -47,9 +46,9 @@ public class TrafficStatsImpl {
      */
     public List<AppInfoEntity> getTrafficInfoForEachApp() {
         trafficInfoForEachApp = new ArrayList<AppInfoEntity>();
+
+        //获取具有联网权限的APP
         List<PackageInfo> packageInfos = mPackageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
-        List<PackageInfo> packageInfos1 = mPackageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
-        List<PackageInfo> packageInfos2 = mPackageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
 
         for(PackageInfo p:packageInfos) {
             String[] permissions = p.requestedPermissions;
@@ -61,16 +60,15 @@ public class TrafficStatsImpl {
                             //0-non-system   1-system
                             // ( appInfo.flags & ApplicationInfo.FLAG_SYSTEM )>0---system app,here we get all apps
                             AppInfoEntity appInfoEntiy = new AppInfoEntity();
-                            appInfoEntiy.setAppIcon(appInfo.loadIcon(mPackageManager));
-                            appInfoEntiy.setAppName(appInfo.loadLabel(mPackageManager).toString() + "-" + appInfo.uid);
-//                myAppInfo.setAppName(mPackageManager.getNameForUid(appInfo.uid));
+                            appInfoEntiy.setmAppIcon(appInfo.loadIcon(mPackageManager));
+                            appInfoEntiy.setmAppName(appInfo.loadLabel(mPackageManager).toString());
                             int uid = appInfo.uid;
                             appInfoEntiy.setUid(uid);
 
-                            appInfoEntiy.setAppNetSpeeed(getAppNetSpeed(uid));
-                            appInfoEntiy.setAppTrafficUsedBg(getAppTrafficUsed(uid, BACKGROUND));
-                            appInfoEntiy.setAppTrafficUsed(getAppTrafficUsed(uid, ALL));
-                            appInfoEntiy.setIsNetworkAllowed(getIsNetWorkAllowed(uid));
+                            appInfoEntiy.setmAppNetSpeeed(getAppNetSpeed(uid));
+                            appInfoEntiy.setmAppTrafficUsedBg(getAppTrafficUsed(uid, BACKGROUND));
+                            appInfoEntiy.setmAppTrafficUsed(getAppTrafficUsed(uid, ALL));
+                            appInfoEntiy.setmIsNetworkAllowed(getIsNetWorkAllowed(uid));
 
                             trafficInfoForEachApp.add(appInfoEntiy);
                         }
@@ -89,7 +87,7 @@ public class TrafficStatsImpl {
      */
     private int getIsNetWorkAllowed(int uid) {
         //here we may save the value in the sharePreference  AppNetworkInfoPref
-        int netState = AppNetInfoPreferrence.getAppNetState(context,uid);
+        int netState = AppNetInfoPreferrence.getAppNetState(mContext,uid);
         return netState;
     }
 

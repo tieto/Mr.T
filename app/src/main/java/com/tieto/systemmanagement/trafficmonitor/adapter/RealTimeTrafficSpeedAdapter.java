@@ -1,15 +1,17 @@
 package com.tieto.systemmanagement.trafficmonitor.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntity;
+import com.tieto.systemmanagement.trafficmonitor.entity.IptablesForDroidWall;
 import com.tieto.systemmanagement.trafficmonitor.entity.TrafficSpeed;
 
 import java.util.ArrayList;
@@ -19,26 +21,26 @@ import java.util.List;
  * Created by jane on 15-3-26.
  */
 public class RealTimeTrafficSpeedAdapter extends BasicAdapter {
-    private List<AppInfoEntity> appInfos;
-    private LayoutInflater inflater;
+    private List<AppInfoEntity> mAppInfos;
+    private LayoutInflater mInflater;
 
     public RealTimeTrafficSpeedAdapter(Context context, List<AppInfoEntity> appInfos) {
         if(appInfos == null) {
             appInfos = new ArrayList<AppInfoEntity>();
         }
         this.context = context;
-        this.appInfos = appInfos;
-        inflater = LayoutInflater.from(context);
+        this.mAppInfos = appInfos;
+        mInflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        return appInfos.size();
+        return mAppInfos.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return appInfos.get(i);
+        return mAppInfos.get(i);
     }
 
     @Override
@@ -47,48 +49,54 @@ public class RealTimeTrafficSpeedAdapter extends BasicAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View convertView, ViewGroup viewGroup) {
         ViewHolder holder = null;
-        if(view == null) {
-            view = inflater.inflate(R.layout.t_firewall_item_realtime,null);
+        if(convertView == null) {
+            convertView = mInflater.inflate(R.layout.t_firewall_item_realtime,null);
             holder = new ViewHolder();
-            holder.appIcon = (ImageView) view.findViewById(R.id.realtime_app_icon);
-            holder.appName = (TextView) view.findViewById(R.id.realtime_app_name);
-            holder.appNetSpeed = (TextView) view.findViewById(R.id.realtime_app_netspeed);
-            holder.net_allowed_info = (TextView) view.findViewById(R.id.realtime_net_allowed);
-            holder.allowNetwork = (LinearLayout) view.findViewById(R.id.realtime_allow_net);
+            holder.mAppIcon = (ImageView) convertView.findViewById(R.id.realtime_app_icon);
+            holder.mAppName = (TextView) convertView.findViewById(R.id.realtime_app_name);
+            holder.mAppNetSpeed = (TextView) convertView.findViewById(R.id.realtime_app_netspeed);
+            holder.mNetAllowedInfo = (TextView) convertView.findViewById(R.id.realtime_net_allowed);
+            holder.mAllowNetworkButton = (ImageButton) convertView.findViewById(R.id.realtime_allow_net);
 
             holder.trafficSpeed = new TrafficSpeed();
-            holder.speedListener = new SpeedListener(holder.appNetSpeed);
-            view.setTag(holder);
+            holder.speedListener = new SpeedListener(holder.mAppNetSpeed);
+            convertView.setTag(holder);
         }else {
-            holder = (ViewHolder) view.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        final AppInfoEntity appInfo = appInfos.get(i);
+        final AppInfoEntity appInfo = mAppInfos.get(i);
 
         holder.trafficSpeed.setUid(appInfo.getUid());
         holder.trafficSpeed.registerUpdate(1000, holder.speedListener);
 
-        holder.appIcon.setImageDrawable(appInfo.getAppIcon());
-        holder.appName.setText(appInfo.getAppName());
-        holder.net_allowed_info.setText(appInfo.getIsNetworkAllowed());
-        holder.allowNetwork.setOnClickListener(new View.OnClickListener() {
+        holder.mAppIcon.setImageDrawable(appInfo.getmAppIcon());
+        holder.mAppName.setText(appInfo.getmAppName());
+        holder.mNetAllowedInfo.setText(appInfo.getmIsNetworkAllowed());
+
+        final CallbackImpl impl = new CallbackImpl(holder.mNetAllowedInfo);
+        holder.mAllowNetworkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showWindow(view,appInfo);
+
+                if (IptablesForDroidWall.hasRootAccess(context, true)) {
+                    showWindow(view, appInfo, impl);
+                }
+                showWindow(view, appInfo, impl);
             }
         });
-        return view;
+        return convertView;
     }
 
     private final static class ViewHolder {
         // Views
-        private ImageView appIcon;
-        private TextView appName;
-        private TextView appNetSpeed;
-        private TextView net_allowed_info;
-        private LinearLayout allowNetwork;
+        private ImageView mAppIcon;
+        private TextView mAppName;
+        private TextView mAppNetSpeed;
+        private TextView mNetAllowedInfo;
+        private ImageButton mAllowNetworkButton;
 
         // Other objects
         private TrafficSpeed trafficSpeed;
@@ -105,7 +113,10 @@ public class RealTimeTrafficSpeedAdapter extends BasicAdapter {
 
         @Override
         public void onSpeedUpdated(TrafficSpeed.Speeds speeds) {
+            Log.e("TAG","RTSpeed:"+speeds.getRxSpeedReadable());
             mTarget.setText(speeds.getRxSpeedReadable());
         }
     }
+
+
 }

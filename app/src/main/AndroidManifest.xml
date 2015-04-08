@@ -109,6 +109,12 @@
         <activity android:name=".trafficmonitor.views.NetSpeedActivity"
             android:label="网络测速"
             android:icon="@drawable/t_common_title_icon"></activity>
+        <receiver android:name=".trafficmonitor.entity.PackageBroadCast">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"></action>
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
 
         <!-- Intercept-->
         <receiver android:name=".intercept.service.PhoneCallReceiver">

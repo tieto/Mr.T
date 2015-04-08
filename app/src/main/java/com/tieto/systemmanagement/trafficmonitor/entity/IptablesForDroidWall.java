@@ -56,8 +56,6 @@ import java.util.StringTokenizer;
  * All iptables "communication" is handled by this class.
  */
 public final class IptablesForDroidWall {
-	/** application version string */
-	public static final String VERSION = "1.5.0";
 	/** special application UID used to indicate "any application" */
 	public static final int SPECIAL_UID_ANY	= -10;
 	/** special application UID used to indicate the Linux Kernel */
@@ -75,7 +73,6 @@ public final class IptablesForDroidWall {
 	public static final String PREF_LOGENABLED	= "LogEnabled";
 	// Modes
 	public static final String MODE_WHITELIST = "whitelist";
-//	public static final String MODE_BLACKLIST = "blacklist";
 	// Messages
 	public static final String STATUS_CHANGED_MSG 	= "com.googlecode.droidwall.intent.action.STATUS_CHANGED";
 	public static final String TOGGLE_REQUEST_MSG	= "com.googlecode.droidwall.intent.action.TOGGLE_REQUEST";
@@ -89,7 +86,7 @@ public final class IptablesForDroidWall {
 	private static int isARMv6 = -1;
 
     /**
-     * Display a simple alert box
+     * Display a alertDialog
      * @param ctx context
      * @param msg message
      */
@@ -178,7 +175,8 @@ public final class IptablesForDroidWall {
 	 * @throws java.io.IOException on error
 	 * @throws InterruptedException when interrupted
 	 */
-	private static void copyRawFile(Context ctx, int resid, File file, String mode) throws IOException, InterruptedException
+	private static void copyRawFile(Context ctx, int resid, File file, String mode) throws
+            IOException, InterruptedException
 	{
 		final String abspath = file.getAbsolutePath();
 		// Write the iptables binary
@@ -201,11 +199,11 @@ public final class IptablesForDroidWall {
      * @param uids3g list of selected UIDs for 2G/3G to allow or disallow (depending on the working mode)
      * @param showErrors indicates if errors should be alerted
      */
-	private static boolean applyIptablesRulesImpl(Context ctx, List<Integer> uidsWifi, List<Integer> uids3g, boolean showErrors) {
+	private static boolean applyIptablesRulesImpl(Context ctx, List<Integer> uidsWifi,
+                                                  List<Integer> uids3g, boolean showErrors) {
 		if (ctx == null) {
 			return false;
 		}
-		assertBinaries(ctx, showErrors);
 		final String ITFS_WIFI[] = {"tiwlan+", "wlan+", "eth+"};
 		final String ITFS_3G[] = {"rmnet+","pdp+","ppp+","uwbr+","wimax+"};
 		final SharedPreferences prefs = ctx.getSharedPreferences(PREFS_NAME, 0);
@@ -445,7 +443,6 @@ public final class IptablesForDroidWall {
 	public static boolean purgeIptables(Context ctx, boolean showErrors) {
     	StringBuilder res = new StringBuilder();
 		try {
-			assertBinaries(ctx, showErrors);
 			int code = runScriptAsRoot(ctx, scriptHeader(ctx) +
 					"$IPTABLES -F droidwall\n" +
 					"$IPTABLES -F droidwall-reject\n" +
@@ -496,94 +493,6 @@ public final class IptablesForDroidWall {
 			alert(ctx, "error: " + e);
 		}
 		return false;
-	}
-	/**
-	 * Display logs
-	 * @param ctx application context
-	 */
-	public static void showLog(Context ctx) {
-		try {
-    		StringBuilder res = new StringBuilder();
-			int code = runScriptAsRoot(ctx, scriptHeader(ctx) +
-					"dmesg | $GREP DROIDWALL\n", res);
-			if (code != 0) {
-				if (res.length() == 0) {
-					res.append("Log is empty");
-				}
-				alert(ctx, res);
-				return;
-			}
-			final BufferedReader r = new BufferedReader(new StringReader(res.toString()));
-			final Integer unknownUID = -99;
-			res = new StringBuilder();
-			String line;
-			int start, end;
-			Integer appid;
-			final HashMap<Integer, LogInfo> map = new HashMap<Integer, LogInfo>();
-			LogInfo loginfo = null;
-			while ((line = r.readLine()) != null) {
-				if (line.indexOf("[DROIDWALL]") == -1) continue;
-				appid = unknownUID;
-				if (((start=line.indexOf("UID=")) != -1) && ((end=line.indexOf(" ", start)) != -1)) {
-					appid = Integer.parseInt(line.substring(start + 4, end));
-				}
-				loginfo = map.get(appid);
-				if (loginfo == null) {
-					loginfo = new LogInfo();
-					map.put(appid, loginfo);
-				}
-				loginfo.totalBlocked += 1;
-				if (((start=line.indexOf("DST=")) != -1) && ((end=line.indexOf(" ", start)) != -1)) {
-					String dst = line.substring(start+4, end);
-					if (loginfo.dstBlocked.containsKey(dst)) {
-						loginfo.dstBlocked.put(dst, loginfo.dstBlocked.get(dst) + 1);
-					} else {
-						loginfo.dstBlocked.put(dst, 1);
-					}
-				}
-			}
-			final DroidApp[] apps = getApps(ctx);
-			for (Integer id : map.keySet()) {
-				res.append("App ID ");
-				if (id != unknownUID) {
-					res.append(id);
-					for (DroidApp app : apps) {
-						if (app.uid == id) {
-							res.append(" (").append(app.names[0]);
-							if (app.names.length > 1) {
-								res.append(", ...)");
-							} else {
-								res.append(")");
-							}
-							break;
-						}
-					}
-				} else {
-					res.append("(kernel)");
-				}
-				loginfo = map.get(id);
-				res.append(" - Blocked ").append(loginfo.totalBlocked).append(" packets");
-				if (loginfo.dstBlocked.size() > 0) {
-					res.append(" (");
-					boolean first = true;
-					for (String dst : loginfo.dstBlocked.keySet()) {
-						if (!first) {
-							res.append(", ");
-						}
-						res.append(loginfo.dstBlocked.get(dst)).append(" packets for ").append(dst);
-						first = false;
-					}
-					res.append(")");
-				}
-				res.append("\n\n");
-			}
-			if (res.length() == 0) {
-				res.append("Log is empty");
-			}
-			alert(ctx, res);
-		} catch (Exception e) {
-			alert(ctx, "error: " + e);
-		}
 	}
 
     /**
@@ -781,7 +690,6 @@ public final class IptablesForDroidWall {
 	 * @param ctx mandatory context
      * @param script the script to be executed
      * @param res the script output response (stdout + stderr)
-     * @param timeout timeout in milliseconds (-1 for none)
      * @return the script exit code
      * @throws java.io.IOException on any error executing the script, or writing it to disk
      */
@@ -793,81 +701,13 @@ public final class IptablesForDroidWall {
 	 * @param ctx mandatory context
      * @param script the script to be executed
      * @param res the script output response (stdout + stderr)
-     * @param timeout timeout in milliseconds (-1 for none)
      * @return the script exit code
      * @throws java.io.IOException on any error executing the script, or writing it to disk
      */
 	public static int runScript(Context ctx, String script, StringBuilder res) throws IOException {
 		return runScript(ctx, script, res, 40000, false);
 	}
-	/**
-	 * Asserts that the binary files are installed in the cache directory.
-	 * @param ctx context
-     * @param showErrors indicates if errors should be alerted
-	 * @return false if the binary files could not be installed
-	 */
-	public static boolean assertBinaries(Context ctx, boolean showErrors) {
-		boolean changed = false;
-		try {
-			// Check iptables_g1
-			File file = new File(ctx.getCacheDir(), "iptables_g1");
-			if ((!file.exists()) && isARMv6()) {
-				copyRawFile(ctx, R.raw.iptables_g1, file, "755");
-				changed = true;
-			}
-			// Check iptables_n1
-			file = new File(ctx.getCacheDir(), "iptables_n1");
-			if ((!file.exists()) && (!isARMv6())) {
-				copyRawFile(ctx, R.raw.iptables_n1, file, "755");
-				changed = true;
-			}
-			// Check busybox
-			file = new File(ctx.getCacheDir(), "busybox_g1");
-			if (!file.exists()) {
-				copyRawFile(ctx, R.raw.busybox_g1, file, "755");
-				changed = true;
-			}
-			if (changed) {
-//				Toast.makeText(ctx, R.string.toast_bin_installed, Toast.LENGTH_LONG).show();
-			}
-		} catch (Exception e) {
-			if (showErrors) alert(ctx, "Error installing binary files: " + e);
-			return false;
-		}
-		return true;
-	}
-	/**
-	 * Check if the firewall is enabled
-	 * @param ctx mandatory context
-	 * @return boolean
-	 */
-	public static boolean isEnabled(Context ctx) {
-		if (ctx == null) return false;
-		return ctx.getSharedPreferences(PREFS_NAME, 0).getBoolean(PREF_ENABLED, false);
-	}
-	
-	/**
-	 * Defines if the firewall is enabled and broadcasts the new status
-	 * @param ctx mandatory context
-	 * @param enabled enabled flag
-	 */
-	public static void setEnabled(Context ctx, boolean enabled) {
-		if (ctx == null) return;
-		final SharedPreferences prefs = ctx.getSharedPreferences(PREFS_NAME, 0);
-		if (prefs.getBoolean(PREF_ENABLED, false) == enabled) {
-			return;
-		}
-		final Editor edit = prefs.edit();
-		edit.putBoolean(PREF_ENABLED, enabled);
-		if (!edit.commit()) {
-			alert(ctx, "Error writing to preferences");
-			return;
-		}
-		/* notify */
-		final Intent message = new Intent(IptablesForDroidWall.STATUS_CHANGED_MSG);
-        message.putExtra(IptablesForDroidWall.STATUS_EXTRA, enabled);
-        ctx.sendBroadcast(message);
-	}
+
 	/**
 	 * Called when an application in removed (un-installed) from the system.
 	 * This will look for that application in the selected list and update the persisted values if necessary
@@ -921,7 +761,7 @@ public final class IptablesForDroidWall {
 		// if anything has changed, save the new prefs...
 		if (changed) {
 			editor.commit();
-			if (isEnabled(ctx)) {
+			if (hasRootAccess(ctx,true)) {
 				// .. and also re-apply the rules if the firewall is enabled
 				applySavedIptablesRules(ctx, false);
 			}
@@ -969,16 +809,6 @@ public final class IptablesForDroidWall {
     		return tostr;
     	}
     }
-    /**
-     * Small internal structure used to hold log information
-     */
-	private static final class LogInfo {
-		private int totalBlocked; // Total number of packets blocked
-		private HashMap<String, Integer> dstBlocked; // Number of packets blocked per destination IP address
-		private LogInfo() {
-			this.dstBlocked = new HashMap<String, Integer>();
-		}
-	}
 	/**
 	 * Internal thread used to execute scripts (as root or not).
 	 */

@@ -15,7 +15,7 @@
             android:textColor="#2f8f58"
             android:text="当前网速:"/>
         <TextView
-            android:layout_width="45dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/netspeed_current"
             android:textSize="24sp"
@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
+            android:visibility="gone"
             android:layout_marginLeft="5dip"
             android:text="KB/S"/>
         </LinearLayout>
@@ -42,7 +43,7 @@
             android:textColor="#2f8f58"
             android:text="平均网速:"/>
         <TextView
-            android:layout_width="45dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/netspeed_average"
             android:textSize="24sp"
@@ -53,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
+            android:visibility="gone"
             android:layout_marginLeft="5dip"
             android:text="KB/S"/>
     </LinearLayout>

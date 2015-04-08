@@ -134,7 +134,7 @@ public final class TrafficSpeed {
             return getReadableString(speed);
         }
 
-        private String getReadableString(long byteSize) {
+        public String getReadableString(long byteSize) {
             if (byteSize < 1024) {
                 return String.format("%dB/s", byteSize);
             } else if (byteSize < 1024 * 1024) {

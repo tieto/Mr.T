@@ -2,69 +2,67 @@ package com.tieto.systemmanagement.trafficmonitor.entity;
 
 import android.graphics.drawable.Drawable;
 
-import com.tieto.systemmanagement.trafficmonitor.constant.CommonConstant;
-
 /**
  * Created by jane on 15-3-24.
  */
 public class AppInfoEntity {
-    private int uid;
-    private Drawable appIcon;
-    private String appName;
-    private float appTrafficUsed;
-    private float appTrafficUsedBg;
-    private int isNetworkAllowed;
-    private float appNetSpeeed;
-    private float appTrafficSneaked;
+    private int mUid;
+    private Drawable mAppIcon;
+    private String mAppName;
+    private float mAppTrafficUsed;
+    private float mAppTrafficUsedBg;
+    private int mIsNetworkAllowed;
+    private float mAppNetSpeeed;
+    private float mAppTrafficSneaked;
 
     public AppInfoEntity() {
     }
 
     public AppInfoEntity(String appName, float appTrafficUsed, float appTrafficUsedBg, int isNetworkAllowed, float appNetSpeeed, float appTrafficSneaked) {
 
-        this.appName = appName;
-        this.appTrafficUsed = appTrafficUsed;
-        this.appTrafficUsedBg = appTrafficUsedBg;
-        this.isNetworkAllowed = isNetworkAllowed;
-        this.appNetSpeeed = appNetSpeeed;
-        this.appTrafficSneaked = appTrafficSneaked;
+        this.mAppName = appName;
+        this.mAppTrafficUsed = appTrafficUsed;
+        this.mAppTrafficUsedBg = appTrafficUsedBg;
+        this.mIsNetworkAllowed = isNetworkAllowed;
+        this.mAppNetSpeeed = appNetSpeeed;
+        this.mAppTrafficSneaked = appTrafficSneaked;
     }
 
-    public Drawable getAppIcon() {
-        return appIcon;
+    public Drawable getmAppIcon() {
+        return mAppIcon;
     }
 
-    public void setAppIcon(Drawable appIcon) {
-        this.appIcon = appIcon;
+    public void setmAppIcon(Drawable mAppIcon) {
+        this.mAppIcon = mAppIcon;
     }
 
-    public String getAppName() {
-        return appName;
+    public String getmAppName() {
+        return mAppName;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setmAppName(String mAppName) {
+        this.mAppName = mAppName;
     }
 
-    public float getAppTrafficUsedBg() {
-        return appTrafficUsedBg;
+    public float getmAppTrafficUsedBg() {
+        return mAppTrafficUsedBg;
     }
 
-    public void setAppTrafficUsedBg(float appTrafficUsedBg) {
-        this.appTrafficUsedBg = appTrafficUsedBg;
+    public void setmAppTrafficUsedBg(float mAppTrafficUsedBg) {
+        this.mAppTrafficUsedBg = mAppTrafficUsedBg;
     }
 
-    public float getAppTrafficUsed() {
-        return appTrafficUsed;
+    public float getmAppTrafficUsed() {
+        return mAppTrafficUsed;
     }
 
-    public void setAppTrafficUsed(float appTrafficUsed) {
-        this.appTrafficUsed = appTrafficUsed;
+    public void setmAppTrafficUsed(float mAppTrafficUsed) {
+        this.mAppTrafficUsed = mAppTrafficUsed;
     }
 
-    public String getIsNetworkAllowed() {
+    public String getmIsNetworkAllowed() {
         String netType = "";
-        switch (isNetworkAllowed) {
+        switch (mIsNetworkAllowed) {
             /*case CommonConstant.SNEAKING_PROHIBITED:
                 break;*/
             case 0:
@@ -84,32 +82,32 @@ public class AppInfoEntity {
         return netType;
     }
 
-    public void setIsNetworkAllowed(int isNetworkAllowed) {
-        this.isNetworkAllowed = isNetworkAllowed;
+    public void setmIsNetworkAllowed(int mIsNetworkAllowed) {
+        this.mIsNetworkAllowed = mIsNetworkAllowed;
     }
 
-    public float getAppNetSpeeed() {
-        return appNetSpeeed;
+    public float getmAppNetSpeeed() {
+        return mAppNetSpeeed;
     }
 
-    public void setAppNetSpeeed(float appNetSpeeed) {
-        this.appNetSpeeed = appNetSpeeed;
+    public void setmAppNetSpeeed(float mAppNetSpeeed) {
+        this.mAppNetSpeeed = mAppNetSpeeed;
     }
 
 
     public int getUid() {
-        return uid;
+        return mUid;
     }
 
     public void setUid(int uid) {
-        this.uid = uid;
+        this.mUid = uid;
     }
 
-    public float getAppTrafficSneaked() {
-        return appTrafficSneaked;
+    public float getmAppTrafficSneaked() {
+        return mAppTrafficSneaked;
     }
 
-    public void setAppTrafficSneaked(float appTrafficSneaked) {
-        this.appTrafficSneaked = appTrafficSneaked;
+    public void setmAppTrafficSneaked(float mAppTrafficSneaked) {
+        this.mAppTrafficSneaked = mAppTrafficSneaked;
     }
 }

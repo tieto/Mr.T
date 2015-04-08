@@ -3,7 +3,6 @@ package com.tieto.systemmanagement.trafficmonitor.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,20 +12,20 @@ import java.util.List;
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter{
 
-    private List<Fragment> fragments = new ArrayList<Fragment>();
+    private List<Fragment> mFragments = new ArrayList<Fragment>();
 
     public ViewPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);
-        this.fragments = fragments;
+        this.mFragments = fragments;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return fragments.get(position);
+        return mFragments.get(position);
     }
 
     @Override
     public int getCount() {
-        return fragments.size();
+        return mFragments.size();
     }
 }
