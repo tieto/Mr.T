@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Looper;
 import android.os.Message;
 import android.view.Menu;
@@ -37,7 +38,8 @@ public class ProcessActivity extends Activity {
     protected static final String ACTIVITY_TAG="ProcessActivity";
 
     private Random random=new Random();
-    private SlidingChartView mCharView=null;
+    private SlidingChartView mCharViewCPU=null;
+    private SlidingChartView mCharViewMem=null;
     private Handler mMainHandler =null;
     private ProcessManagerDefault mProcessMgr=null;
     private ResourceUsageThread mResourceUsageThread=null;
@@ -49,7 +51,7 @@ public class ProcessActivity extends Activity {
     private class ResourceInfo {
         public int cpuSpeed;
         public float cpuUsage;
-        public int memoryUsageInKB;
+        public MemoryInfo memInfo;
     }
 
     private class ResourceUsageThread extends Thread {
@@ -73,6 +75,7 @@ public class ProcessActivity extends Activity {
                     Message toMain = new Message();
 
                     mResourceInfo.cpuUsage= mProcessMgr.getCpuUsage();
+                    mResourceInfo.memInfo=mProcessMgr.getMemoryUsage();
                     toMain.obj=mResourceInfo;
                     mMainHandler.sendMessage(toMain);
                 }
@@ -88,9 +91,9 @@ public class ProcessActivity extends Activity {
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if(null!=mCharView) {
-                float val=random.nextFloat()*mCharView.getYRange();
-                mCharView.append(val);
+            if(null!=mCharViewCPU) {
+                float val=random.nextFloat()*mCharViewCPU.getYRange();
+                mCharViewCPU.append(val);
                 Log.d(ProcessActivity.ACTIVITY_TAG,"new char val="+val);
             }
         }
@@ -101,7 +104,8 @@ public class ProcessActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_process_management);
 
-        mCharView=(SlidingChartView)findViewById(R.id.chart_cpu);
+        mCharViewCPU=(SlidingChartView)findViewById(R.id.chart_cpu);
+        mCharViewMem=(SlidingChartView)findViewById(R.id.chart_mem);
 
         mProcessMgr=new ProcessManagerDefault();
 
@@ -114,10 +118,18 @@ public class ProcessActivity extends Activity {
 
                 ResourceInfo info=(ResourceInfo)msg.obj;
 
-                if(null!=mCharView) {
-                    float val=info.cpuUsage*mCharView.getYRange();
-                    mCharView.append(val);
-                    Log.d(ProcessActivity.ACTIVITY_TAG,"new cpu val="+val);
+                if(null!=mCharViewCPU) {
+                    float usage=info.cpuUsage*mCharViewCPU.getYRange();
+                    mCharViewCPU.append(usage);
+                    Log.d(ProcessActivity.ACTIVITY_TAG,"new cpu usage="+info.cpuUsage);
+                }
+
+                if(null!=mCharViewMem) {
+                    float usage=((float)(info.memInfo.getTotalInkB()-info.memInfo.getFreeInKB()))/
+                            (float)info.memInfo.getTotalInkB();
+
+                    mCharViewMem.append(usage * mCharViewMem.getYRange());
+                    Log.d(ProcessActivity.ACTIVITY_TAG,"new mem usage="+usage);
                 }
 
                 mResourceUsageThread.getHandler().sendEmptyMessageDelayed(
@@ -315,12 +327,24 @@ public class ProcessActivity extends Activity {
 
             if(null!=searchStrings) {
 
-                CommandExecutorResult res= mCmdExecutor.executeCommand(String.format("ps | grep -i '%s'", TextUtils.join("|", searchStrings)));
+                CommandExecutorResult res= mCmdExecutor.executeCommand(String.format("ps | grep -i -E '%s'", TextUtils.join("|", searchStrings)));
 
                 return mProcessParser.parse(res.successMsg);
             }
 
             return new ArrayList<ProcessInfo>();
+        }
+
+        public void killBackgroundProcesses() {
+
+            List<RunningAppProcessInfo> runningApps=mActivityManager.getRunningAppProcesses();
+            for(RunningAppProcessInfo app:runningApps) {
+                if(app.importance>RunningAppProcessInfo.IMPORTANCE_VISIBLE) {
+                    for(String pkg: app.pkgList) {
+                        mActivityManager.killBackgroundProcesses(pkg);
+                    }
+                }
+            }
         }
 
         public boolean tryKillProcess(ProcessInfo processInfo) {
@@ -357,10 +381,10 @@ public class ProcessActivity extends Activity {
 
         public float getCpuUsage() {
 
-            String cmd = "cat /proc/stat | grep \'cpu \'";
+            String cmd = "cat /proc/stat | grep 'cpu '";
             CommandExecutorResult result=mCmdExecutor.executeCommand(cmd);
 
-            String raw= result.successMsg.trim().replaceAll(" {2,}"," ");
+            String raw= result.successMsg.trim().replaceAll(" {2,}", " ");
             String[] cols=raw.split(" ");
 
             int total1=0;
@@ -369,7 +393,7 @@ public class ProcessActivity extends Activity {
                 total1+=Integer.parseInt(cols[i]);
             }
 
-            idle1=Integer.parseInt(cols[3]);
+            idle1=Integer.parseInt(cols[4]);
 
             try {
                 Thread.sleep(1500);
@@ -378,7 +402,7 @@ public class ProcessActivity extends Activity {
             }
 
             result=mCmdExecutor.executeCommand(cmd);
-            raw= result.successMsg.trim().replaceAll(" {2,}"," ");
+            raw= result.successMsg.trim().replaceAll(" {2,}", " ");
             cols=raw.split(" ");
 
             int total2=0;
@@ -387,7 +411,7 @@ public class ProcessActivity extends Activity {
                 total2+=Integer.parseInt(cols[i]);
             }
 
-            idle2=Integer.parseInt(cols[3]);
+            idle2=Integer.parseInt(cols[4]);
 
             int total=total2-total1;
             int idle=idle2-idle1;
@@ -395,14 +419,38 @@ public class ProcessActivity extends Activity {
             return ((float)(total-idle))/(float)total;
         }
 
-        public float getMemoryUsage() {
+        public MemoryInfo getMemoryUsage() {
 
-            return 0.0f;
+            String cmd = "cat /proc/meminfo | grep -i -E 'MemTotal|MemFree'";
+            CommandExecutorResult result=mCmdExecutor.executeCommand(cmd);
+
+            String raw= result.successMsg.replaceAll(" {1,}","");
+            raw= result.successMsg.replaceAll("kB","");
+
+            String[] rows=raw.split("\n");
+
+            int total=0;
+            int free=0;
+            for(String row :rows) {
+                if(row.length()>5) {
+                    String[] cols=row.split(":");
+                    if(cols[0].indexOf("MemTotal")>=0) {
+                        total=Integer.parseInt(cols[1].trim());
+                    } else if(cols[0].indexOf("MemFree")>=0) {
+                        free=Integer.parseInt(cols[1].trim());
+                    }
+                }
+            }
+
+            MemoryInfo memInfo=new MemoryInfo(total,free);
+
+            return memInfo;
         }
 
         public void getCpuInfo() {
 
-//cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+            //cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+
         }
 
         private String getPackageNameByPID(int pid) {
@@ -491,6 +539,36 @@ public class ProcessActivity extends Activity {
             this.mPPid=ppid;
             this.mVSize=vSize;
             this.mRSS=rss;
+        }
+    }
+
+    public class MemoryInfo {
+
+        private int mTotalInkB;
+        private int mFreeInKB;
+
+        public float getUsage() {
+
+            if(mTotalInkB>0) {
+                return ((float)(mTotalInkB-mFreeInKB))/(float)mTotalInkB;
+            }
+            return 0.0f;
+        }
+
+        public int getTotalInkB() {
+
+            return mTotalInkB;
+        }
+
+        public int getFreeInKB() {
+
+            return mFreeInKB;
+        }
+
+        public MemoryInfo(int totalInkB,int freeInKB) {
+
+            this.mTotalInkB = totalInkB;
+            this.mFreeInKB = freeInKB;
         }
     }
 
