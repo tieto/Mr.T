@@ -5,7 +5,8 @@
     <dimen name="activity_vertical_padding">4dp</dimen>
     <dimen name="list_second_column_margin_left">72dp</dimen>
     <dimen name="primary_text_size">16sp</dimen>
-    <dimen name="tile_height">48dp</dimen>
+    <dimen name="tile_icon_height">48dp</dimen>
+    <dimen name="list_item_text_right_margin">48dp</dimen>
 
     //traffic
     <dimen name="t_common_font_size">14sp</dimen>>

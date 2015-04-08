@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-import com.tieto.systemmanagement.notifications.NotifactionManagerAdapter;
+import com.tieto.systemmanagement.notifications.NotificationManagerAdapter;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class NotificationActivity extends Activity {
         setContentView(R.layout.activity_notification);
         PackageManager pm = getPackageManager();
         List<ApplicationInfo> apps= pm.getInstalledApplications(PackageManager.GET_META_DATA);
-        NotifactionManagerAdapter adapter = new NotifactionManagerAdapter(this, apps);
+        NotificationManagerAdapter adapter = new NotificationManagerAdapter(this, apps);
         ListView listView = (ListView) findViewById(R.id.list_app);
         listView.setAdapter(adapter);
     }

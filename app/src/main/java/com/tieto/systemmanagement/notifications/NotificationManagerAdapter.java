@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Created by gujiao on 02/04/15.
  */
-public class NotifactionManagerAdapter extends BaseAdapter {
+public class NotificationManagerAdapter extends BaseAdapter {
 
     private List<ApplicationInfo> mApps;
 
@@ -47,7 +47,7 @@ public class NotifactionManagerAdapter extends BaseAdapter {
     };
     Map<String, Integer> modes = new HashMap<String, Integer>();
 
-    public NotifactionManagerAdapter(Context context, List<ApplicationInfo> apps) {
+    public NotificationManagerAdapter(Context context, List<ApplicationInfo> apps) {
         this.mApps = apps;
         this.mContext = context;
         this.mInflater = LayoutInflater.from(this.mContext);

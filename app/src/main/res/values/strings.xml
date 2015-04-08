@@ -58,4 +58,7 @@
     <string name="app_detail_clear_cache">清理缓存</string>
 
     <string name="title_activity_basic_tabbed">BasicTabbedActivity</string>
+
+    <!-- notification -->
+    <string name="notification_item_icon">app icon</string>
 </resources>
