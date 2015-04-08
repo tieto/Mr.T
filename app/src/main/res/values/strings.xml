@@ -23,13 +23,16 @@
     <string name="disk_space_system">系统空间</string>
     <string name="disk_space_store_tip1">除上述内容外,存储空间还包含手机操作系统等数据</string>
     <string name="disk_space_store_title_1">安装包</string>
-    <string name="disk_space_store_title_2">我的音乐</string>
-    <string name="disk_space_store_title_3">我的相册</string>
+    <string name="disk_space_store_title_2">我的相册</string>
+    <string name="disk_space_store_title_3">我的音乐</string>
+    <string name="disk_space_store_package_title_1">已安装</string>
+    <string name="disk_space_store_package_title_2">未安装</string>
+    <string name="disk_space_store_package_title_3">安装包</string>
 
     <string name="disk_space_system_tip1">包含操作,应用软件以及使用软件产生的缓存数据</string>
     <string name="disk_space_system_tip2">可通过以下方式释放空间:</string>
     <string name="title_activity_disk_packages">安装包</string>
-    <string name="title_activity_disk_abulm">我的相册</string>
+    <string name="title_activity_disk_album">我的相册</string>
     <string name="title_activity_disk_audio">我的音乐</string>
 
     <!-- Authority management -->
@@ -37,6 +40,7 @@
     <string name="auth_unknown_permission">未知权限</string>
     <string name="auth_permission_count_format"><![CDATA[<font color=\'#880000\'>%1$d</font>&nbsp;项危险权限]]></string>
     <string name="auth_empty_loading">正在加载</string>
+
     <!-- App管理 Zhou Jinpei -->
     <string name="app_downloaded">已下载</string>
     <string name="app_running">正在运行</string>
@@ -53,4 +57,5 @@
     <string name="app_detail_clear_data">清理数据</string>
     <string name="app_detail_clear_cache">清理缓存</string>
 
+    <string name="title_activity_basic_tabbed">BasicTabbedActivity</string>
 </resources>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tieto.systemmanagement" >
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-
     <uses-permission android:name="android.permission.UPDATE_APP_OPS_STATS" />
     <uses-permission android:name="android.permission.GET_APP_OPS_STATS" />
 
@@ -61,8 +60,8 @@
             android:label="@string/title_activity_self_start" />
         <activity
             android:name=".trafficmonitor.TrafficActivity"
-            android:label="@string/title_activity_traffic"
-            android:icon="@drawable/t_common_title_icon">
+            android:icon="@drawable/t_common_title_icon"
+            android:label="@string/title_activity_traffic" >
         </activity>
         <activity
             android:name=".diskmonitor.DiskActivity"
@@ -72,10 +71,6 @@
             android:name=".intercept.views.InterceptActivity"
             android:label="@string/title_activity_no_spam" >
         </activity>
-        <activity
-            android:name=".DiskActivity"
-            android:label="@string/title_activity_disk" />
-        <activity
             android:name=".NoSpamActivity"
             android:label="@string/title_activity_no_spam" />
         <activity
@@ -90,21 +85,26 @@
             android:label="@string/app_detail"
             android:theme="@style/CustomerTheme">
         </activity>
-         <activity
+        <activity
             android:name=".diskmonitor.views.DiskPackagesActivity"
             android:label="@string/title_activity_disk_packages" >
         </activity>
         <activity
             android:name=".diskmonitor.views.DiskAlbumActivity"
-            android:label="@string/title_activity_disk_abulm" >
+            android:label="@string/title_activity_disk_album" >
         </activity>
         <activity
             android:name=".diskmonitor.views.DiskAudioActivity"
-            android:label="@string/title_activity_disk_audio">
+            android:label="@string/title_activity_disk_audio" >
         </activity>
-        <activity android:name=".trafficmonitor.views.FireWallManageActivity"
-            android:label="联网管理"
-            android:icon="@drawable/t_common_title_icon">
+        <activity
+            android:name=".trafficmonitor.views.FireWallManageActivity"
+            android:icon="@drawable/t_common_title_icon"
+            android:label="联网管理" >
+        </activity>
+        <activity
+            android:name=".BasicTabbedActivity"
+            android:label="@string/title_activity_basic_tabbed" >
         </activity>
         <activity android:name=".trafficmonitor.views.NetSpeedActivity"
             android:label="网络测速"
@@ -119,7 +119,6 @@
         </receiver>
 
         <service android:name=".intercept.service.PhoneFilterServer" android:process=":remote" />
-
     </application>
 
 </manifest>

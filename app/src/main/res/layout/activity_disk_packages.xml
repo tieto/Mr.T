@@ -1,5 +1,27 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.tieto.systemmanagement.diskmonitor.views.DiskPackagesActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame"
+    >
+
+    <EditText
+        android:editable="false"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:paddingTop="8dp"
+        android:id="@+id/editText"
+        android:text="@string/disk_space_store_package_title_3"
+        android:background="#1e83d1"
+        android:textColor="#ffffff"
+        android:paddingLeft="35dp"/>
+
+    <include
+        android:layout_marginTop="45dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/activity_basic_tabbed_style_2" />
+
+</FrameLayout>

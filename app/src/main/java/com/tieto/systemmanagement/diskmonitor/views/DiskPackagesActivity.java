@@ -1,65 +1,41 @@
 package com.tieto.systemmanagement.diskmonitor.views;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.app.Fragment;
 
-import com.tieto.systemmanagement.BasicActivity;
+import com.tieto.systemmanagement.BasicTabbedActivity;
 import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.SysManageApplication;
 
-public class DiskPackagesActivity extends BasicActivity {
+import java.util.ArrayList;
+import java.util.List;
 
+public class DiskPackagesActivity  extends BasicTabbedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disk_packages);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_disk_packages, menu);
-        return true;
+        this.getActionBar().hide();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    protected void onResume() {
+        super.onResume();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        List<Class<? extends Fragment>> fs = new ArrayList<Class<? extends Fragment>>();
+        fs.add(DiskPackagesInstalledFragment.class);
+        fs.add(DiskPackagesUninstalledFragment.class);
 
-        return super.onOptionsItemSelected(item);
-    }
+        List<String> ts = new ArrayList<String>();
+        ts.add(SysManageApplication.getInstance().getString(R.string.disk_space_store_package_title_1));
+        ts.add(SysManageApplication.getInstance().getString(R.string.disk_space_store_package_title_2));
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_disk_packages, container, false);
-            return rootView;
+        try {
+            set2Tabs(fs, ts);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
         }
     }
 }

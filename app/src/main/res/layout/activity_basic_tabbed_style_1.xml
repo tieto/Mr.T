@@ -9,5 +9,14 @@
     <include
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        layout="@layout/activity_basic_tabbed_style_1" />
+        layout="@layout/container_tabbed_head_style_1" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/tabbed_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:flipInterval="30"
+        android:persistentDrawingCache="animation">
+    </android.support.v4.view.ViewPager>
+
 </LinearLayout>
