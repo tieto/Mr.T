@@ -5,7 +5,7 @@
         <item name="android:actionBarStyle">@style/ActionBarNoBackground</item>
     </style>
 
-    <style name="ActionBarNoBackground" parent="@android:style/Widget.DeviceDefault.Light.ActionBar.Solid.Inverse">
+    <style name="ActionBarNoBackground" parent="@android:style/Widget.DeviceDefault.ActionBar">
         <item name="android:background">@color/app_actionbar_background_color</item>
     </style>
 
