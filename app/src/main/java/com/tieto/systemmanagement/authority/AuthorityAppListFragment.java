@@ -1,7 +1,11 @@
 package com.tieto.systemmanagement.authority;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +24,7 @@ import com.tieto.systemmanagement.authority.adapter.AppInfoAdapter;
 import com.tieto.systemmanagement.authority.entity.AppWrapper;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,7 +62,7 @@ public class AuthorityAppListFragment extends ListFragment {
         getListView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                mAdapter.setAppListData(AppWrapper.getApplicationList(getActivity(), true));
+                mAdapter.setAppListData(getApplicationList(getActivity(), true));
                 getListView().getViewTreeObserver().removeOnPreDrawListener(this);
                 return false;
             }
@@ -75,7 +80,23 @@ public class AuthorityAppListFragment extends ListFragment {
         });
     }
 
-    protected void updateAppList(List<AppWrapper> apps) {
-        mAdapter.setAppListData(apps);
+    private List<AppWrapper> getApplicationList(Context context, boolean hasSystem) {
+        PackageManager pm = context.getPackageManager();
+        List<PackageInfo> packageInfo = pm.getInstalledPackages(
+                PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
+        List<AppWrapper> list = new ArrayList<AppWrapper>();
+        for (final PackageInfo pkg : packageInfo) {
+            ApplicationInfo app = pkg.applicationInfo;
+
+            // Ignore the system app
+            if (!hasSystem && (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                continue;
+            }
+
+            if (app != null) {
+                list.add(new AppWrapper(pkg));
+            }
+        }
+        return list;
     }
 }

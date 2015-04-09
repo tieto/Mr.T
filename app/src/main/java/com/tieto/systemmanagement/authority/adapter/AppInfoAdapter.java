@@ -1,7 +1,6 @@
 package com.tieto.systemmanagement.authority.adapter;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.authority.entity.AppWrapper;
 import com.tieto.systemmanagement.authority.entity.BitmapUtils;
+import com.tieto.systemmanagement.authority.entity.ImageLoader;
 
 import java.util.List;
 

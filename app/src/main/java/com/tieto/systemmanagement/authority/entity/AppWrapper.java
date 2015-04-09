@@ -19,13 +19,15 @@ import java.util.List;
  */
 public final class AppWrapper implements Parcelable {
 
+    private PackageInfo mPackageInfo;
     private ApplicationInfo mAppInfo;
 
-    public AppWrapper(ApplicationInfo appInfo) {
-        if (appInfo == null) {
-            throw new NullPointerException("Attempt to access the null object of appInfo.");
+    public AppWrapper(PackageInfo packageInfo) {
+        if (packageInfo == null) {
+            throw new NullPointerException("Attempt to access the null object of packageInfo.");
         }
-        mAppInfo = appInfo;
+        mPackageInfo = packageInfo;
+        mAppInfo = packageInfo.applicationInfo;
     }
 
     public Drawable loadIcon(Context context) {
@@ -49,7 +51,7 @@ public final class AppWrapper implements Parcelable {
     }
 
     public int getPermissionCount() {
-        return 0;
+        return mPackageInfo.permissions == null? 0 : mPackageInfo.permissions.length;
     }
 
     @Override
@@ -59,13 +61,13 @@ public final class AppWrapper implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeParcelable(mAppInfo, i);
+        parcel.writeParcelable(mPackageInfo, i);
     }
 
     public static final Creator<AppWrapper> CREATOR = new Creator<AppWrapper>() {
         @Override
         public AppWrapper createFromParcel(Parcel parcel) {
-            ApplicationInfo app = parcel.readParcelable(ApplicationInfo.class.getClassLoader());
+            PackageInfo app = parcel.readParcelable(PackageInfo.class.getClassLoader());
             AppWrapper info = new AppWrapper(app);
             return info;
         }
@@ -75,48 +77,4 @@ public final class AppWrapper implements Parcelable {
             return new AppWrapper[size];
         }
     };
-
-    public static List<AppWrapper> getApplicationList(Context context, boolean hasSystem) {
-        PackageManager pm = context.getPackageManager();
-        List<PackageInfo> packageInfo = pm.getInstalledPackages(
-                PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
-        List<AppWrapper> list = new ArrayList<AppWrapper>();
-        for (final PackageInfo pkg : packageInfo) {
-            ApplicationInfo app = pkg.applicationInfo;
-
-            // Ignore the system app
-            if (!hasSystem && (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                continue;
-            }
-
-            if (app != null) {
-                list.add(new AppWrapper(app));
-            }
-        }
-        return list;
-    }
-
-    private static AppPermission loadPermission(Context context,
-                PackageManager pm, String permission) {
-        try {
-            PermissionInfo permissionInfo =
-                    pm.getPermissionInfo(permission, PackageManager.GET_META_DATA);
-            int level = permissionInfo.protectionLevel;
-            if (level == PermissionInfo.PROTECTION_DANGEROUS) {
-                int labelRes = permissionInfo.labelRes == 0?
-                        R.string.auth_unknown_permission : permissionInfo.labelRes;
-                String labelString = "";
-                try {
-                    labelString = context.getString(labelRes);
-                } catch (Exception e) {
-                    Log.e("AppInfo", e.toString());
-                }
-                // Currently left the description as empty
-                return new AppPermission(labelString, "");
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e("AppInfo", e.toString());
-        }
-        return null;
-    }
 }

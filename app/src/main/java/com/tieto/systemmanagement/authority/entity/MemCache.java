@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.authority.adapter;
+package com.tieto.systemmanagement.authority.entity;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.util.LruCache;
