@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tieto.systemmanagement.R;
 
@@ -25,6 +26,8 @@ import java.util.Map;
  * Created by gujiao on 02/04/15.
  */
 public class NotificationManagerAdapter extends BaseAdapter {
+
+    private static final int NOTIFICATION_OPS = 11;
 
     private List<ApplicationInfo> mApps;
 
@@ -48,13 +51,13 @@ public class NotificationManagerAdapter extends BaseAdapter {
     Map<String, Integer> modes = new HashMap<String, Integer>();
 
     public NotificationManagerAdapter(Context context, List<ApplicationInfo> apps) {
-        this.mApps = apps;
-        this.mContext = context;
-        this.mInflater = LayoutInflater.from(this.mContext);
-        this.pm = this.mContext.getPackageManager();
+        mApps = apps;
+        mContext = context;
+        mInflater = LayoutInflater.from(mContext);
+        pm = mContext.getPackageManager();
         appOpsManager = (AppOpsManager) mContext.getSystemService(Context.APP_OPS_SERVICE);
-        initMode();
-        getMode(ops);
+        initNotificationMode();
+        getNotificationMode(ops);
 
     }
 
@@ -85,9 +88,7 @@ public class NotificationManagerAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        ApplicationInfo info = mApps.get(position);
-        viewHolder.imageView.setImageDrawable(info.loadIcon(pm));
-        viewHolder.textView.setText(info.loadLabel(pm));
+
         bindView(viewHolder, position);
         return convertView;
     }
@@ -119,7 +120,7 @@ public class NotificationManagerAdapter extends BaseAdapter {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             switch (buttonView.getId()) {
                 case R.id.notification_notify_switch:
-                    banNotification(appInfo, isChecked);
+                    disableNotification(appInfo, buttonView, isChecked);
                     break;
                 default:
                     break;
@@ -127,9 +128,9 @@ public class NotificationManagerAdapter extends BaseAdapter {
         }
     }
 
-    private void banNotification(ApplicationInfo appInfo, boolean isChecked) {
+    private void disableNotification(ApplicationInfo appInfo, CompoundButton buttonView, boolean isChecked) {
         Object[] params = new Object[] {
-                11,
+                NOTIFICATION_OPS,
                 appInfo.uid,
                 appInfo.packageName,
                 isChecked ? AppOpsManager.MODE_IGNORED : AppOpsManager.MODE_ALLOWED
@@ -138,16 +139,14 @@ public class NotificationManagerAdapter extends BaseAdapter {
             Method setMode = appOpsManager.getClass().getMethod("setMode", args);
             setMode.invoke(appOpsManager, params);
             modes.put(appInfo.packageName, isChecked ? AppOpsManager.MODE_IGNORED : AppOpsManager.MODE_ALLOWED);
-        } catch (NoSuchMethodException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Toast.makeText(mContext, R.string.notification_prohibit_text, Toast.LENGTH_SHORT).show();
+            buttonView.setChecked(!isChecked);
         }
     }
 
-    private void getMode(int[] ops) {
+    private void getNotificationMode(int[] ops) {
         Object[] params = new Object[] {
                ops
         };
@@ -172,7 +171,7 @@ public class NotificationManagerAdapter extends BaseAdapter {
         }
     }
 
-    private void initMode() {
+    private void initNotificationMode() {
         for (int i = 0; i < mApps.size(); i ++) {
             modes.put(mApps.get(i).packageName, AppOpsManager.MODE_ALLOWED);
         }
