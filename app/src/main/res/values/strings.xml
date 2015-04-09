@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">T先生</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">施工中!</string>
     <string name="action_settings">设置</string>
     <string name="title_activity_notification">通知管理</string>
     <string name="title_activity_process_management">进程管理</string>
@@ -62,8 +62,6 @@
     <string name="app_detail_uninstall">卸载</string>
     <string name="app_detail_clear_data">清理数据</string>
     <string name="app_detail_clear_cache">清理缓存</string>
-
-    <string name="title_activity_basic_tabbed">BasicTabbedActivity</string>
 
     <!-- notification -->
     <string name="notification_item_icon">app icon</string>

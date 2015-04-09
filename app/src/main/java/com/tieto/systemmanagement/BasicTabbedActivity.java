@@ -58,6 +58,9 @@ public class BasicTabbedActivity extends FragmentActivity implements ViewPager.O
 
         }
         currentIndex = position;
+
+        if (anim==null)return;
+
         anim.setDuration(250);
         anim.setFillAfter(true);
         anim.setRepeatCount(0);

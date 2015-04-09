@@ -3,7 +3,6 @@ package com.tieto.systemmanagement;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,27 +25,27 @@ public class SystemManagementActivity extends Activity {
 
     static {
         ACTIVITIES.add(new FunEntity(R.string.title_activity_process_management
-                , R.mipmap.ic_launcher, ProcessActivity.class));
+                , R.mipmap.dh, ProcessActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_memory
                 , R.mipmap.card_icon_speedup, MemoryActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_notification
-                , R.mipmap.ic_launcher, NotificationActivity.class));
+                , R.mipmap.hl, NotificationActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_app
-                , R.mipmap.ic_launcher, AppActivity.class));
+                , R.mipmap.ih, AppActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_authority
-                , R.drawable.ic_auth_launcher, AuthorityActivity.class));
+                , R.mipmap.ql, AuthorityActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_self_start
-                , R.mipmap.ic_launcher, SelfStartActivity.class));
+                , R.mipmap.card_icon_autorun, SelfStartActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_traffic
                 , R.mipmap.t_app_icon, TrafficActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_disk
                 , R.mipmap.card_icon_media, DiskActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_no_spam
-                , R.mipmap.ic_launcher, InterceptActivity.class));
+                , R.mipmap.jm, InterceptActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_net_control
-                , R.mipmap.ic_launcher, NetControlActivity.class));
+                , R.mipmap.wl, NetControlActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_battery
-                , R.mipmap.ic_launcher, BatteryActivity.class));
+                , R.mipmap.sl, BatteryActivity.class));
     }
 
     @Override

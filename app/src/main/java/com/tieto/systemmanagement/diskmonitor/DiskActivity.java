@@ -12,7 +12,6 @@ import com.tieto.systemmanagement.diskmonitor.views.SystemSpaceFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-//Refer to FireWallManageActivity
 public class DiskActivity  extends BasicTabbedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
