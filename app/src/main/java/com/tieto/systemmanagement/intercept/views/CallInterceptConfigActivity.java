@@ -1,8 +1,13 @@
 package com.tieto.systemmanagement.intercept.views;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -10,6 +15,7 @@ import android.widget.SimpleAdapter;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.intercept.adapter.ConfigListViewAdapter;
+import com.tieto.systemmanagement.intercept.service.PhoneFilterServer;
 import com.tieto.systemmanagement.intercept.util.InterceptConfiguration;
 
 import java.util.ArrayList;
@@ -19,13 +25,19 @@ import java.util.Map;
 
 public class CallInterceptConfigActivity extends Activity {
 
+    private PhoneFilterServer phoneFilterServer ;
+    private ConfigListViewAdapter configListViewAdapter ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call_intercept_config);
 
         ListView view = (ListView)findViewById(R.id.intercept_config_management_item);
-        view.setAdapter(new ConfigListViewAdapter(this,getDate()));
+        configListViewAdapter = new ConfigListViewAdapter(this, getDate());
+        view.setAdapter(configListViewAdapter);
+
+        bindService(new Intent(this,PhoneFilterServer.class),serviceConnection, Context.BIND_AUTO_CREATE) ;
 
         setTitle("电话拦截设置");
     }
@@ -59,6 +71,20 @@ public class CallInterceptConfigActivity extends Activity {
 
         return date ;
     }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            phoneFilterServer = ((PhoneFilterServer.myBinder)service).getService();
+            configListViewAdapter.setPhoneFilterServer(phoneFilterServer);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            phoneFilterServer = null ;
+            unbindService(serviceConnection);
+        }
+    };
 
 
     @Override

@@ -11,6 +11,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.intercept.service.PhoneFilterServer;
 import com.tieto.systemmanagement.intercept.util.InterceptConfiguration;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class ConfigListViewAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private Context context ;
     private SharedPreferences sharedPreferences ;
+    private PhoneFilterServer phoneFilterServer;
 
     public ConfigListViewAdapter(Context context,List<Map<String,Object>> data){
         this.data =  data ;
@@ -71,7 +73,7 @@ public class ConfigListViewAdapter extends BaseAdapter {
 
         titleView.setText(date.get("title_call_intercept").toString());
         titleEnableView.setText(date.get("title_is_intercept").toString());
-        switchView.setSelected(Boolean.valueOf(date.get("intercept").toString()));
+        switchView.setChecked(Boolean.valueOf(date.get("intercept").toString()));
 
         switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -79,9 +81,27 @@ public class ConfigListViewAdapter extends BaseAdapter {
                 data.get(position).put("title_is_intercept",context.getResources().getString(isChecked ? R.string.intercept : R.string.un_intercept));
                 data.get(position).put("intercept",isChecked);
                 SharedPreferences.Editor edit = sharedPreferences.edit();
-//                edit.putBoolean()
+                switch (position){
+                    case 0 :
+                        edit.putBoolean(InterceptConfiguration.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT,isChecked) ;
+                        break;
+                    case 1 :
+                        edit.putBoolean(InterceptConfiguration.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_ANONYMITY,isChecked) ;
+                        break;
+                    case 2 :
+                        edit.putBoolean(InterceptConfiguration.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_CONTRACT,isChecked) ;
+                        break;
+                }
+                edit.commit() ;
+                if(phoneFilterServer!=null){
+                    phoneFilterServer.reInit();
+                }
                 notifyDataSetChanged();
             }
         });
+    }
+
+    public void setPhoneFilterServer(PhoneFilterServer phoneFilterServer){
+        this.phoneFilterServer = phoneFilterServer ;
     }
 }

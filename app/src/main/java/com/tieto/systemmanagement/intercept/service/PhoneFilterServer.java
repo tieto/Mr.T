@@ -11,8 +11,11 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.android.internal.telephony.ITelephony;
+import com.tieto.systemmanagement.intercept.entity.Record;
+import com.tieto.systemmanagement.intercept.recordmanagement.RecordDBHelper;
 import com.tieto.systemmanagement.intercept.util.InterceptConfiguration;
 import com.tieto.systemmanagement.intercept.util.InterceptConfiguration.InterceptCallConfiguration;
+import com.tieto.systemmanagement.intercept.views.CallInterceptConfigActivity;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -35,6 +38,7 @@ public class PhoneFilterServer extends Service {
 
     private ITelephony telephonyService;
     private TelephonyManager telephonyManager ;
+    private RecordDBHelper recordDBHelper ;
 
 
     @Override
@@ -47,23 +51,9 @@ public class PhoneFilterServer extends Service {
         initFilter();
     }
 
-
-    public void get() {
-
-        String tempInputNumber = "18382037880";
-        String Number = ContactsContract.CommonDataKinds.Phone.NUMBER;
-
-        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, "replace(" + Number + ",' ','') = ?", new String[]{tempInputNumber}, null);
-
-        while (cursor.moveToNext()) {
-            String number = cursor.getString(cursor.getColumnIndex(Number));
-            Log.e("Phone Number :", number);
-        }
-    }
-
     public class myBinder extends Binder {
 
-        PhoneFilterServer getService() {
+        public PhoneFilterServer getService() {
             return PhoneFilterServer.this;
         }
     }
@@ -73,26 +63,34 @@ public class PhoneFilterServer extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.e(TAG, "Telephony Manager:" + telephonyManager.getCallState());
-        switch (telephonyManager.getCallState()) {
-            case TelephonyManager.CALL_STATE_RINGING:
-                String incomingNumber = intent.getStringExtra("incoming_number");
-                Log.i(TAG, "RINGING :" + incomingNumber);
-                if (isIntercept(incomingNumber)) {
-                    try {
-                        if (telephonyService == null) {
-                            Class c = Class.forName(telephonyManager.getClass().getName());
-                            Method m = c.getDeclaredMethod("getITelephony");
-                            m.setAccessible(true);
-                            telephonyService = (ITelephony) m.invoke(telephonyManager);
-                        }
-                        telephonyService.endCall();
+        if (intent.getAction().equals(InterceptConfiguration.INTERCEPT_ACTION)) {
+            Log.e(TAG, "Telephony Manager:" + telephonyManager.getCallState());
+            switch (telephonyManager.getCallState()) {
+                case TelephonyManager.CALL_STATE_RINGING:
+                    String incomingNumber = intent.getStringExtra("incoming_number");
+                    Log.i(TAG, "RINGING :" + incomingNumber);
+                    if (isIntercept(incomingNumber)) {
+                        try {
+                            if (telephonyService == null) {
+                                Class c = Class.forName(telephonyManager.getClass().getName());
+                                Method m = c.getDeclaredMethod("getITelephony");
+                                m.setAccessible(true);
+                                telephonyService = (ITelephony) m.invoke(telephonyManager);
+                            }
+                            telephonyService.endCall();
 
-                    } catch (Exception e) {
-                        //
+                        } catch (Exception e) {
+                            //
+                        }
+                        Record record = new Record();
+                        record.setRecordContent(incomingNumber);
+                        record.setInterceptType(Record.InterceptType.INCOMING_PHONE);
+                        record.setFiltrationType(Record.FiltrationType.NUMBER);
+                        record.setManifestType(Record.ManifestType.RECORD_LIST);
+                        recordDBHelper.insert(record);
                     }
-                }
-             break;
+                    break;
+            }
         }
 
         return super.onStartCommand(intent, flags, startId);
@@ -116,6 +114,10 @@ public class PhoneFilterServer extends Service {
             intercept = phoneNumberList.contains(incomingPhoneNumber);
         }
         return intercept;
+    }
+
+    public void reInit(){
+        initFilter();
     }
 
     /**
@@ -144,6 +146,8 @@ public class PhoneFilterServer extends Service {
         if(telephonyManager == null){
             telephonyManager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
         }
+
+        recordDBHelper = new RecordDBHelper(this) ;
     }
 }
 

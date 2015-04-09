@@ -7,6 +7,7 @@ package com.tieto.systemmanagement.intercept.util;
 public interface InterceptConfiguration {
 
     String INTERCEPT_CONFIGURATION = "intercept_configuration" ;
+    String INTERCEPT_ACTION = "com.tieto.intercept.ACTION"  ;
 
     interface InterceptCallConfiguration{
         String ENABLE_CALL_INTERCEPT = "enable_call_intercept" ;

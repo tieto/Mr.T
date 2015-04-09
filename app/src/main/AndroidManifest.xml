@@ -131,7 +131,7 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
-        <service android:name=".intercept.service.PhoneFilterServer" android:process=":remote" />
+        <service android:name=".intercept.service.PhoneFilterServer"/>
     </application>
 
 </manifest>
