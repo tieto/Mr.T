@@ -44,11 +44,7 @@ public class SlidingChartView extends View {
     private int mValueFillColor=Color.CYAN;
     private boolean mIsDataInitialized=false;
 
-    private float mTextWidth;
-    private float mTextHeight;
-
-    private float mStartTime=0.0f;
-    private float previousTime=0.0f;
+    private long previousTime=0;
     private float mGridLineOffset=0.0f;
 
     private ChartValPoint mEndPoint=new ChartValPoint(0,0);
@@ -96,7 +92,6 @@ public class SlidingChartView extends View {
     public void append(float value) {
         if(!mIsDataInitialized) {
             mIsDataInitialized=true;
-            mStartTime=(float)(System.currentTimeMillis()/1000.0f);
             previousTime=0;
             mEndPoint.mY=0;
             mEndPoint.mX=mXUnit;
@@ -113,10 +108,14 @@ public class SlidingChartView extends View {
     }
 
     private void updatePoints(float value) {
-        float currentTime=(float)(System.currentTimeMillis()/1000.0f);
-        float timespan=currentTime-previousTime;
 
-        timespan=1.5f;
+        long currentTime=System.currentTimeMillis();
+        float timespan=(float)(currentTime-previousTime)/1000.0f;
+
+        if(0==previousTime) {
+            timespan=0.0f;
+        }
+
         List<ChartValPoint> toRemove=new ArrayList<ChartValPoint>();
 
         mGridLineOffset=(timespan+mGridLineOffset)%mXUnit;

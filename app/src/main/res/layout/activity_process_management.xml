@@ -49,38 +49,37 @@
                     android:text="4 Cores"
                     android:layout_weight="2.5"
                     android:gravity="bottom"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginBottom="3dp"
                     />
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="8pt"
                     android:text="\@"
-                    android:layout_weight="0.5"
                     android:gravity="bottom"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="5dp"
                     />
 
                 <TextView
                     android:id="@+id/txt_process_mgr_cpu_feq_cur"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="8pt"
                     android:text="1.5GHz"
-                    android:layout_weight="2.5"
-                    android:gravity="bottom"
-                    android:layout_marginBottom="2dp"
+                    android:gravity="bottom|right"
+                    android:layout_marginBottom="3dp"
                     />
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="top"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
-                    android:layout_weight="2">
+                    >
 
                     <TextView
                         android:id="@+id/txt_process_mgr_cpu_feq_min"
@@ -167,11 +166,13 @@
                     />
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:id="@+id/txt_process_mgr_mem_usage_num"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="8pt"
-                    android:text="1099MB of 2000MB"
-                    android:gravity="bottom"
+                    android:text="1099MB / 2000MB"
+                    android:gravity="bottom|right"
+                    android:layout_marginBottom="3px"
                     android:layout_weight="2"
                     />
 
@@ -195,7 +196,7 @@
                     local:valueFillColor="#338B12AE"
                     />
                 <TextView
-                    android:id="@+id/txt_process_mgr_mem_usage"
+                    android:id="@+id/txt_process_mgr_mem_usage_per"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16pt"
@@ -228,11 +229,12 @@
             <Button
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:layout_marginRight="5dp"
-                android:text="内存优化"
-                android:id="@+id/btnProcessManOptimize" />
+                android:text="进程管理"
+                android:id="@+id/btnGoProcessManagement" />
 
             <Button
                 android:layout_width="0dp"
@@ -240,8 +242,9 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:layout_marginLeft="5dp"
-                android:text="进程管理"
-                android:id="@+id/btnGoProcessManagement" />
+                android:text="内存优化"
+                android:id="@+id/btnProcessManOptimize" />
+
         </LinearLayout>
     </LinearLayout>
 

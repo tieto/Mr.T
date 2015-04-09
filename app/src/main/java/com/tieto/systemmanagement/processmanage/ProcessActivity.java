@@ -17,10 +17,14 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.text.TextUtils;
 import android.util.Log;
 import android.os.Handler;
 import android.os.Debug.MemoryInfo;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.lang.Thread;
 
@@ -45,11 +49,21 @@ public class ProcessActivity extends Activity {
     private ResourceUsageThread mResourceUsageThread=null;
     private ResourceInfo mResourceInfo=new ResourceInfo();
 
+    private TextView mTxtCPUCurrentFeq=null;
+    private TextView mTxtCPUMaxFeq=null;
+    private TextView mTxtCPUMinFeq=null;
+    private TextView mTxtCPUUsage=null;
+
+    private TextView mTxtMemInfo=null;
+    private TextView mTxtMemUsage=null;
+
+    private Button mBtnMemoryOptimize=null;
+
     public static final int WHAT_UPDATE_CPU_INFO=1;
     public static final int WHAT_UPDATE_MEM_INFO=2;
 
     private class ResourceInfo {
-        public int cpuSpeed;
+        public CPUInfo cpuInfo;
         public float cpuUsage;
         public MemoryInfo memInfo;
     }
@@ -75,6 +89,7 @@ public class ProcessActivity extends Activity {
                     Message toMain = new Message();
 
                     mResourceInfo.cpuUsage= mProcessMgr.getCpuUsage();
+                    mResourceInfo.cpuInfo=mProcessMgr.getCpuInfo();
                     mResourceInfo.memInfo=mProcessMgr.getMemoryUsage();
                     toMain.obj=mResourceInfo;
                     mMainHandler.sendMessage(toMain);
@@ -107,6 +122,22 @@ public class ProcessActivity extends Activity {
         mCharViewCPU=(SlidingChartView)findViewById(R.id.chart_cpu);
         mCharViewMem=(SlidingChartView)findViewById(R.id.chart_mem);
 
+        mTxtCPUCurrentFeq=(TextView)findViewById(R.id.txt_process_mgr_cpu_feq_cur);
+        mTxtCPUMaxFeq=(TextView)findViewById(R.id.txt_process_mgr_cpu_feq_max);
+        mTxtCPUMinFeq=(TextView)findViewById(R.id.txt_process_mgr_cpu_feq_min);
+        mTxtCPUUsage=(TextView)findViewById(R.id.txt_process_mgr_cpu_usage);
+
+        mTxtMemInfo=(TextView)findViewById(R.id.txt_process_mgr_mem_usage_num);
+        mTxtMemUsage=(TextView)findViewById(R.id.txt_process_mgr_mem_usage_per);
+
+        mBtnMemoryOptimize=(Button)findViewById(R.id.btnProcessManOptimize);
+        mBtnMemoryOptimize.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProcessMgr.killBackgroundProcesses();
+            }
+        });
+
         mProcessMgr=new ProcessManagerDefault();
 
         mResourceUsageThread=new ResourceUsageThread();
@@ -121,19 +152,26 @@ public class ProcessActivity extends Activity {
                 if(null!=mCharViewCPU) {
                     float usage=info.cpuUsage*mCharViewCPU.getYRange();
                     mCharViewCPU.append(usage);
-                    Log.d(ProcessActivity.ACTIVITY_TAG,"new cpu usage="+info.cpuUsage);
+                    mTxtCPUUsage.setText(String.format("%2.0f%%",100*info.cpuUsage));
+
+                    mTxtCPUCurrentFeq.setText(String.format("%1.1fGHz",info.cpuInfo.getCurrentFrequency()/1000000.0f));
+                    mTxtCPUMaxFeq.setText(String.format("MAX %1.1fGHz",info.cpuInfo.getMaxFrequency()/1000000.0f));
+                    mTxtCPUMinFeq.setText(String.format("MIN %1.1fGHz",info.cpuInfo.getMinFrequency()/1000000.0f));
                 }
 
                 if(null!=mCharViewMem) {
-                    float usage=((float)(info.memInfo.getTotalInkB()-info.memInfo.getFreeInKB()))/
-                            (float)info.memInfo.getTotalInkB();
+
+                    int used=info.memInfo.getTotalInkB()-info.memInfo.getFreeInKB();
+                    float usage=((float)used)/(float)info.memInfo.getTotalInkB();
 
                     mCharViewMem.append(usage * mCharViewMem.getYRange());
-                    Log.d(ProcessActivity.ACTIVITY_TAG,"new mem usage="+usage);
+                    mTxtMemUsage.setText(String.format("%2.0f%%",100*usage));
+
+                    mTxtMemInfo.setText(String.format(" %dMB / %dMB",(int)(used/1024),(int)(info.memInfo.getTotalInkB()/1024)));
                 }
 
                 mResourceUsageThread.getHandler().sendEmptyMessageDelayed(
-                        WHAT_UPDATE_CPU_INFO|WHAT_UPDATE_MEM_INFO,1500);
+                        WHAT_UPDATE_CPU_INFO|WHAT_UPDATE_MEM_INFO,500);
                 //mMainHandler.postDelayed(runnable, 1500);
             }
         };
@@ -447,10 +485,46 @@ public class ProcessActivity extends Activity {
             return memInfo;
         }
 
-        public void getCpuInfo() {
+        public CPUInfo getCpuInfo() {
 
-            //cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+            String cmd = "cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq " +
+                    "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq " +
+                    "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq";
+            CommandExecutorResult result=mCmdExecutor.executeCommand(cmd);
 
+            if(0==result.result) {
+                String[] rows= result.successMsg.trim().split("\n");
+                int min,max,cur;
+                min=Integer.parseInt(rows[0]);
+                max=Integer.parseInt(rows[1]);
+                cur=Integer.parseInt(rows[2]);
+
+                CPUInfo info=new CPUInfo(min,max,cur);
+
+                return info;
+            } else {
+
+                return new CPUInfo(0,0,0);
+            }
+        }
+
+        public void getWakeLockUsage(){
+            // cat /proc/wakelocks
+            // name	count	expire_count	wake_count	active_since	total_time	sleep_time	max_time	last_change
+
+            String cmd = "cat /proc/wakelocks";
+            CommandExecutorResult result=mCmdExecutor.executeCommand(cmd);
+
+            String raw= result.successMsg.replaceAll(" {2,}"," ");
+
+            String[] rows=raw.split("\n");
+
+            for(String row :rows) {
+                if (row.length() > 5) {
+
+
+                }
+            }
         }
 
         private String getPackageNameByPID(int pid) {
@@ -566,10 +640,36 @@ public class ProcessActivity extends Activity {
         }
 
         public MemoryInfo(int totalInkB,int freeInKB) {
-
             this.mTotalInkB = totalInkB;
             this.mFreeInKB = freeInKB;
         }
+    }
+
+    public class CPUInfo{
+        int mMinFrequency;
+        int mMaxFrequency;
+        int mCurrentFrequency;
+
+        public int getMinFrequency() {
+
+            return mMinFrequency;
+        }
+        public int getMaxFrequency() {
+
+            return mMaxFrequency;
+        }
+
+        public int getCurrentFrequency() {
+
+            return mCurrentFrequency;
+        }
+
+        public CPUInfo(int minFrequency,int maxFrequency, int currentFrequency) {
+            this.mMinFrequency = minFrequency;
+            this.mMaxFrequency = maxFrequency;
+            this.mCurrentFrequency = currentFrequency;
+        }
+
     }
 
     public class NativeProcessInfo extends ProcessInfo {
