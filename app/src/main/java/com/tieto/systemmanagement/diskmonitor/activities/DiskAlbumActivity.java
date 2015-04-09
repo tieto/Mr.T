@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.diskmonitor;
+package com.tieto.systemmanagement.diskmonitor.activities;
 
 import com.tieto.systemmanagement.BasicActivity;
 

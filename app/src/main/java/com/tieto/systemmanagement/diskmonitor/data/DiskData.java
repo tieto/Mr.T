@@ -6,7 +6,7 @@ import android.os.StatFs;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
-import com.tieto.systemmanagement.diskmonitor.entity.DMemInfo;
+import com.tieto.systemmanagement.diskmonitor.entity.DStorageInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,22 +60,22 @@ public class DiskData {
         return 100*(getStorageUsed())/getStorageTotal();
     }
 
-    public List<DMemInfo> getStoreSpaceInfos() {
-        ArrayList<DMemInfo> spaceInfos = new ArrayList<DMemInfo>();
+    public List<DStorageInfo> getStoreSpaceInfos() {
+        ArrayList<DStorageInfo> spaceInfos = new ArrayList<DStorageInfo>();
 
-        DMemInfo info1= new DMemInfo();
+        DStorageInfo info1= new DStorageInfo();
         info1.setIcon(TApp.getInstance().getDrawable(R.drawable.sysclear_file_apk));
         info1.setTitle(TApp.getInstance().getString(R.string.disk_space_store_title_1));
         info1.setTotal("123M");
         spaceInfos.add(info1);
 
-        DMemInfo info2= new DMemInfo();
+        DStorageInfo info2= new DStorageInfo();
         info2.setIcon(TApp.getInstance().getDrawable(R.drawable.sysclear_file_audio));
         info2.setTitle(TApp.getInstance().getString(R.string.disk_space_store_title_2));
         info2.setTotal("123M");
         spaceInfos.add(info2);
 
-        DMemInfo info3= new DMemInfo();
+        DStorageInfo info3= new DStorageInfo();
         info3.setIcon(TApp.getInstance().getDrawable(R.drawable.sysclear_file_zip));
         info3.setTitle(TApp.getInstance().getString(R.string.disk_space_store_title_3));
         info3.setTotal("123M");
@@ -84,10 +84,10 @@ public class DiskData {
         return spaceInfos;
     }
 
-    public List<DMemInfo> getSystemSpaceInfos() {
-        ArrayList<DMemInfo> systemInfos = new ArrayList<DMemInfo>();
+    public List<DStorageInfo> getSystemSpaceInfos() {
+        ArrayList<DStorageInfo> systemInfos = new ArrayList<DStorageInfo>();
 
-        DMemInfo info1= new DMemInfo();
+        DStorageInfo info1= new DStorageInfo();
         info1.setIcon(TApp.getInstance().getDrawable(R.drawable.sysclear_media_uninstall));
         info1.setTitle(TApp.getInstance().getString(R.string.disk_space_system_title_1));
         info1.setTotal("");

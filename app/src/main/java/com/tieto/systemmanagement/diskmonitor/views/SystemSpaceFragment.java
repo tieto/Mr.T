@@ -14,13 +14,13 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
-import com.tieto.systemmanagement.diskmonitor.DiskSWUninstalledActivity;
-import com.tieto.systemmanagement.diskmonitor.adapter.DiskSpaceAdapter;
+import com.tieto.systemmanagement.diskmonitor.activities.DiskSWUninstalledActivity;
+import com.tieto.systemmanagement.diskmonitor.adapter.DiskStorageAdapter;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
 
 public class SystemSpaceFragment extends Fragment {
     private ListView listView;
-    private DiskSpaceAdapter adapter;
+    private DiskStorageAdapter adapter;
 
     public SystemSpaceFragment() {
         super();
@@ -30,7 +30,7 @@ public class SystemSpaceFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = (ListView)view.findViewById(R.id.disk_list);
-        adapter = new DiskSpaceAdapter((Context)(this.getActivity()), DiskData.getInstance().getSystemSpaceInfos());
+        adapter = new DiskStorageAdapter((Context)(this.getActivity()), DiskData.getInstance().getSystemSpaceInfos());
         listView.setAdapter(adapter);
         TextView tv_summary_title = (TextView)view.findViewById(R.id.title);
         tv_summary_title.setText(TApp.getInstance().getString(R.string.disk_space_system));

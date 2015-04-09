@@ -1,15 +1,12 @@
 package com.tieto.systemmanagement.intercept.views;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,10 +16,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.diskmonitor.adapter.DiskSpaceAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;

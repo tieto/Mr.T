@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.diskmonitor.adapter.DiskSpaceAdapter;
+import com.tieto.systemmanagement.diskmonitor.adapter.DiskStorageAdapter;
 
 public class UninstalledSysSWFragment extends Fragment {
     private ListView listView;
-    private DiskSpaceAdapter adapter;
+    private DiskStorageAdapter adapter;
 
     public UninstalledSysSWFragment() {
         super();

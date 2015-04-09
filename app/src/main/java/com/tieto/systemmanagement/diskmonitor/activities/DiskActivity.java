@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.diskmonitor;
+package com.tieto.systemmanagement.diskmonitor.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 /**
  * Created by wangbo on 4/3/15.
  */
-public class DMemInfo {
+public class DStorageInfo {
 
     private Drawable icon;
     private String   title;
