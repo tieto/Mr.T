@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.authority.entity.AppWrapper;
-import com.tieto.systemmanagement.authority.entity.BitmapUtils;
-import com.tieto.systemmanagement.authority.entity.ImageLoader;
+import com.tieto.systemmanagement.authority.utilities.BitmapUtils;
+import com.tieto.systemmanagement.authority.utilities.ImageLoader;
 
 import java.util.List;
 

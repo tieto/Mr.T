@@ -59,7 +59,8 @@ public class AuthorityAppListFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         mAdapter = new AppInfoAdapter(getActivity());
         getListView().setAdapter(mAdapter);
-        getListView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        getListView().getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 mAdapter.setAppListData(getApplicationList(getActivity(), true));

@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.authority.entity;
+package com.tieto.systemmanagement.authority.utilities;
 
 import android.content.Context;
 import android.content.res.Resources;

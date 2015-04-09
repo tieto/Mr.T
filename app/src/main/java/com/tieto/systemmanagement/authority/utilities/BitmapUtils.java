@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.authority.entity;
+package com.tieto.systemmanagement.authority.utilities;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;

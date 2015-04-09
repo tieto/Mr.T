@@ -1,7 +1,6 @@
 package com.tieto.systemmanagement.authority;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.authority.entity.AppWrapper;
-import com.tieto.systemmanagement.authority.entity.BitmapUtils;
+import com.tieto.systemmanagement.authority.utilities.BitmapUtils;
 
 /**
  * @author Jiang Ping
