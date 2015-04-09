@@ -2,6 +2,7 @@ package com.tieto.systemmanagement.authority;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.authority.entity.AppInfo;
+import com.tieto.systemmanagement.authority.entity.AppWrapper;
 import com.tieto.systemmanagement.authority.entity.BitmapUtils;
 
 /**
@@ -20,10 +21,8 @@ import com.tieto.systemmanagement.authority.entity.BitmapUtils;
  */
 public class AuthorityDetailFragment extends Fragment {
 
-    private TextView mTextName;
     private ImageView mImageIcon;
-
-    private AppInfo mAppInfo;
+    private AppWrapper mAppInfo;
 
     public static AuthorityDetailFragment newInstance() {
         return new AuthorityDetailFragment();
@@ -52,11 +51,12 @@ public class AuthorityDetailFragment extends Fragment {
             mAppInfo = savedInstanceState.getParcelable("app_info");
         }
 
-        mTextName = (TextView) getView().findViewById(R.id.text_app_name);
-        mImageIcon = (ImageView) getView().findViewById(R.id.image_app_icon);
-        mTextName.setText(mAppInfo.getName());
+        TextView name = (TextView) getView().findViewById(R.id.text_app_name);
+        name.setText(mAppInfo.getName(getActivity()));
 
-        Bitmap original = mAppInfo.getIcon();
+        mImageIcon = (ImageView) getView().findViewById(R.id.image_app_icon);
+        Drawable icon = mAppInfo.loadIcon(getActivity());
+        Bitmap original = BitmapUtils.convertDrawableToBitmap(icon);
         Bitmap bitmap = BitmapUtils.createReflectBitmap(original, original.getHeight() / 3);
         mImageIcon.setImageBitmap(bitmap);
     }

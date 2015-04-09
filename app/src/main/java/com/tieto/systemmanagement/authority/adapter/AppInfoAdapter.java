@@ -1,6 +1,9 @@
 package com.tieto.systemmanagement.authority.adapter;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.authority.entity.AppInfo;
+import com.tieto.systemmanagement.authority.entity.AppWrapper;
+import com.tieto.systemmanagement.authority.entity.BitmapUtils;
 
 import java.util.List;
 
@@ -19,17 +23,19 @@ import java.util.List;
  */
 public class AppInfoAdapter extends BaseAdapter {
 
-    private List<AppInfo> mData;
+    private List<AppWrapper> mData;
     private LayoutInflater mInflater;
 
     private static String FORMATTER_HTML = null;
+    private IconLoader mLoader = null;
 
     public AppInfoAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         FORMATTER_HTML = context.getString(R.string.auth_permission_count_format);
+        mLoader = new IconLoader(context);
     }
 
-    public void setAppListData(List<AppInfo> apps) {
+    public void setAppListData(List<AppWrapper> apps) {
         mData = apps;
         notifyDataSetChanged();
     }
@@ -40,7 +46,7 @@ public class AppInfoAdapter extends BaseAdapter {
     }
 
     @Override
-    public AppInfo getItem(int pos) {
+    public AppWrapper getItem(int pos) {
         return mData == null? null : mData.get(pos);
     }
 
@@ -63,9 +69,9 @@ public class AppInfoAdapter extends BaseAdapter {
         } else {
             holder = (ConvertHolder) convertView.getTag();
         }
-        AppInfo info = mData.get(pos);
-        holder.icon.setImageBitmap(info.getIcon());
-        holder.name.setText(info.getName());
+        AppWrapper info = mData.get(pos);
+        mLoader.loadImage(holder.icon, info);
+        holder.name.setText(info.getName(mInflater.getContext()));
         holder.permissionCount.setText(Html.fromHtml(
                 String.format(FORMATTER_HTML, info.getPermissionCount())));
         return convertView;
@@ -75,5 +81,22 @@ public class AppInfoAdapter extends BaseAdapter {
         private ImageView icon;
         private TextView name;
         private TextView permissionCount;
+    }
+
+    private static final class IconLoader extends ImageLoader {
+
+        public IconLoader(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected Bitmap onCreateDrawable(Object data) {
+            if (data instanceof AppWrapper) {
+                AppWrapper app = (AppWrapper)data;
+                Drawable drawable = app.loadIcon(mContext);
+                return BitmapUtils.convertDrawableToBitmap(drawable);
+            }
+            return null;
+        }
     }
 }

@@ -9,6 +9,7 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -16,7 +17,7 @@ import android.widget.AdapterView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.authority.adapter.AppInfoAdapter;
-import com.tieto.systemmanagement.authority.entity.AppInfo;
+import com.tieto.systemmanagement.authority.entity.AppWrapper;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -53,13 +54,14 @@ public class AuthorityAppListFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         mAdapter = new AppInfoAdapter(getActivity());
         getListView().setAdapter(mAdapter);
-        new AppLoader(this).executeOnExecutor(mExecutor, null);
-
-        Animation fade = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
-        fade.setDuration(500);
-        LayoutAnimationController lac = new LayoutAnimationController(fade);
-        lac.setDelay(0.1f);
-        getListView().setLayoutAnimation(lac);
+        getListView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mAdapter.setAppListData(AppWrapper.getApplicationList(getActivity(), true));
+                getListView().getViewTreeObserver().removeOnPreDrawListener(this);
+                return false;
+            }
+        });
 
         View empty = getView().findViewById(R.id.empty_view);
         getListView().setEmptyView(empty);
@@ -73,30 +75,7 @@ public class AuthorityAppListFragment extends ListFragment {
         });
     }
 
-    protected void updateAppList(List<AppInfo> apps) {
+    protected void updateAppList(List<AppWrapper> apps) {
         mAdapter.setAppListData(apps);
-    }
-
-    private static class AppLoader extends AsyncTask<Void, Void, List<AppInfo>> {
-
-        private WeakReference<AuthorityAppListFragment> mContextRef;
-
-        public AppLoader(AuthorityAppListFragment fragment) {
-            mContextRef = new WeakReference<AuthorityAppListFragment>(fragment);
-        }
-
-        @Override
-        protected List<AppInfo> doInBackground(Void... voids) {
-            return AppInfo.getApplicationList(mContextRef.get().getActivity(), false);
-        }
-
-        @Override
-        protected void onPostExecute(List<AppInfo> apps) {
-            super.onPostExecute(apps);
-            AuthorityAppListFragment fragment = mContextRef.get();
-            if (fragment != null && fragment.isAdded()) {
-                fragment.updateAppList(apps);
-            }
-        }
     }
 }

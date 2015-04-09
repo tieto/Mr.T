@@ -5,17 +5,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.*;
-import android.os.Process;
 import android.util.Log;
 
 import com.tieto.systemmanagement.R;
-
-import org.androidannotations.annotations.App;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,31 +17,39 @@ import java.util.List;
 /**
  * @author Jiang Ping
  */
-public final class AppInfo implements Parcelable {
+public final class AppWrapper implements Parcelable {
 
-    private Bitmap mIcon;
-    private String mName;
-    private List<AppPermission> mPermissions = new ArrayList<AppPermission>();
+    private ApplicationInfo mAppInfo;
 
-    public AppInfo(String name, Bitmap icon) {
-        mName = name;
-        mIcon = icon;
+    public AppWrapper(ApplicationInfo appInfo) {
+        if (appInfo == null) {
+            throw new NullPointerException("Attempt to access the null object of appInfo.");
+        }
+        mAppInfo = appInfo;
     }
 
-    public Bitmap getIcon() {
-        return mIcon;
+    public Drawable loadIcon(Context context) {
+        return mAppInfo.loadIcon(context.getPackageManager());
     }
 
-    public String getName() {
-        return mName;
+    public String getName(Context context) {
+        return mAppInfo.loadLabel(context.getPackageManager()).toString();
+    }
+
+    public int getUid() {
+        return mAppInfo.uid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof AppWrapper)) {
+            return false;
+        }
+        return mAppInfo.uid == ((AppWrapper)o).getUid();
     }
 
     public int getPermissionCount() {
-        return mPermissions.size();
-    }
-
-    public void addPermission(AppPermission permission) {
-        mPermissions.add(permission);
+        return 0;
     }
 
     @Override
@@ -57,30 +59,28 @@ public final class AppInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeParcelable(mIcon, i);
-        parcel.writeString(mName);
+        parcel.writeParcelable(mAppInfo, i);
     }
 
-    public static final Creator<AppInfo> CREATOR = new Creator<AppInfo>() {
+    public static final Creator<AppWrapper> CREATOR = new Creator<AppWrapper>() {
         @Override
-        public AppInfo createFromParcel(Parcel parcel) {
-            Bitmap icon = parcel.readParcelable(Bitmap.class.getClassLoader());
-            String label = parcel.readString();
-            AppInfo info = new AppInfo(label, icon);
+        public AppWrapper createFromParcel(Parcel parcel) {
+            ApplicationInfo app = parcel.readParcelable(ApplicationInfo.class.getClassLoader());
+            AppWrapper info = new AppWrapper(app);
             return info;
         }
 
         @Override
-        public AppInfo[] newArray(int size) {
-            return new AppInfo[size];
+        public AppWrapper[] newArray(int size) {
+            return new AppWrapper[size];
         }
     };
 
-    public static List<AppInfo> getApplicationList(Context context, boolean hasSystem) {
+    public static List<AppWrapper> getApplicationList(Context context, boolean hasSystem) {
         PackageManager pm = context.getPackageManager();
         List<PackageInfo> packageInfo = pm.getInstalledPackages(
                 PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
-        List<AppInfo> list = new ArrayList<AppInfo>();
+        List<AppWrapper> list = new ArrayList<AppWrapper>();
         for (final PackageInfo pkg : packageInfo) {
             ApplicationInfo app = pkg.applicationInfo;
 
@@ -89,24 +89,9 @@ public final class AppInfo implements Parcelable {
                 continue;
             }
 
-            // Load app icon and name
-            String label = app.loadLabel(pm).toString();
-            Drawable iconDrawable = app.loadIcon(pm);
-            Bitmap icon = BitmapUtils.convertDrawableToBitmap(iconDrawable);
-            AppInfo item = new AppInfo(label, icon);
-
-            // Load app permissions
-            String[] permissions = pkg.requestedPermissions;
-            if (permissions != null && permissions.length > 0) {
-                for (String per : permissions) {
-                    AppPermission ap = loadPermission(context, pm, per);
-                    if (ap != null) {
-                        item.addPermission(ap);
-                    }
-                }
+            if (app != null) {
+                list.add(new AppWrapper(app));
             }
-
-            list.add(item);
         }
         return list;
     }
