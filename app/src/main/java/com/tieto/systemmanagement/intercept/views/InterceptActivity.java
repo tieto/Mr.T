@@ -1,5 +1,6 @@
 package com.tieto.systemmanagement.intercept.views;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -13,11 +14,20 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.diskmonitor.adapter.DiskSpaceAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhaooked on 4/2/15.
@@ -138,16 +148,53 @@ public class InterceptActivity extends FragmentActivity {
             switch (pagerIndex){
 
                 case 1 :
+                    ((View)rootView.findViewById(R.id.intercept_button)).setVisibility(View.VISIBLE);
                     singleButton.setText("标记");
                     deleteButton.setText("删除");
                     break;
                 case 2 :
-
-
+                    ((View)rootView.findViewById(R.id.intercept_button)).setVisibility(View.VISIBLE);
+                    singleButton.setText("标记");
+                    deleteButton.setText("删除");
                     break;
+                case 3 :
+                    ListView configurationListView = (ListView) rootView.findViewById(R.id.intercept_configuration);
+                    configurationListView.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.GONE);
+                    configurationListView.setAdapter(new SimpleAdapter(getActivity(),createData(),R.layout.item_intercept_configuration,new String[]{"content"},new int[]{R.id.intercept_configuration_item}){
+                    });
+                    configurationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            switch (position){
+                                case 0 :
+                                        Intent intent = new Intent(getActivity(),CallInterceptConfigActivity.class) ;
+                                        startActivity(intent);
+                                    break ;
+                                case 1 :
+
+                                    break ;
+                            }
+                        }
+                    });
+                    break ;
             }
-            textView.setText("Selected Page " + pagerIndex);
+
             return rootView ;
+        }
+
+        private List<Map<String,Object>> createData() {
+            List<Map<String,Object>> data = new ArrayList<Map<String,Object>>();
+
+            Map<String,Object> callConfig = new HashMap<String,Object>();
+            callConfig.put("content", getResources().getString(R.string.intercept_config_call)) ;
+            data.add(callConfig) ;
+
+            Map<String,Object> messageConfig = new HashMap<String,Object>();
+            messageConfig.put("content",getResources().getString(R.string.intercept_config_message)) ;
+            data.add(messageConfig) ;
+
+            return data ;
         }
 
     }

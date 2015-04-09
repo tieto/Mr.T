@@ -11,12 +11,21 @@
         android:id="@+id/fragment_content"
         android:text="Select"
         />
+    <ListView
+        style="@style/AppTheme.ListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/intercept_configuration">
+    </ListView>
 
 
     <LinearLayout
+        android:id="@+id/intercept_button"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
            <Button
                style="@style/ButtonTheme"
                android:layout_width="0dp"

@@ -76,8 +76,9 @@
             android:name=".intercept.views.InterceptActivity"
             android:label="@string/title_activity_no_spam" >
         </activity>
-            android:name=".NoSpamActivity"
-            android:label="@string/title_activity_no_spam" />
+        <activity
+            android:name=".NospamActivity"
+	    android:label="@string/title_activity_no_spam" />
         <activity
             android:name=".NetControlActivity"
             android:label="@string/title_activity_net_control" />
@@ -113,7 +114,12 @@
         </activity>
         <activity android:name=".trafficmonitor.views.NetSpeedActivity"
             android:label="网络测速"
-            android:icon="@drawable/t_common_title_icon"></activity>
+	    android:icon="@drawable/t_common_title_icon"></activity>
+        <activity
+	    android:name=".intercept.views.CallInterceptConfigActivity"
+	    android:label="@string/title_activity_call_intercept_config" >
+        </activity>
+
         <receiver android:name=".trafficmonitor.entity.PackageBroadCast">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"></action>
@@ -128,8 +134,11 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
-
         <service android:name=".intercept.service.PhoneFilterServer" android:process=":remote" />
+        <activity
+            android:name=".intercept.views.CallInterceptConfigActivity"
+            android:label="@string/title_activity_call_intercept_config" >
+        </activity>
     </application>
 
 </manifest>

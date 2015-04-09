@@ -2,6 +2,7 @@ package com.tieto.systemmanagement.intercept.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Binder;
 import android.os.IBinder;
@@ -10,6 +11,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.android.internal.telephony.ITelephony;
+import com.tieto.systemmanagement.intercept.util.InterceptConfiguration;
+import com.tieto.systemmanagement.intercept.util.InterceptConfiguration.InterceptCallConfiguration;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -21,16 +24,17 @@ import java.util.Set;
 public class PhoneFilterServer extends Service {
 
 
-    private static String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER ;
-    private static String TAG = "Phone Filter" ;
+    private static String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+    private static String TAG = "Phone Filter Server";
 
-    private boolean intercept_Contract = false ;
+    private boolean isIntercept ;
+    private boolean interceptContract ;
+    private boolean interceptAnonymity ;
 
-    private boolean intercept_Anonymity = true ;
-
-    private Set<String> phoneNumber = new HashSet<String>() ;
+    private Set<String> phoneNumberList = new HashSet<String>();
 
     private ITelephony telephonyService;
+    private TelephonyManager telephonyManager ;
 
 
     @Override
@@ -40,98 +44,105 @@ public class PhoneFilterServer extends Service {
 
     @Override
     public void onCreate() {
-        initFilter() ;
+        initFilter();
     }
 
 
+    public void get() {
 
-    public void get(){
+        String tempInputNumber = "18382037880";
+        String Number = ContactsContract.CommonDataKinds.Phone.NUMBER;
 
-        String tempInputNumber = "18382037880" ;
-        String Number = ContactsContract.CommonDataKinds.Phone.NUMBER ;
+        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, "replace(" + Number + ",' ','') = ?", new String[]{tempInputNumber}, null);
 
-        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null, "replace("+Number+",' ','') = ?", new String[]{tempInputNumber}, null);
-
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             String number = cursor.getString(cursor.getColumnIndex(Number));
-            Log.e("Phone Number :", number) ;
+            Log.e("Phone Number :", number);
         }
     }
 
-    public class myBinder extends Binder{
+    public class myBinder extends Binder {
 
-        PhoneFilterServer getService(){
-            return PhoneFilterServer.this ;
+        PhoneFilterServer getService() {
+            return PhoneFilterServer.this;
         }
     }
 
-    private final IBinder mBinder = new myBinder() ;
+    private final IBinder mBinder = new myBinder();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Intent intent1 = intent ;
-
-        if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
-
-        } else {
-
-            TelephonyManager tm = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
-
-            switch (tm.getCallState()) {
-                case TelephonyManager.CALL_STATE_RINGING:
-                    String incoming_number = intent.getStringExtra("incoming_number");
-                    Log.i(TAG, "RINGING :" + incoming_number);
-                    Log.e(TAG, "Telephony Manager:" + tm.getCallState());
-
-                    if(isIntercept(incoming_number)) {
-
-                        try {
-                            if(telephonyService == null) {
-                                Class c = Class.forName(tm.getClass().getName());
-                                Method m = c.getDeclaredMethod("getITelephony");
-                                m.setAccessible(true);
-                                telephonyService = (ITelephony) m.invoke(tm);
-                            }
-
-                            telephonyService.endCall();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
+        Log.e(TAG, "Telephony Manager:" + telephonyManager.getCallState());
+        switch (telephonyManager.getCallState()) {
+            case TelephonyManager.CALL_STATE_RINGING:
+                String incomingNumber = intent.getStringExtra("incoming_number");
+                Log.i(TAG, "RINGING :" + incomingNumber);
+                if (isIntercept(incomingNumber)) {
+                    try {
+                        if (telephonyService == null) {
+                            Class c = Class.forName(telephonyManager.getClass().getName());
+                            Method m = c.getDeclaredMethod("getITelephony");
+                            m.setAccessible(true);
+                            telephonyService = (ITelephony) m.invoke(telephonyManager);
                         }
+                        telephonyService.endCall();
+
+                    } catch (Exception e) {
+                        //
                     }
-                    break;
-            }
-
-            Log.v(TAG, "Receving....");
-
+                }
+             break;
         }
 
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public boolean isIntercept(String phoneNumber){
+    /**
+     * Filter conditions
+     * @param incomingPhoneNumber
+     * @return
+     */
+    private boolean isIntercept(String incomingPhoneNumber) {
 
-        boolean intercept = false ;
-        if(intercept_Anonymity){
-            intercept = !phoneNumber.contains(phoneNumber) ;
+        boolean intercept = false;
+        if(!isIntercept){
+            return intercept ;
         }
-        if(intercept_Contract){
-            intercept = phoneNumber.contains(phoneNumber) ;
+        if (interceptAnonymity) {
+            intercept = !phoneNumberList.contains(incomingPhoneNumber);
         }
-
-        return intercept ;
+        if (interceptContract) {
+            intercept = phoneNumberList.contains(incomingPhoneNumber);
+        }
+        return intercept;
     }
 
-    private void initFilter(){
+    /**
+     * Init Intercept Filter
+     */
+    private void initFilter() {
+
+        //Prepare intercept condition
+        SharedPreferences sharedPreferences = getSharedPreferences(InterceptConfiguration.INTERCEPT_CONFIGURATION, MODE_PRIVATE);
+        isIntercept = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT,InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT);
+        interceptContract = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_CONTRACT,InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_CONTRACT) ;
+        interceptAnonymity = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_ANONYMITY,InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_ANONYMITY) ;
+
         //Get all contract number
-        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,null,null,null);
-        while (cursor.moveToNext()){
+        phoneNumberList.clear();
+        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        while (cursor.moveToNext()) {
             try {
-                phoneNumber.add(cursor.getString(cursor.getColumnIndex(NUMBER)));
-            }catch (Exception e){
+                phoneNumberList.add(cursor.getString(cursor.getColumnIndex(NUMBER)));
+            } catch (Exception e) {
                 //
             }
+        }
+
+        //Prepare phone service
+        if(telephonyManager == null){
+            telephonyManager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
         }
     }
 }

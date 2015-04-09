@@ -67,4 +67,13 @@
 
     <!-- notification -->
     <string name="notification_item_icon">app icon</string>
+    <!-- Intercept management -->
+    <string name="intercept_config_message">MESSAGE INTERCEPT</string>
+    <string name="intercept_config_call">CALL INTERCEPT</string>
+    <string name="title_activity_call_intercept_config">CallInterceptConfigActivity</string>
+    <string name="title_call_intercept_strange">Unknown Number</string>
+    <string name="title_call_intercept_anonymous">Anonymous Number</string>
+    <string name="title_call_intercept_contract">Contracts</string>
+    <string name="intercept">Intercept</string>
+    <string name="un_intercept">No intercept</string>
 </resources>
