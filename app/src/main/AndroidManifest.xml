@@ -69,7 +69,7 @@
             android:label="@string/title_activity_disk" >
         </activity>
         <activity
-            android:name=".diskmonitor.views.DiskUninstalledActivity"
+            android:name=".diskmonitor.DiskSWUninstalledActivity"
             android:label="@string/title_activity_disk" >
         </activity>
         <activity
@@ -89,15 +89,15 @@
             android:theme="@style/CustomerTheme">
         </activity>
         <activity
-            android:name=".diskmonitor.views.DiskPackagesActivity"
+            android:name=".diskmonitor.DiskPackagesActivity"
             android:label="@string/title_activity_disk_packages" >
         </activity>
         <activity
-            android:name=".diskmonitor.views.DiskAlbumActivity"
+            android:name=".diskmonitor.DiskAlbumActivity"
             android:label="@string/title_activity_disk_album" >
         </activity>
         <activity
-            android:name=".diskmonitor.views.DiskAudioActivity"
+            android:name=".diskmonitor.DiskAudioActivity"
             android:label="@string/title_activity_disk_audio" >
         </activity>
         <activity

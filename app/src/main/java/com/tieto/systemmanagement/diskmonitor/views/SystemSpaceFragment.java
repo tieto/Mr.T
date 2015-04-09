@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
+import com.tieto.systemmanagement.diskmonitor.DiskSWUninstalledActivity;
 import com.tieto.systemmanagement.diskmonitor.adapter.DiskSpaceAdapter;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
 
@@ -42,7 +43,7 @@ public class SystemSpaceFragment extends Fragment {
 
                 switch (position) {
                     case 0: {//SW uninstalled
-                        Intent intent = new Intent(getActivity(),DiskUninstalledActivity.class);
+                        Intent intent = new Intent(getActivity(),DiskSWUninstalledActivity.class);
                         startActivity(intent);
                         break;
                     }
@@ -55,12 +56,12 @@ public class SystemSpaceFragment extends Fragment {
 
         //configured mem usage,how to refactor
         TextView tv_summary_men_percent_used = (TextView)view.findViewById(R.id.used_percent);
-        tv_summary_men_percent_used.setText(DiskData.getInstance().getMemPercentUserd()+"%");
+        tv_summary_men_percent_used.setText(DiskData.getInstance().getMemPercentUsed()+"%");
 
         TextView tv_summary_men_free = (TextView)view.findViewById(R.id.used);
         tv_summary_men_free.setText(TApp.getInstance().getString(R.string.disk_space_used_title)
-                +DiskData.getInstance().getMemAvailable()+"G/"
-                +DiskData.getInstance().getMemTotal()+"G");
+                +DiskData.getInstance().getStorageUsed()+"G/"
+                +DiskData.getInstance().getStorageTotal()+"G");
     }
 
     @Override

@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
+import com.tieto.systemmanagement.diskmonitor.DiskAlbumActivity;
+import com.tieto.systemmanagement.diskmonitor.DiskAudioActivity;
+import com.tieto.systemmanagement.diskmonitor.DiskPackagesActivity;
 import com.tieto.systemmanagement.diskmonitor.adapter.DiskSpaceAdapter;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
 
@@ -66,12 +69,12 @@ public class StoreSpaceFragment extends Fragment {
 
         //configured mem usage-> how to refactor
         TextView tv_summary_men_percent_used = (TextView)view.findViewById(R.id.used_percent);
-        tv_summary_men_percent_used.setText(DiskData.getInstance().getMemPercentUserd()+"%");
+        tv_summary_men_percent_used.setText(DiskData.getInstance().getMemPercentUsed()+"%");
 
         TextView tv_summary_men_free = (TextView)view.findViewById(R.id.used);
         tv_summary_men_free.setText(TApp.getInstance().getString(R.string.disk_space_used_title)
-                +DiskData.getInstance().getMemAvailable()+"G/"
-                +DiskData.getInstance().getMemTotal()+"G");
+                +DiskData.getInstance().getStorageUsed()+"G/"
+                +DiskData.getInstance().getStorageTotal()+"G");
     }
 
 	@Override

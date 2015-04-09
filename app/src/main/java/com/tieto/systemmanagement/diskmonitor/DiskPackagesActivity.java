@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.diskmonitor.views;
+package com.tieto.systemmanagement.diskmonitor;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,15 +6,17 @@ import android.support.v4.app.Fragment;
 import com.tieto.systemmanagement.BasicTabbedActivity;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
+import com.tieto.systemmanagement.diskmonitor.views.DiskPackagesInstalledFragment;
+import com.tieto.systemmanagement.diskmonitor.views.DiskPackagesUninstalledFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiskUninstalledActivity extends BasicTabbedActivity {
+public class DiskPackagesActivity  extends BasicTabbedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_disk_uninstalled);
+        setContentView(R.layout.activity_disk_packages);
         this.getActionBar().hide();
     }
 
@@ -23,12 +25,12 @@ public class DiskUninstalledActivity extends BasicTabbedActivity {
         super.onResume();
 
         List<Class<? extends Fragment>> fs = new ArrayList<Class<? extends Fragment>>();
-        fs.add(UninstalledUserSWFragment.class);
-        fs.add(UninstalledSysSWFragment.class);
+        fs.add(DiskPackagesInstalledFragment.class);
+        fs.add(DiskPackagesUninstalledFragment.class);
 
         List<String> ts = new ArrayList<String>();
-        ts.add(TApp.getInstance().getString(R.string.disk_uninstalled_user_sw));
-        ts.add(TApp.getInstance().getString(R.string.disk_uninstalled_sys_sw));
+        ts.add(TApp.getInstance().getString(R.string.disk_space_store_package_title_1));
+        ts.add(TApp.getInstance().getString(R.string.disk_space_store_package_title_2));
 
         try {
             set2Tabs(fs, ts);
