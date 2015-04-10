@@ -20,10 +20,28 @@ public class Record {
         int CONTENT = 1 ;
     }
 
+    private int id ;
 
     private int interceptType ;
     private int manifestType ;
     private int filtrationType ;
+    public String getDate() {
+        return date;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    private String date ;
 
     public int getInterceptType() {
         return interceptType;

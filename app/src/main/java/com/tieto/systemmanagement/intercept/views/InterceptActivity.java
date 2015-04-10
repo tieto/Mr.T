@@ -104,12 +104,20 @@ public class InterceptActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = new ContentFragmentPager() ;
-            Bundle args = new Bundle();
-            args.putInt(ContentFragmentPager.SELECT_PAGE,i+1);
-            fragment.setArguments(args);
 
-            return fragment;
+            switch (i){
+                case 0 :
+                return new CallRecordFragment();
+                case 1 :
+                case 2 :
+                    Fragment fragment = new ContentFragmentPager() ;
+                    Bundle args = new Bundle();
+                    args.putInt(ContentFragmentPager.SELECT_PAGE,i+1);
+                    fragment.setArguments(args);
+                    return fragment;
+            }
+            return null ;
+
         }
 
         @Override
@@ -143,9 +151,6 @@ public class InterceptActivity extends FragmentActivity {
             switch (pagerIndex){
 
                 case 1 :
-                    ((View)rootView.findViewById(R.id.intercept_button)).setVisibility(View.VISIBLE);
-                    singleButton.setText("标记");
-                    deleteButton.setText("删除");
                     break;
                 case 2 :
                     ((View)rootView.findViewById(R.id.intercept_button)).setVisibility(View.VISIBLE);

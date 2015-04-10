@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="10sp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:id="@+id/record_content"/>
+    <TextView
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10sp"
+        android:textColor="@color/secondary_text_disabled_material_light"
+        android:id="@+id/date"/>
+
+</LinearLayout>

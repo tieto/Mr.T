@@ -18,6 +18,7 @@ import com.tieto.systemmanagement.intercept.util.InterceptConfiguration.Intercep
 import com.tieto.systemmanagement.intercept.views.CallInterceptConfigActivity;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -87,6 +88,7 @@ public class PhoneFilterServer extends Service {
                         record.setInterceptType(Record.InterceptType.INCOMING_PHONE);
                         record.setFiltrationType(Record.FiltrationType.NUMBER);
                         record.setManifestType(Record.ManifestType.RECORD_LIST);
+                        record.setDate(new Date().toString());
                         recordDBHelper.insert(record);
                     }
                     break;

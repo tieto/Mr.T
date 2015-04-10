@@ -82,10 +82,14 @@ public class CallInterceptConfigActivity extends Activity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             phoneFilterServer = null ;
-            unbindService(serviceConnection);
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(serviceConnection);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
