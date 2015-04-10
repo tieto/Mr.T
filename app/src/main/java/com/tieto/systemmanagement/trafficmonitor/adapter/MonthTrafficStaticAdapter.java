@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by jane on 15-3-26.
  */
-public class MonthTrafficStaticAdapter extends BasicAdapter {
+public class MonthTrafficStaticAdapter extends NetworkManageBasicAdapter {
     private List<AppInfoEntity> mAppInfos;
     private LayoutInflater mInflater;
 
@@ -54,11 +54,11 @@ public class MonthTrafficStaticAdapter extends BasicAdapter {
             holder = new ViewHolder();
             holder.mAppIcon = (ImageView) view.findViewById(R.id.mon_app_icon);
             holder.mAppName = (TextView) view.findViewById(R.id.mon_app_name);
-            holder.mTrffic_sneak_tip = (TextView) view.findViewById(R.id.mon_traffic_sneak_tip);
-            holder.mTraffic_used = (TextView) view.findViewById(R.id.mon_traffic_used);
-            holder.mTraffic_used_bg = (TextView) view.findViewById(R.id.mon_traffic_bg);
-            holder.mTraffic_sneaked = (TextView) view.findViewById(R.id.mon_traffic_sneak);
-            holder.mNet_allowed_info = (TextView) view.findViewById(R.id.mon_net_allowed_info);
+            holder.mSneakTrafficTip = (TextView) view.findViewById(R.id.mon_traffic_sneak_tip);
+            holder.mUsedTraffic = (TextView) view.findViewById(R.id.mon_traffic_used);
+            holder.mBackgroundUsedTraffic = (TextView) view.findViewById(R.id.mon_traffic_bg);
+            holder.mSneakedTraffic = (TextView) view.findViewById(R.id.mon_traffic_sneak);
+            holder.mFirewallType = (TextView) view.findViewById(R.id.mon_net_allowed_info);
             holder.mAllowNetwork = (ImageButton) view.findViewById(R.id.mon_allow_net);
             view.setTag(holder);
         }else{
@@ -68,21 +68,20 @@ public class MonthTrafficStaticAdapter extends BasicAdapter {
         final AppInfoEntity appInfo = mAppInfos.get(i);
         holder.mAppIcon.setImageDrawable(appInfo.getmAppIcon());
         holder.mAppName.setText(appInfo.getmAppName());
-        holder.mTraffic_used.setText("已用" + appInfo.getmAppTrafficUsed() + "M");
-        holder.mTraffic_used_bg.setText("后台" + appInfo.getmAppTrafficUsedBg() + "M");
-        holder.mTraffic_sneaked.setText("本月已偷跑" + appInfo.getmAppTrafficSneaked() + "M");
-        holder.mNet_allowed_info.setText(appInfo.getmIsNetworkAllowed());
+        holder.mUsedTraffic.setText("已用" + appInfo.getmAppTrafficUsed() + "M");
+        holder.mBackgroundUsedTraffic.setText("后台" + appInfo.getmAppTrafficUsedBg() + "M");
+        holder.mSneakedTraffic.setText("本月已偷跑" + appInfo.getmAppTrafficSneaked() + "M");
+        holder.mFirewallType.setText(appInfo.getFirewallType());
 
-        final CallbackImpl impl = new CallbackImpl(holder.mNet_allowed_info);
+        final CallbackImpl impl = new CallbackImpl(holder.mFirewallType);
         holder.mAllowNetwork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //popup window,and when  the item is clicked ,the info should be changed.
+                //check the root permission first
                 if (IptablesForDroidWall.hasRootAccess(context, true)) {
                     showWindow(view, appInfo, impl);
                 }
-                showWindow(view, appInfo, impl);
-
             }
         });
         return view;
@@ -91,11 +90,11 @@ public class MonthTrafficStaticAdapter extends BasicAdapter {
     private class ViewHolder {
         private ImageView mAppIcon;
         private TextView mAppName;
-        private TextView mTrffic_sneak_tip;
-        private TextView mTraffic_used;
-        private TextView mTraffic_used_bg;
-        private TextView mTraffic_sneaked;
-        private TextView mNet_allowed_info;
+        private TextView mSneakTrafficTip;
+        private TextView mUsedTraffic;
+        private TextView mBackgroundUsedTraffic;
+        private TextView mSneakedTraffic;
+        private TextView mFirewallType;
         private ImageButton mAllowNetwork;
     }
 }

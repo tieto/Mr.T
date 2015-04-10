@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.trafficmonitor.views;
+package com.tieto.systemmanagement.trafficmonitor.control;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by jane on 15-3-25.
  */
-public class FireWallManageActivity  extends FragmentActivity implements ViewPager.OnPageChangeListener{
+public class NetworkManageActivity extends FragmentActivity implements ViewPager.OnPageChangeListener{
     private ArrayList<Fragment> mFragments;
     private ViewPager mViewPager;
     private ViewPagerAdapter mAdapter;
@@ -35,11 +35,15 @@ public class FireWallManageActivity  extends FragmentActivity implements ViewPag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.t_activity_firewall_manage_layout);
+        initialize();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    private void initialize() {
         mCursor = findViewById(R.id.activity_firewall_cursor);
         mViewPager = (ViewPager) findViewById(R.id.activity_firewall_viewpager);
         mRTNetSpeedTextView = (TextView) findViewById(R.id.activity_firewall_realtime);
@@ -54,8 +58,8 @@ public class FireWallManageActivity  extends FragmentActivity implements ViewPag
         mOffset = (int) (screenW / 2.0 - mOffset);
 
         mFragments = new ArrayList<Fragment>();
-        mFragments.add(new RtNetSpeedFragment());
-        mFragments.add(new MonTrafficStatFragement());
+        mFragments.add(new RealTimeNetworkSpeedFragment());
+        mFragments.add(new MonthTrafficStasticFragement());
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager(),mFragments);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(mCurrentIndex);
@@ -67,7 +71,7 @@ public class FireWallManageActivity  extends FragmentActivity implements ViewPag
         super.onPause();
         //check if hasRoot permission ,and apply the iptable firewall rules
         if(IptablesForDroidWall.hasRootAccess(this,false)) {
-            IptablesForDroidWall.applySavedIptablesRules(FireWallManageActivity.this,true);
+            IptablesForDroidWall.applySavedIptablesRules(NetworkManageActivity.this,true);
         }
     }
 

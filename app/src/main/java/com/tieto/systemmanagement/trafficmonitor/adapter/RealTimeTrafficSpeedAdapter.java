@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by jane on 15-3-26.
  */
-public class RealTimeTrafficSpeedAdapter extends BasicAdapter {
+public class RealTimeTrafficSpeedAdapter extends NetworkManageBasicAdapter {
     private List<AppInfoEntity> mAppInfos;
     private LayoutInflater mInflater;
 
@@ -74,17 +74,15 @@ public class RealTimeTrafficSpeedAdapter extends BasicAdapter {
 
         holder.mAppIcon.setImageDrawable(appInfo.getmAppIcon());
         holder.mAppName.setText(appInfo.getmAppName());
-        holder.mNetAllowedInfo.setText(appInfo.getmIsNetworkAllowed());
+        holder.mNetAllowedInfo.setText(appInfo.getFirewallType());
 
         final CallbackImpl impl = new CallbackImpl(holder.mNetAllowedInfo);
         holder.mAllowNetworkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (IptablesForDroidWall.hasRootAccess(context, true)) {
                     showWindow(view, appInfo, impl);
                 }
-                showWindow(view, appInfo, impl);
             }
         });
         return convertView;
@@ -113,7 +111,6 @@ public class RealTimeTrafficSpeedAdapter extends BasicAdapter {
 
         @Override
         public void onSpeedUpdated(TrafficSpeed.Speeds speeds) {
-            Log.e("TAG","RTSpeed:"+speeds.getRxSpeedReadable());
             mTarget.setText(speeds.getRxSpeedReadable());
         }
     }

@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 /**
  * Created by jane on 15-3-25.
  */
-public class AppTrafficUsedInfoPref {
+public class TrafficStasticPreferrence {
 
     //记录的信息：
     // 是否是第一次使用该app

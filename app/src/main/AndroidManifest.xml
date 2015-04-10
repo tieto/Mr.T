@@ -78,9 +78,6 @@
             android:label="@string/title_activity_no_spam" >
         </activity>
         <activity
-            android:name=".NetControlActivity"
-            android:label="@string/title_activity_net_control" />
-        <activity
             android:name=".BatteryActivity"
             android:label="@string/title_activity_battery" />
         <activity
@@ -101,15 +98,14 @@
             android:label="@string/title_activity_disk_audio" >
         </activity>
         <activity
-            android:name=".trafficmonitor.views.FireWallManageActivity"
+            android:name=".trafficmonitor.control.NetworkManageActivity"
             android:icon="@drawable/t_common_title_icon"
             android:label="联网管理" >
         </activity>
         <activity
             android:name=".BasicTabbedActivity">
         </activity>
-        <activity
-            android:name=".trafficmonitor.views.NetSpeedActivity"
+        <activity android:name=".trafficmonitor.control.NetworkSpeedCalculateActivity"
             android:label="网络测速"
             android:icon="@drawable/t_common_title_icon"></activity>
         <activity

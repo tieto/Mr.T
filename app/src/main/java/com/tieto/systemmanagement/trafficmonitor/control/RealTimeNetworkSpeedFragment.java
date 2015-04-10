@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.trafficmonitor.views;
+package com.tieto.systemmanagement.trafficmonitor.control;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.trafficmonitor.adapter.RealTimeTrafficSpeedAdapter;
@@ -17,14 +17,14 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RtNetSpeedFragment extends Fragment {
+public class RealTimeNetworkSpeedFragment extends Fragment {
 
     private ListView mListView;
     private RealTimeTrafficSpeedAdapter mAdapter;
     private List<AppInfoEntity> mAppInfoList;
     private TrafficStatsImpl mTrafficStats;
 
-    public RtNetSpeedFragment() {
+    public RealTimeNetworkSpeedFragment() {
         super();
     }
 

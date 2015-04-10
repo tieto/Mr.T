@@ -3,7 +3,7 @@ package com.tieto.systemmanagement.trafficmonitor.entity;
 /**
  * Created by jane on 15-3-24.
  */
-public enum AppNetWorkInfo {
+public enum FirewallType {
 
     //prohibit network sneaking
     SNEAKING_PROHIBIT ,

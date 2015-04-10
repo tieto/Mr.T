@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.trafficmonitor.views;
+package com.tieto.systemmanagement.trafficmonitor.control;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,13 +19,13 @@ import java.util.List;
 /**
  * Created by jane on 15-3-26.
  */
-public class MonTrafficStatFragement extends Fragment {
+public class MonthTrafficStasticFragement extends Fragment {
     private ListView mListView;
     private List<AppInfoEntity> mAppInfos;
     private MonthTrafficStaticAdapter mAdapter;
     private TrafficStatsImpl mTrafficStats;
 
-    public MonTrafficStatFragement() {
+    public MonthTrafficStasticFragement() {
         super();
     }
 

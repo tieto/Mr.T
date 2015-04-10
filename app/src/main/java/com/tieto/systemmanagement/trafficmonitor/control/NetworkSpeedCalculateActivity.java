@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.trafficmonitor.views;
+package com.tieto.systemmanagement.trafficmonitor.control;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by jane on 15-4-2.
  */
-public class NetSpeedActivity extends BasicActivity implements View.OnClickListener{
+public class NetworkSpeedCalculateActivity extends BasicActivity implements View.OnClickListener{
 
     private TextView mCurrentSpeedTextView;
     private TextView mAveragSpeedTextView;
@@ -48,7 +48,6 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
         mAveragSpeedTextView = (TextView) findViewById(R.id.netspeed_average);
         mCalSpeedTextView = (Button) findViewById(R.id.netspeed_calculate);
         mCalSpeedTextView.setOnClickListener(this);
-
 
         mHandler = new Handler() {
             @Override
@@ -77,7 +76,6 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
                                 total =total + mSpeedList.get(i);
                                 totalCount += 1;
                             }
-
                         }
                         Log.e("TAG","totalCount = "+totalCount+" ,total = "+total);
                         average = total/totalCount;
@@ -89,8 +87,6 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
                 }
             }
         };
-
-
     }
 
     @Override
@@ -113,6 +109,7 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
             @Override
             public void run() {
                 super.run();
+                //download a specified file from the specified URL
                 downLoadFile(URL, mTrafficSpeed);
             }
 
@@ -122,6 +119,7 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
             @Override
             public void run() {
                 super.run();
+                //send handler for updating the current network speed
                 while(mTrafficSpeed.getmHadReadBytes()< mTrafficSpeed.getmTotalBytes()|| mTrafficSpeed.getmHadReadBytes()==0){
                     if(mFlag) {
                             mHandler.sendEmptyMessageDelayed(UPDATE, POST_DELAY);
@@ -139,7 +137,7 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
         URL url = null;
         URLConnection url_conn = null;
         InputStream input = null;
-        long interval = 0;
+
 
         try {
             url  = new URL(url_str);
@@ -155,6 +153,7 @@ public class NetSpeedActivity extends BasicActivity implements View.OnClickListe
 
             byte[] buff = new byte[1024];
             long startTime = System.currentTimeMillis();
+            long interval = 0;
             int len = 0;
                 while((len = input.read()) != -1){
                     if(mFlag) {

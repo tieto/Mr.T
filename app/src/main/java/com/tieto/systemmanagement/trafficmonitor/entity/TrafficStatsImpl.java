@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.TrafficStats;
 
-import com.tieto.systemmanagement.trafficmonitor.storage.AppNetInfoPreferrence;
+import com.tieto.systemmanagement.trafficmonitor.storage.FirewallTypePreferrence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,7 @@ public class TrafficStatsImpl {
                             appInfoEntiy.setmAppNetSpeeed(getAppNetSpeed(uid));
                             appInfoEntiy.setmAppTrafficUsedBg(getAppTrafficUsed(uid, BACKGROUND));
                             appInfoEntiy.setmAppTrafficUsed(getAppTrafficUsed(uid, ALL));
-                            appInfoEntiy.setmIsNetworkAllowed(getIsNetWorkAllowed(uid));
+                            appInfoEntiy.setFirewallType(getIsNetWorkAllowed(uid));
 
                             trafficInfoForEachApp.add(appInfoEntiy);
                         }
@@ -87,7 +87,7 @@ public class TrafficStatsImpl {
      */
     private int getIsNetWorkAllowed(int uid) {
         //here we may save the value in the sharePreference  AppNetworkInfoPref
-        int netState = AppNetInfoPreferrence.getAppNetState(mContext,uid);
+        int netState = FirewallTypePreferrence.getNetworkState(mContext, uid);
         return netState;
     }
 

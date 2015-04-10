@@ -8,11 +8,17 @@ import android.graphics.drawable.Drawable;
 public class AppInfoEntity {
     private int mUid;
     private Drawable mAppIcon;
+    //app name
     private String mAppName;
+    //app在本月使用的流量
     private float mAppTrafficUsed;
+    //后台使用的流量
     private float mAppTrafficUsedBg;
-    private int mIsNetworkAllowed;
+    //防火墙设置类型
+    private int firewallType;
+    //app网速
     private float mAppNetSpeeed;
+    //后台偷跑流量
     private float mAppTrafficSneaked;
 
     public AppInfoEntity() {
@@ -23,7 +29,7 @@ public class AppInfoEntity {
         this.mAppName = appName;
         this.mAppTrafficUsed = appTrafficUsed;
         this.mAppTrafficUsedBg = appTrafficUsedBg;
-        this.mIsNetworkAllowed = isNetworkAllowed;
+        this.firewallType = isNetworkAllowed;
         this.mAppNetSpeeed = appNetSpeeed;
         this.mAppTrafficSneaked = appTrafficSneaked;
     }
@@ -60,9 +66,9 @@ public class AppInfoEntity {
         this.mAppTrafficUsed = mAppTrafficUsed;
     }
 
-    public String getmIsNetworkAllowed() {
+    public String getFirewallType() {
         String netType = "";
-        switch (mIsNetworkAllowed) {
+        switch (firewallType) {
             /*case CommonConstant.SNEAKING_PROHIBITED:
                 break;*/
             case 0:
@@ -82,8 +88,8 @@ public class AppInfoEntity {
         return netType;
     }
 
-    public void setmIsNetworkAllowed(int mIsNetworkAllowed) {
-        this.mIsNetworkAllowed = mIsNetworkAllowed;
+    public void setFirewallType(int firewallType) {
+        this.firewallType = firewallType;
     }
 
     public float getmAppNetSpeeed() {

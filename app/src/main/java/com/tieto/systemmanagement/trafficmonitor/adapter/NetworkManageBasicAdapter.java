@@ -19,16 +19,16 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntity;
-import com.tieto.systemmanagement.trafficmonitor.entity.AppNetWorkInfo;
+import com.tieto.systemmanagement.trafficmonitor.entity.FirewallType;
 import com.tieto.systemmanagement.trafficmonitor.entity.IptablesForDroidWall;
-import com.tieto.systemmanagement.trafficmonitor.storage.AppNetInfoPreferrence;
+import com.tieto.systemmanagement.trafficmonitor.storage.FirewallTypePreferrence;
 
 import java.util.StringTokenizer;
 
 /**
  * Created by jane on 15-4-1.
  */
-public class BasicAdapter extends BaseAdapter {
+public class NetworkManageBasicAdapter extends BaseAdapter {
     public Context context;
     private PopupWindow popupWindow;
     public static final String[] mPop_list = new String[]{"禁止偷跑","禁止联网","允许网络","仅wifi"};
@@ -46,8 +46,8 @@ public class BasicAdapter extends BaseAdapter {
         //parent should be changed by animation
         int h = parent.getLayoutParams().height;
         int w = parent.getLayoutParams().width;
-        final Animation anim1 = new RotateAnimation(0f,180f,w/2,h/2);
 
+        final Animation anim1 = new RotateAnimation(0f,180f,w/2,h/2);
         anim1.setRepeatCount(0);
         anim1.setDuration(50);
         anim1.setFillAfter(true);
@@ -84,7 +84,7 @@ public class BasicAdapter extends BaseAdapter {
                 switch (i) {
                     case 0://sneak prohibit
                         callBack.onNetAllowedInfoUpdated(mPop_list[0]);
-                        AppNetInfoPreferrence.saveAppNetState(context, uid, AppNetWorkInfo.SNEAKING_PROHIBIT.ordinal());
+                        FirewallTypePreferrence.saveNetworkState(context, uid, FirewallType.SNEAKING_PROHIBIT.ordinal());
                         break;
                     case 1://network prohibit
                         callBack.onNetAllowedInfoUpdated(mPop_list[1]);
@@ -94,7 +94,7 @@ public class BasicAdapter extends BaseAdapter {
                         if (uid_3g_existed) {
                             uids_3g_new = delete(uids_3g, uid);
                         }
-                        AppNetInfoPreferrence.saveAppNetState(context, uid, AppNetWorkInfo.NETWORK_PROHIBIT.ordinal());
+                        FirewallTypePreferrence.saveNetworkState(context, uid, FirewallType.NETWORK_PROHIBIT.ordinal());
                         break;
                     case 2://network allowed
                         callBack.onNetAllowedInfoUpdated(mPop_list[2]);
@@ -108,7 +108,7 @@ public class BasicAdapter extends BaseAdapter {
                         } else {
                             uids_3g_new = uids_3g;
                         }
-                        AppNetInfoPreferrence.saveAppNetState(context, uid, AppNetWorkInfo.NETWORK_ALLOWED.ordinal());
+                        FirewallTypePreferrence.saveNetworkState(context, uid, FirewallType.NETWORK_ALLOWED.ordinal());
                         break;
                     case 3://only wifi allowed
                         callBack.onNetAllowedInfoUpdated(mPop_list[3]);
@@ -118,12 +118,14 @@ public class BasicAdapter extends BaseAdapter {
                             uids_wifi_new = uids_wifi;
                         }
                         uids_3g_new = uids_3g;
-                        AppNetInfoPreferrence.saveAppNetState(context, uid, AppNetWorkInfo.WIFI_ALLOWED_ONLY.ordinal());
+                        FirewallTypePreferrence.saveNetworkState(context, uid, FirewallType.WIFI_ALLOWED_ONLY.ordinal());
                         break;
                 }
                 parent.startAnimation(anim2);
+                //save uids
                 mEditor.putString(IptablesForDroidWall.PREF_WIFI_UIDS, uids_wifi_new).commit();
                 mEditor.putString(IptablesForDroidWall.PREF_3G_UIDS, uids_3g_new).commit();
+                //dismiss the popup window
                 popupWindow.dismiss();
                 Log.e("TAG", ",uid:" + uid + ",uids_wifi_new:" + uids_wifi_new + ",uids_3g_new:" + uids_3g_new);
 
@@ -226,6 +228,8 @@ public class BasicAdapter extends BaseAdapter {
         void onNetAllowedInfoUpdated(String info);
     }
 
+    //the callback was designed to update the ui display
+    //when the firewall type changed.
     public class CallbackImpl implements CallBack{
         private TextView mNetAllowedInfo;
         public CallbackImpl(TextView mText){

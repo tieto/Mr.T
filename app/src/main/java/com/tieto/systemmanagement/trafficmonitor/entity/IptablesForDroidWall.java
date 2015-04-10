@@ -641,8 +641,9 @@ public final class IptablesForDroidWall {
 		if (showErrors) {
 			alert(ctx, "Could not acquire root access.\n" +
 				"You need a rooted phone to run DroidWall.\n\n" +
-				"If this phone is already rooted, please make sure DroidWall has enough permissions to execute the \"su\" command.\n" +
-				"Error message: " + res.toString());
+				"If this phone is already rooted, please make sure DroidWall has enough permissions to execute the \"su\" command.\n"
+				);
+            //"Error message: " + res.toString()
 		}
 		return false;
 	}
