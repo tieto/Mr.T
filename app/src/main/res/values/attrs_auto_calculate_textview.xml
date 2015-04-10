@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="AutoCalculateTextView">
+        <attr name="setContentType" format="enum">
+            <enum name="size" value="1" />
+            <enum name="date" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>
