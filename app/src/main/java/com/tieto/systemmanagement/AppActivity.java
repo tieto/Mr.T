@@ -3,9 +3,9 @@ package com.tieto.systemmanagement;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 
 import com.tieto.systemmanagement.app.adapter.ListFragmentPagerAdapter;
@@ -18,7 +18,7 @@ import java.util.List;
  * Created by jinpei on 25/03/15.
  * Main activity of app management.
  */
-public class AppActivity extends ActionBarActivity {
+public class AppActivity extends FragmentActivity {
 
     /**
      * Position of default page.

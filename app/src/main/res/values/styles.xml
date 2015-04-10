@@ -29,7 +29,11 @@
     </style>
     <!-- Customer application theme. -->
     <style name="CustomerTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="android:actionBarStyle">@style/CustomerThemeActionBarNoBackground</item>
+    </style>
+
+    <style name="CustomerThemeActionBarNoBackground" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/app_actionbar_background_color</item>
     </style>
 
 </resources>

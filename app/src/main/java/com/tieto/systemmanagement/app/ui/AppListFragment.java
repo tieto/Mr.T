@@ -64,17 +64,17 @@ public abstract class AppListFragment extends Fragment implements View.OnClickLi
      * To init the root view.
      */
     protected View initRootView(LayoutInflater inflater) {
-        return inflater.inflate(R.layout.app_page,null);
-    };
+        return inflater.inflate(R.layout.app_page, null);
+    }
 
     /**
      * To init Views.
      */
     protected void initView(View root) {
-        mListView =  (ListView)root.findViewById(R.id.app_list);
-        mProgressBar = (ProgressBar)root.findViewById(R.id.app_list_loading);
+        mListView = (ListView) root.findViewById(R.id.app_list);
+        mProgressBar = (ProgressBar) root.findViewById(R.id.app_list_loading);
         mListView.setOnItemClickListener(this);
-    };
+    }
 
     /**
      * Abstract method. To set the type of app list.
@@ -124,7 +124,7 @@ public abstract class AppListFragment extends Fragment implements View.OnClickLi
         /**
          * New a thread to fill the list with app info.
          */
-        if(mListView != null && mAppListAdapter == null && isAlive) {
+        if (mListView != null && mAppListAdapter == null && isAlive) {
             mAppInfoGetter = new Thread(new AppListThread());
             mAppInfoGetter.start();
         }
@@ -145,7 +145,7 @@ public abstract class AppListFragment extends Fragment implements View.OnClickLi
      * Called after loading.
      */
     private void switchView() {
-        if(View.VISIBLE == mProgressBar.getVisibility()) {
+        if (View.VISIBLE == mProgressBar.getVisibility()) {
             mProgressBar.setVisibility(View.INVISIBLE);
             mListView.setVisibility(View.VISIBLE);
         } else {
@@ -162,7 +162,7 @@ public abstract class AppListFragment extends Fragment implements View.OnClickLi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         AppListAdapter.AppDetailIntent intent = mAppListAdapter.new AppDetailIntent(position);
-        intent.setClass(this.getActivity(),AppDetailActivity.class);
+        intent.setClass(this.getActivity(), AppDetailActivity.class);
         startActivity(intent);
     }
 
@@ -172,9 +172,6 @@ public abstract class AppListFragment extends Fragment implements View.OnClickLi
     private class AppListThread implements Runnable {
         @Override
         public void run() {
-            if(!isAlive) {
-                return;
-            }
             /**
              * Call getAppListAdapter method to get the adapter.
              */

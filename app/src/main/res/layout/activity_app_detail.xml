@@ -1,7 +1,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:paddingBottom="8dip"
+    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:paddingTop="8dip">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,12 +17,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/app_detail_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="@android:dimen/app_icon_size"
+                android:layout_height="@android:dimen/app_icon_size"
+                android:layout_marginEnd="8dip" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -27,18 +34,21 @@
                 <TextView
                     android:id="@+id/app_detail_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
                     android:id="@+id/app_detail_version"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
             android:orientation="horizontal">
 
             <Button
@@ -68,12 +78,25 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginTop="4dip"
-            android:text="@string/app_detail_notification_visible" />
+            android:text="@string/app_detail_notification_visible"
+            android:visibility="invisible" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_storage"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?android:colorPrimaryDark" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dip"
+                android:src="@drawable/marker" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -102,13 +125,14 @@
                     android:scaleType="center"
                     android:src="@mipmap/dotted_line_480px" />
 
-                <TextView
+                <com.tieto.systemmanagement.app.ui.AutoCalculateTextView
                     android:id="@+id/app_detail_total_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:paddingTop="6dip"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    local:setContentType="size" />
             </LinearLayout>
 
             <LinearLayout
@@ -138,13 +162,14 @@
                     android:scaleType="center"
                     android:src="@mipmap/dotted_line_480px" />
 
-                <TextView
+                <com.tieto.systemmanagement.app.ui.AutoCalculateTextView
                     android:id="@+id/app_detail_application_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:paddingTop="6dip"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    local:setContentType="size" />
             </LinearLayout>
 
             <LinearLayout
@@ -174,14 +199,60 @@
                     android:scaleType="center"
                     android:src="@mipmap/dotted_line_480px" />
 
-                <TextView
+                <com.tieto.systemmanagement.app.ui.AutoCalculateTextView
                     android:id="@+id/app_detail_data_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:paddingTop="6dip"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    local:setContentType="size" />
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/app_detail_button_clear_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="@string/app_detail_clear_data" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_cache"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?android:colorPrimaryDark" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dip"
+                android:src="@drawable/marker" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -210,40 +281,41 @@
                     android:scaleType="center"
                     android:src="@mipmap/dotted_line_480px" />
 
-                <TextView
+                <com.tieto.systemmanagement.app.ui.AutoCalculateTextView
                     android:id="@+id/app_detail_cache_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:paddingTop="6dip"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    local:setContentType="size" />
             </LinearLayout>
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/app_detail_button_clear_data"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:text="@string/app_detail_clear_data" />
+                android:layout_marginTop="5dip"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:visibility="invisible" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:visibility="invisible" />
 
-            <Button
-                android:id="@+id/app_detail_button_clear_cache"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:text="@string/app_detail_clear_cache" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/app_detail_button_clear_cache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="@string/app_detail_clear_cache" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -3,11 +3,15 @@
     <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/ActionBarNoBackground</item>
         <item name="android:colorPrimaryDark">#ff2f8f58</item>
+        <item name="android:colorPrimary">#ff2f8f58</item>
     </style>
 
     <!-- Customer application theme. -->
     <style name="CustomerTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
+        <item name="android:colorPrimaryDark">#ff2f8f58</item>
+        <item name="android:colorPrimary">#ff2f8f58</item>
+        <item name="android:actionBarStyle">@style/CustomerThemeActionBarNoBackground</item>
     </style>
 
     //traffic

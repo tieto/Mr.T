@@ -21,7 +21,7 @@ public class AppInfoTool {
     private final static String GET_PACKAGE_SIZE_INFO = "getPackageSizeInfo";
 
     public static synchronized List<PackageInfo> getAppList(PackageManager pm) {
-        if(AppListCache.PackageInfoListCache == null) {
+        if (AppListCache.PackageInfoListCache == null) {
             try {
                 AppListCache.PackageInfoListCache = pm.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
             } catch (Exception e) {
@@ -32,7 +32,7 @@ public class AppInfoTool {
     }
 
     public static synchronized List<ActivityManager.RunningAppProcessInfo> getRunningAppProcessInfoList(ActivityManager am) {
-        if(AppListCache.RunningAppProcessCache == null) {
+        if (AppListCache.RunningAppProcessCache == null) {
             try {
                 AppListCache.RunningAppProcessCache = am.getRunningAppProcesses();
             } catch (Exception e) {

@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.app.constants.AppListCache;
 import com.tieto.systemmanagement.app.model.AppListItemModel;
 import com.tieto.systemmanagement.app.model.AppSizeModel;
 import com.tieto.systemmanagement.app.tools.AppListFragmentTool;
@@ -71,7 +70,8 @@ public class AppListAdapter extends BaseAdapter {
             holder = new AppListItemViewHolder();
             holder.image = (ImageView) convertView.findViewById(R.id.app_icon);
             holder.textView_1 = (TextView) convertView.findViewById(R.id.app_name);
-            holder.textView_2 = (TextView) convertView.findViewById(R.id.package_name);
+            holder.textView_2 = (TextView) convertView.findViewById(R.id.app_size);
+            holder.textView_3 = (TextView) convertView.findViewById(R.id.app_date);
 
             convertView.setTag(holder);
         } else {
@@ -84,6 +84,7 @@ public class AppListAdapter extends BaseAdapter {
         holder.image.setImageDrawable(mAppListItemModel.getIcon());
         holder.textView_1.setText(mAppListItemModel.getAppLabel());
         holder.textView_2.setText(String.valueOf(mAppListItemModel.getTotalSize()));
+        holder.textView_3.setText(String.valueOf(mAppListItemModel.getFirstInstallTime()));
         holder.position = position;
 
         mAppViewMap.put(Integer.valueOf(position), convertView);
@@ -105,48 +106,50 @@ public class AppListAdapter extends BaseAdapter {
         public ImageView image;
         public TextView textView_1;
         public TextView textView_2;
+        public TextView textView_3;
         public int position;
     }
 
-    /**
-     * A thread to set app size info.
-     */
-    private static class AppSizeInfoSetterRunnable implements Runnable {
-
-        /**
-         * Position of item in app list.
-         */
-        private int position;
-
-        /**
-         * Package name of app info.
-         */
-        private String packageName;
-
-        private AppSizeInfoSetterHandler appSizeInfoSetterHandler;
-
-        private WeakReference<AppListAdapter> mAppListAdapter;
-
-        private AppSizeInfoSetterRunnable(int position, String packageName, AppSizeInfoSetterHandler appSizeInfoSetterHandler, WeakReference<AppListAdapter> appListAdapter) {
-            this.position = position;
-            this.packageName = packageName;
-            this.appSizeInfoSetterHandler = appSizeInfoSetterHandler;
-            mAppListAdapter = appListAdapter;
-        }
-
-        @Override
-        public void run() {
-            AppListFragment appListFragment = mAppListAdapter.get().mAppListFragment.get();
-            if (appListFragment == null || !appListFragment.isAlive) return;
-
-            AppListFragmentTool appListFragmentTool = appListFragment.getAppInfoTool();
-            try {
-                appListFragmentTool.getAppSizeModel(packageName, position, appSizeInfoSetterHandler);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    /**
+//     * A thread to set app size info.
+//     */
+//    private static class AppSizeInfoSetterRunnable implements Runnable {
+//
+//        /**
+//         * Position of item in app list.
+//         */
+//        private int position;
+//
+//        /**
+//         * Package name of app info.
+//         */
+//        private String packageName;
+//
+//        private AppSizeInfoSetterHandler appSizeInfoSetterHandler;
+//
+//        private WeakReference<AppListAdapter> mAppListAdapter;
+//
+//        private AppSizeInfoSetterRunnable(int position, String packageName, AppSizeInfoSetterHandler appSizeInfoSetterHandler, WeakReference<AppListAdapter> appListAdapter) {
+//            this.position = position;
+//            this.packageName = packageName;
+//            this.appSizeInfoSetterHandler = appSizeInfoSetterHandler;
+//            mAppListAdapter = appListAdapter;
+//        }
+//
+//        @Override
+//        public void run() {
+//            if(mAppListAdapter.get() == null) return;
+//            AppListFragment appListFragment = mAppListAdapter.get().mAppListFragment.get();
+//            if (appListFragment == null || !appListFragment.isAlive) return;
+//
+//            AppListFragmentTool appListFragmentTool = appListFragment.getAppInfoTool();
+//            try {
+//                appListFragmentTool.getAppSizeModel(packageName, position, appSizeInfoSetterHandler);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     public static class AppSizeInfoSetterHandler extends Handler {
 
@@ -170,14 +173,14 @@ public class AppListAdapter extends BaseAdapter {
 
             View item = appListAdapter.mAppViewMap.get(Integer.valueOf(msg.arg1));
             if (item != null) {
-                TextView size = (TextView) item.findViewById(R.id.package_name);
+                TextView size = (TextView) item.findViewById(R.id.app_size);
                 size.setText(String.valueOf(appListItemModel.getTotalSize()));
             }
             ApplicationsState.getInstance().sizeChanged(appSizeModel);
         }
     }
 
-    private static class AppSizeInfoRunnable implements Runnable {
+    private class AppSizeInfoRunnable implements Runnable {
 
         private WeakReference<AppListAdapter> mAppListAdapter;
 
@@ -185,29 +188,26 @@ public class AppListAdapter extends BaseAdapter {
             mAppListAdapter = new WeakReference<AppListAdapter>(appListAdapter);
         }
 
-
-
-        private static final long sleepTime = 100;
-
         @Override
         public void run() {
             int size = mAppListAdapter.get().mAppList.size();
 
             for (int i = 0; i < size; i++) {
-                if(mAppListAdapter.get().mAppListFragment.get() == null || !mAppListAdapter.get().mAppListFragment.get().isAlive) {
+                if (mAppListAdapter.get().mAppListFragment.get() == null || !mAppListAdapter.get().mAppListFragment.get().isAlive) {
                     return;
                 }
 
                 AppListItemModel mAppListItemModel = mAppListAdapter.get().mAppList.get(i);
-                Thread setter = null;
-                if (!mAppListItemModel.isSizeSet()) {
-                    setter = new Thread(new AppSizeInfoSetterRunnable(i, mAppListItemModel.getPackageName(), mAppListAdapter.get().mAppSizeInfoSetterHandler, mAppListAdapter));
-                    AppListCache.ExecutorService.execute(setter);
-                }
+//                Thread setter = null;
+//                if (!mAppListItemModel.isSizeSet()) {
+//                    setter = new Thread(new AppSizeInfoSetterRunnable(i, mAppListItemModel.getPackageName(), mAppListAdapter.get().mAppSizeInfoSetterHandler, mAppListAdapter));
+//                    AppListCache.ExecutorService.execute(setter);
+//                }
 
+                AppListFragmentTool appListFragmentTool = mAppListFragment.get().getAppInfoTool();
                 try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
+                    appListFragmentTool.getAppSizeModel(mAppListItemModel.getPackageName(), i, mAppSizeInfoSetterHandler);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -216,7 +216,6 @@ public class AppListAdapter extends BaseAdapter {
 
     public class AppDetailIntent extends Intent {
 
-        public static final String APP_DETAIL_INTENT_PARAMETER = "app_detail_intent_parameter";
         public static final String APP_PACKAGE_NAME = "app_package_name";
 
         public AppDetailIntent(int position) {

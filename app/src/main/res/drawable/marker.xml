@@ -3,5 +3,5 @@
 * All rights, including trade secret rights, reserved.
 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@android:color/holo_orange_dark" />
+    <solid android:color="?android:colorPrimaryDark" />
 </shape>

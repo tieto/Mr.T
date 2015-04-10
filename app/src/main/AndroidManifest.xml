@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
 
     <application
         android:name=".TApp"
@@ -47,8 +48,7 @@
         <activity
             android:name=".AppActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden|uiMode|locale|layoutDirection"
-            android:label="@string/title_activity_app"
-            android:theme="@style/CustomerTheme" />
+            android:label="@string/title_activity_app" />
         <activity
             android:name=".authority.AuthorityActivity"
             android:label="@string/title_activity_authority" >
@@ -86,8 +86,7 @@
         <activity
             android:name=".app.ui.AppDetailActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden|uiMode|locale|layoutDirection"
-            android:label="@string/app_detail"
-            android:theme="@style/CustomerTheme">
+            android:label="@string/app_detail">
         </activity>
         <activity
             android:name=".diskmonitor.activities.DiskPackagesActivity"

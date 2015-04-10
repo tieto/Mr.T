@@ -11,9 +11,9 @@ import android.os.Message;
 import android.os.RemoteException;
 
 import com.tieto.systemmanagement.app.adapter.AppListAdapter;
-import com.tieto.systemmanagement.app.ui.AppListFragment;
 import com.tieto.systemmanagement.app.model.AppListItemModel;
 import com.tieto.systemmanagement.app.model.AppSizeModel;
+import com.tieto.systemmanagement.app.ui.AppListFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

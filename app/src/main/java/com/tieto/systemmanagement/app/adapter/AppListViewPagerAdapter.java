@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by jinpei on 01/04/15.
  */
-public class AppListViewPagerAdapter extends PagerAdapter{
+public class AppListViewPagerAdapter extends PagerAdapter {
 
     private List<View> viewList;
 
@@ -31,7 +31,7 @@ public class AppListViewPagerAdapter extends PagerAdapter{
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View)object);
+        container.removeView((View) object);
     }
 
     @Override

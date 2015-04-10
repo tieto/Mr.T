@@ -52,7 +52,8 @@
     <string name="app_running">正在运行</string>
     <string name="app_all">全部</string>
     <string name="app_detail">应用详细</string>
-
+    <string name="app_storage">存储</string>
+    <string name="app_cache">缓存</string>
     <string name="app_total_size">全部</string>
     <string name="app_data_size">数据</string>
     <string name="app_application_size">应用</string>

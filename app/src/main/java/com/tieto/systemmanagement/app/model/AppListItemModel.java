@@ -99,7 +99,7 @@ public class AppListItemModel {
 
         isSizeSet = true;
 
-        AppListCache.AppListItemModelCache.put(packageName,this);
+        AppListCache.AppListItemModelCache.put(packageName, this);
     }
 
     public AppListItemModel(PackageInfo packageinfo, AppSizeModel appSize, PackageManager pm) {
@@ -119,7 +119,7 @@ public class AppListItemModel {
 
         isSizeSet = true;
 
-        AppListCache.AppListItemModelCache.put(packageName,this);
+        AppListCache.AppListItemModelCache.put(packageName, this);
     }
 
     public AppListItemModel(PackageInfo packageinfo, PackageManager pm) {
@@ -133,7 +133,7 @@ public class AppListItemModel {
         this.icon = packageinfo.applicationInfo.loadIcon(pm);
         this.flag = packageinfo.applicationInfo.flags;
 
-        AppListCache.AppListItemModelCache.put(packageName,this);
+        AppListCache.AppListItemModelCache.put(packageName, this);
     }
 
     public synchronized void setSizeInfo(AppSizeModel appSize) {
@@ -143,7 +143,7 @@ public class AppListItemModel {
         this.totalSize = appSize.getTotalSize();
 
         isSizeSet = true;
-        AppListCache.AppListItemModelCache.put(packageName,this);
+        AppListCache.AppListItemModelCache.put(packageName, this);
     }
 
     public String getPackageName() {

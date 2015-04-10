@@ -62,10 +62,10 @@ public class AppConstants {
             try {
                 Fragment fragment = appModuleModel.getModuleClass().newInstance();
                 Bundle bundle = new Bundle();
-                bundle.putInt(TITLE_TEXT_RESOURCE,appModuleModel.getTitle());
-                bundle.putInt(PREVIEW_TITLE_TEXT_RESOURCE,i > 0 ? AppModelList.get(i - 1).getTitle() : 0);
-                bundle.putInt(NEXT_TITLE_TEXT_RESOURCE,i < (size - 1) ? AppModelList.get(i + 1).getTitle() : 0);
-                bundle.putInt(PAGE_POSITION,i);
+                bundle.putInt(TITLE_TEXT_RESOURCE, appModuleModel.getTitle());
+                bundle.putInt(PREVIEW_TITLE_TEXT_RESOURCE, i > 0 ? AppModelList.get(i - 1).getTitle() : 0);
+                bundle.putInt(NEXT_TITLE_TEXT_RESOURCE, i < (size - 1) ? AppModelList.get(i + 1).getTitle() : 0);
+                bundle.putInt(PAGE_POSITION, i);
                 fragment.setArguments(bundle);
                 fragments.add(fragment);
             } catch (InstantiationException e) {
@@ -81,7 +81,7 @@ public class AppConstants {
     public static String[] getTitleStrings(Context context) {
         int size = AppModelList.size();
         String[] titles = new String[size];
-        for(int i = 0; i<size ; i++) {
+        for (int i = 0; i < size; i++) {
             titles[i] = context.getString(AppModelList.get(i).getTitle());
         }
         return titles;
