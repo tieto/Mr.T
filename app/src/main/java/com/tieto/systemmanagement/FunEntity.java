@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
+//TODO: change the name
 public class FunEntity {
     private int mTitle;
     private int mIcon;

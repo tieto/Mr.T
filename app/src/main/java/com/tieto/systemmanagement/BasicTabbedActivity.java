@@ -16,6 +16,8 @@ import java.util.List;
 
 
 public class BasicTabbedActivity extends FragmentActivity implements ViewPager.OnPageChangeListener{
+
+    //TODO:the class member var need start m
     private ArrayList<Fragment> fragments;
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;

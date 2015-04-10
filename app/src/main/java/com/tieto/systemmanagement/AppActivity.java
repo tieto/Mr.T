@@ -40,6 +40,7 @@ public class AppActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app);
 
+        //TODO: remove no need var
         LayoutInflater mInflater = getLayoutInflater();
         List<Fragment> fragments = AppConstants.getFragmentList();
         String[] titles = AppConstants.getTitleStrings(this);
@@ -70,6 +71,7 @@ public class AppActivity extends FragmentActivity {
     /**
      * Switch ViewPager by item's position.
      */
+    //TODO: remove no need method
     public void switchViewPager(int item) {
         mViewPager.setCurrentItem(item);
     }

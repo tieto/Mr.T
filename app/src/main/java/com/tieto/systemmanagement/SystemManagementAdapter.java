@@ -15,9 +15,10 @@ import java.util.List;
  */
 public class SystemManagementAdapter extends BaseAdapter {
 
+    //TODO:the class member var need start m
     private Context context;
     private LayoutInflater inflater;
-    private List<FunEntity> data;
+    private List<FunEntity> data; //TODO: change the var name
 
     public SystemManagementAdapter(Context context, List<FunEntity> data) {
         this.context = context;

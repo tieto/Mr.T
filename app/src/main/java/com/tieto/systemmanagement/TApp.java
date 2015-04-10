@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
  * Created by jane on 15-4-3.
  */
 public class TApp extends Application {
+    //TODO: put this on string file
     public static final String TYPE_WIFI = "wifi连接正常";
     public static final String TYPE_MOBILE = "手机网络连接";
     public static final String TYPE_NONE = "无网络连接";
@@ -16,7 +17,8 @@ public class TApp extends Application {
     private ConnectivityManager mConnectivityManager;
     private NetworkInfo mNetworkInfo;
 
-    private static TApp ourInstance = new TApp();
+    //TODO: change var name;
+    private static TApp ourInstance;
     public static TApp getInstance() {
         return ourInstance;
     }
@@ -27,6 +29,7 @@ public class TApp extends Application {
         ourInstance = this;
     }
 
+    //TODO: change name and move to other class
     public String isNetConnected() {
         mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
