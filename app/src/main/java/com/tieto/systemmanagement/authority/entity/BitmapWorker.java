@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.authority.utilities;
+package com.tieto.systemmanagement.authority.entity;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -11,16 +11,32 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 
 /**
  * @author Jiang Ping
  */
-public final class BitmapUtils {
-    private BitmapUtils() {
-        throw new UnsupportedOperationException("Utility class do not allow new instance");
+public final class BitmapWorker {
+
+    /** Real bitmap to set */
+    private Bitmap mBitmap;
+
+    /** Init the bitmap with source bitmap, the bitmap handle will be kept */
+    public BitmapWorker(Bitmap bitmap) {
+        mBitmap = bitmap;
     }
 
-    public static Bitmap convertDrawableToBitmap(Drawable drawable) {
+    /** Init the bitmap with drawable */
+    public BitmapWorker(Drawable drawable) {
+        mBitmap = convertFromDrawable(drawable);
+    }
+
+    @Nullable
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    private Bitmap convertFromDrawable(Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
         }
@@ -32,25 +48,28 @@ public final class BitmapUtils {
         return bitmap;
     }
 
-    public static Bitmap createReflectBitmap(Bitmap bitmap, int refHeight){
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
+    /** Every call will create new instance */
+    public Bitmap createReflectBitmap(float refRatio){
+        int width = mBitmap.getWidth();
+        int height = mBitmap.getHeight();
+
+        int refHeight = Math.round(refRatio * height);
 
         // Create upside down bitmap
         Matrix matrix = new Matrix();
         matrix.preScale(1, -1);
-        Bitmap refBitmap = Bitmap.createBitmap(bitmap, 0, height - refHeight,
+        Bitmap refBitmap = Bitmap.createBitmap(mBitmap, 0, height - refHeight,
                 width, refHeight, matrix, false);
 
         // Target bitmap to draw
         Bitmap targetBitmap = Bitmap.createBitmap(width, height +refHeight, Config.ARGB_8888);
         Canvas canvas = new Canvas(targetBitmap);
-        canvas.drawBitmap(bitmap, 0, 0, null);
+        canvas.drawBitmap(mBitmap, 0, 0, null);
         canvas.drawBitmap(refBitmap, 0, height + 1, null);
 
         // Create gradient effect
         Paint paint = new Paint();
-        LinearGradient shader = new LinearGradient(0, bitmap.getHeight(),
+        LinearGradient shader = new LinearGradient(0, mBitmap.getHeight(),
                 0, targetBitmap.getHeight() + 1,
                 0x90ffffff, 0x00ffffff, Shader.TileMode.MIRROR);
         paint.setShader(shader);

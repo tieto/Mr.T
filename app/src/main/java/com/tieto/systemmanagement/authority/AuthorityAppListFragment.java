@@ -34,7 +34,6 @@ import java.util.concurrent.Executors;
  */
 public class AuthorityAppListFragment extends ListFragment {
 
-    private ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private AppInfoAdapter mAdapter;
 
     public static AuthorityAppListFragment newInstance() {

@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.authority.utilities;
+package com.tieto.systemmanagement.authority.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
 import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
@@ -130,7 +131,7 @@ public abstract class ImageLoader {
         @Override
         protected BitmapDrawable doInBackground(Object... objects) {
             mData = objects[0];
-            return new BitmapDrawable(onCreateDrawable(mData));
+            return new BitmapDrawable(onCreateBitmap(mData));
         }
 
         @Override
@@ -165,9 +166,70 @@ public abstract class ImageLoader {
 		}
 	}
 
-    protected abstract Bitmap onCreateDrawable(Object data);
+    protected abstract Bitmap onCreateBitmap(Object data);
 
 	public static interface OnCompleteListener {
 		public void onComplete(Bitmap bitmap);
 	}
+
+    /**
+     * The Image memory cache for image loader
+     */
+    private static class MemCache {
+        private int mCapacity = 3 * 1024 * 1024; // 3MB Memory bitmap cache
+        private LruCache<Object, BitmapDrawable> mCache;
+        private final Object mLock = new Object();
+
+        public MemCache(int capacity) {
+            if (capacity > 0) {
+                mCapacity = capacity;
+            }
+            mCache = new LruCache<Object, BitmapDrawable>(mCapacity) {
+                protected int sizeOf(Object key, BitmapDrawable value) {
+                    return value.getBitmap().getRowBytes() * value.getBitmap().getHeight();
+                }
+
+                @Override
+                protected void entryRemoved(boolean evicted, Object key,
+                                            BitmapDrawable oldValue, BitmapDrawable newValue) {
+                    super.entryRemoved(evicted, key, oldValue, newValue);
+                }
+            };
+        }
+
+        public void addBitmap(String key, BitmapDrawable bitmap) {
+            if (bitmap == null) {
+                return;
+            }
+            synchronized (mCache) {
+                mCache.put(key, bitmap);
+            }
+        }
+
+        public BitmapDrawable getBitmap(Object key) {
+            synchronized (mCache) {
+                BitmapDrawable bitmap = mCache.get(key);
+                // Because of the Transition Animation, the alpha in memory
+                // may be set to smaller than 255.
+                // Just restore the alpha value to 255.
+                if (bitmap != null) {
+                    bitmap.setAlpha(255);
+                }
+                return bitmap;
+            }
+        }
+
+        public boolean containsKey(String key) {
+            synchronized (mCache) {
+                return mCache.snapshot().containsKey(key);
+            }
+        }
+
+        public void clear() {
+            synchronized (mCache) {
+                mCache.evictAll();
+                mCache = null;
+            }
+        }
+    }
 }

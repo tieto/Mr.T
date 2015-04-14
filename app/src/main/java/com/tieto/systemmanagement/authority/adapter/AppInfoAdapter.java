@@ -13,8 +13,7 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.authority.entity.AppWrapper;
-import com.tieto.systemmanagement.authority.utilities.BitmapUtils;
-import com.tieto.systemmanagement.authority.utilities.ImageLoader;
+import com.tieto.systemmanagement.authority.entity.BitmapWorker;
 
 import java.util.List;
 
@@ -90,11 +89,12 @@ public class AppInfoAdapter extends BaseAdapter {
         }
 
         @Override
-        protected Bitmap onCreateDrawable(Object data) {
+        protected Bitmap onCreateBitmap(Object data) {
             if (data instanceof AppWrapper) {
                 AppWrapper app = (AppWrapper)data;
                 Drawable drawable = app.loadIcon(mContext);
-                return BitmapUtils.convertDrawableToBitmap(drawable);
+                BitmapWorker bw = new BitmapWorker(drawable);
+                return bw.getBitmap();
             }
             return null;
         }
