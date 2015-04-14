@@ -1,11 +1,9 @@
-package com.tieto.systemmanagement.app.tools;
+package com.tieto.systemmanagement.app.models;
 
 import android.os.Handler;
 import android.os.Message;
 
-import com.tieto.systemmanagement.app.constants.AppListCache;
-import com.tieto.systemmanagement.app.model.AppListItemModel;
-import com.tieto.systemmanagement.app.model.AppSizeModel;
+import com.tieto.systemmanagement.app.utils.constants.AppListCache;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -83,11 +81,15 @@ public class ApplicationsState {
     final MainHandler mMainHandler = new MainHandler();
 
     public synchronized void sizeChanged(AppSizeModel appSizeModel) {
-        AppListItemModel appListItemModel = AppListCache.AppListItemModelCache.get(appSizeModel.getPackageName());
-        if (appListItemModel != null) {
-            appListItemModel.setSizeInfo(appSizeModel);
+        AppInfoModel appInfoModel = AppListCache.AppListItemModelCache.get(appSizeModel.getPackageName());
+        if (appInfoModel != null) {
+            appInfoModel.setSizeInfo(appSizeModel);
         }
         Message msg = mMainHandler.obtainMessage(MainHandler.MSG_PACKAGE_SIZE_CHANGED, appSizeModel);
         mMainHandler.sendMessage(msg);
+    }
+
+    public synchronized void removeOnStateChanged(String packageName) {
+        mActiveCallbacks.remove(packageName);
     }
 }

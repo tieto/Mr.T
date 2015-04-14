@@ -1,15 +1,15 @@
-package com.tieto.systemmanagement.app.model;
+package com.tieto.systemmanagement.app.models;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
-import com.tieto.systemmanagement.app.constants.AppListCache;
+import com.tieto.systemmanagement.app.utils.constants.AppListCache;
 
 /**
  * Created by jinpei on 26/03/15.
  */
-public class AppListItemModel {
+public class AppInfoModel {
     /**
      * The name of this app's package.
      */
@@ -77,12 +77,14 @@ public class AppListItemModel {
      */
     private long totalSize;
 
+    private String codePath;
+
     /**
      * Is the size info set?
      */
     private boolean isSizeSet = false;
 
-    public AppListItemModel(String packageName, String appLabel, String versionName, int versionCode, long firstInstallTime, int installLocation, long lastUpdateTime, Drawable icon, int flag, long cacheSize, long dataSize, long programSize, long totalSize) {
+    public AppInfoModel(String packageName, String appLabel, String versionName, int versionCode, long firstInstallTime, int installLocation, long lastUpdateTime, Drawable icon, int flag, long cacheSize, long dataSize, long programSize, long totalSize, String codePath) {
         this.packageName = packageName;
         this.appLabel = appLabel;
         this.versionName = versionName;
@@ -96,13 +98,14 @@ public class AppListItemModel {
         this.dataSize = dataSize;
         this.programSize = programSize;
         this.totalSize = totalSize;
+        this.codePath = codePath;
 
         isSizeSet = true;
 
         AppListCache.AppListItemModelCache.put(packageName, this);
     }
 
-    public AppListItemModel(PackageInfo packageinfo, AppSizeModel appSize, PackageManager pm) {
+    public AppInfoModel(PackageInfo packageinfo, AppSizeModel appSize, PackageManager pm) {
         this.packageName = packageinfo.packageName;
         this.appLabel = packageinfo.applicationInfo.loadLabel(pm).toString();
         this.versionName = packageinfo.versionName;
@@ -116,13 +119,14 @@ public class AppListItemModel {
         this.dataSize = appSize.getDataSize();
         this.programSize = appSize.getProgramSize();
         this.totalSize = appSize.getTotalSize();
+        this.codePath = packageinfo.applicationInfo.dataDir;
 
         isSizeSet = true;
 
         AppListCache.AppListItemModelCache.put(packageName, this);
     }
 
-    public AppListItemModel(PackageInfo packageinfo, PackageManager pm) {
+    public AppInfoModel(PackageInfo packageinfo, PackageManager pm) {
         this.packageName = packageinfo.packageName;
         this.appLabel = packageinfo.applicationInfo.loadLabel(pm).toString();
         this.versionName = packageinfo.versionName;

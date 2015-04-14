@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.app.model;
+package com.tieto.systemmanagement.app.models;
 
 /**
  * Created by jinpei on 26/03/15.

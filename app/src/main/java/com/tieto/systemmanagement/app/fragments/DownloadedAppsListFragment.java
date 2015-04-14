@@ -1,7 +1,7 @@
-package com.tieto.systemmanagement.app.ui;
+package com.tieto.systemmanagement.app.fragments;
 
 
-import com.tieto.systemmanagement.app.tools.AppListFragmentTool;
+import com.tieto.systemmanagement.app.utils.AppListFragmentTool;
 
 
 /**

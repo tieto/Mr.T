@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.app.ui;
+package com.tieto.systemmanagement.app;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -9,14 +9,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.app.adapter.AppListAdapter;
-import com.tieto.systemmanagement.app.constants.AppListCache;
-import com.tieto.systemmanagement.app.model.AppListItemModel;
-import com.tieto.systemmanagement.app.model.AppSizeModel;
-import com.tieto.systemmanagement.app.tools.AppManagementTool;
-import com.tieto.systemmanagement.app.tools.ApplicationsState;
+import com.tieto.systemmanagement.app.adapters.AppListAdapter;
+import com.tieto.systemmanagement.app.utils.constants.AppListCache;
+import com.tieto.systemmanagement.app.models.AppInfoModel;
+import com.tieto.systemmanagement.app.models.AppSizeModel;
+import com.tieto.systemmanagement.app.utils.AppManagementTool;
+import com.tieto.systemmanagement.app.models.ApplicationsState;
 
 public class AppDetailActivity extends FragmentActivity implements ApplicationsState.Callbacks, View.OnClickListener {
 
@@ -24,6 +25,8 @@ public class AppDetailActivity extends FragmentActivity implements ApplicationsS
      * Package name from intent.
      */
     private String packageName;
+
+    private AppInfoModel mAppInfoModel;
 
     private TextView app_detail_name;
     private TextView app_detail_version;
@@ -69,23 +72,27 @@ public class AppDetailActivity extends FragmentActivity implements ApplicationsS
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mAppInfoModel = null;
+        ApplicationsState.getInstance().removeOnStateChanged(packageName);
     }
 
     private void init() {
-        PackageManager pm = getPackageManager();
-        AppListItemModel appListItemModel = getPackageInfo(packageName);
+        mAppInfoModel = getPackageInfo(packageName);
 
-        if (appListItemModel != null) {
-            app_detail_icon.setImageDrawable(appListItemModel.getIcon());
-            app_detail_name.setText(appListItemModel.getAppLabel());
-            app_detail_version.setText(appListItemModel.getVersionName());
+        if (mAppInfoModel != null) {
+            app_detail_icon.setImageDrawable(mAppInfoModel.getIcon());
+            app_detail_name.setText(mAppInfoModel.getAppLabel());
+            app_detail_version.setText(mAppInfoModel.getVersionName());
 
-            if (appListItemModel.isSizeSet()) {
-                app_detail_total_size.setText(String.valueOf(appListItemModel.getTotalSize()));
-                app_detail_application_size.setText(String.valueOf(appListItemModel.getProgramSize()));
-                app_detail_data_size.setText(String.valueOf(appListItemModel.getDataSize()));
-                app_detail_cache_size.setText(String.valueOf(appListItemModel.getCacheSize()));
+            if (mAppInfoModel.isSizeSet()) {
+                app_detail_total_size.setText(String.valueOf(mAppInfoModel.getTotalSize()));
+                app_detail_application_size.setText(String.valueOf(mAppInfoModel.getProgramSize()));
+                app_detail_data_size.setText(String.valueOf(mAppInfoModel.getDataSize()));
+                app_detail_cache_size.setText(String.valueOf(mAppInfoModel.getCacheSize()));
             }
+        } else {
+            Toast.makeText(this,R.string.app_detail_failure_to_get_package_info,Toast.LENGTH_LONG);
+            finish();
         }
 
         app_detail_button_force_stop.setOnClickListener(this);
@@ -94,16 +101,16 @@ public class AppDetailActivity extends FragmentActivity implements ApplicationsS
         app_detail_button_clear_cache.setOnClickListener(this);
     }
 
-    private AppListItemModel getPackageInfo(String packageName) {
-        AppListItemModel appListItemModel = AppListCache.AppListItemModelCache.get(packageName);
-        if (appListItemModel != null) {
-            return appListItemModel;
+    private AppInfoModel getPackageInfo(String packageName) {
+        AppInfoModel appInfoModel = AppListCache.AppListItemModelCache.get(packageName);
+        if (appInfoModel != null) {
+            return appInfoModel;
         }
         PackageManager pm = getPackageManager();
         try {
             PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES);
-            appListItemModel = new AppListItemModel(packageInfo, pm);
-            return appListItemModel;
+            appInfoModel = new AppInfoModel(packageInfo, pm);
+            return appInfoModel;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.app.adapter;
+package com.tieto.systemmanagement.app.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

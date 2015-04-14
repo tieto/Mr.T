@@ -8,9 +8,9 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 
-import com.tieto.systemmanagement.app.adapter.ListFragmentPagerAdapter;
-import com.tieto.systemmanagement.app.constants.AppConstants;
-import com.tieto.systemmanagement.app.constants.AppListCache;
+import com.tieto.systemmanagement.app.adapters.ListFragmentPagerAdapter;
+import com.tieto.systemmanagement.app.utils.constants.AppConstants;
+import com.tieto.systemmanagement.app.utils.constants.AppListCache;
 
 import java.util.List;
 

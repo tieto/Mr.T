@@ -1,14 +1,14 @@
-package com.tieto.systemmanagement.app.constants;
+package com.tieto.systemmanagement.app.utils.constants;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.app.model.AppModuleModel;
-import com.tieto.systemmanagement.app.ui.AllAppsListFragment;
-import com.tieto.systemmanagement.app.ui.DownloadedAppsListFragment;
-import com.tieto.systemmanagement.app.ui.RunningAppsListFragment;
+import com.tieto.systemmanagement.app.models.AppModuleModel;
+import com.tieto.systemmanagement.app.fragments.AllAppsListFragment;
+import com.tieto.systemmanagement.app.fragments.DownloadedAppsListFragment;
+import com.tieto.systemmanagement.app.fragments.RunningAppsListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +18,6 @@ import java.util.List;
  */
 public class AppConstants {
 
-    /**
-     * Name of title name parameter.
-     */
-    public static final String TITLE_TEXT_RESOURCE = "title_text_resource";
-    public static final String PREVIEW_TITLE_TEXT_RESOURCE = "preview_title_text_resource";
-    public static final String NEXT_TITLE_TEXT_RESOURCE = "next_title_text_resource";
     public static final String PAGE_POSITION = "page_position";
 
     /**
@@ -62,9 +56,6 @@ public class AppConstants {
             try {
                 Fragment fragment = appModuleModel.getModuleClass().newInstance();
                 Bundle bundle = new Bundle();
-                bundle.putInt(TITLE_TEXT_RESOURCE, appModuleModel.getTitle());
-                bundle.putInt(PREVIEW_TITLE_TEXT_RESOURCE, i > 0 ? AppModelList.get(i - 1).getTitle() : 0);
-                bundle.putInt(NEXT_TITLE_TEXT_RESOURCE, i < (size - 1) ? AppModelList.get(i + 1).getTitle() : 0);
                 bundle.putInt(PAGE_POSITION, i);
                 fragment.setArguments(bundle);
                 fragments.add(fragment);
@@ -85,10 +76,6 @@ public class AppConstants {
             titles[i] = context.getString(AppModelList.get(i).getTitle());
         }
         return titles;
-    }
-
-    public static List<AppModuleModel> getAppModuleModel() {
-        return AppModelList;
     }
 
 }

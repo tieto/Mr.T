@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.app.model;
+package com.tieto.systemmanagement.app.models;
 
 import android.support.v4.app.Fragment;
 

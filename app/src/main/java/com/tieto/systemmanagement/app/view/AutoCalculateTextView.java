@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.app.ui;
+package com.tieto.systemmanagement.app.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

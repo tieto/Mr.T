@@ -1,22 +1,18 @@
-package com.tieto.systemmanagement.app.tools;
+package com.tieto.systemmanagement.app.utils;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.RemoteException;
-import android.os.StatFs;
 
-import com.tieto.systemmanagement.app.model.AppSizeModel;
+import com.tieto.systemmanagement.app.models.AppSizeModel;
+import com.tieto.systemmanagement.app.models.ApplicationsState;
 
-import java.io.File;
-import java.lang.reflect.Method;
+import java.io.DataOutputStream;
 
 
 /**
@@ -41,8 +37,12 @@ public class AppManagementTool {
 
     public static boolean ForceStop(Context context, String packageName) {
         try {
-            ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            am.killBackgroundProcesses(packageName);
+            Process process = Runtime.getRuntime().exec("su");
+            DataOutputStream dos = new DataOutputStream(process.getOutputStream());
+            dos.writeBytes("adb shell" + " \n");
+            dos.flush();
+            dos.writeBytes("am force-stop " + packageName + " \n");
+            dos.flush();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -52,10 +52,7 @@ public class AppManagementTool {
 
     public static boolean ClearData(Activity activity, String packageName) {
         try {
-            Intent intent = new Intent(Intent.ACTION_DEFAULT);
-            intent.setClassName(activity.getPackageName(),
-                    "");
-            activity.startActivityForResult(intent, 2);
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -64,36 +61,19 @@ public class AppManagementTool {
     }
 
     public static void ClearCache(Activity activity, final String packageName) {
-        final PackageManager pm = activity.getPackageManager();
         try {
-            Method method = pm.getClass().getMethod("freeStorageAndNotify", Long.TYPE, IPackageDataObserver.class);
-            Long freeStorageSize = Long.valueOf(getEnvironmentSize() - 1L);
 
-            method.invoke(pm, freeStorageSize, new IPackageDataObserver.Stub() {
-                @Override
-                public void onRemoveCompleted(String name, boolean succeeded) throws RemoteException {
-                    new Thread(new AppSizeInfoSetterRunnable(pm, packageName)).start();
-                }
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static long getEnvironmentSize() {
-        File localFile = Environment.getDataDirectory();
-        long L1;
+    private static boolean deleteDatabase() {
+        return true;
+    }
 
-        if (localFile == null)
-            L1 = 0L;
-
-        while (true) {
-            String str = localFile.getPath();
-            StatFs localStatFs = new StatFs(str);
-            long L2 = localStatFs.getBlockSizeLong();
-            L1 = localStatFs.getBlockCountLong() * L2;
-            return L1;
-        }
+    private static boolean deleteFile() {
+        return true;
     }
 
     /**

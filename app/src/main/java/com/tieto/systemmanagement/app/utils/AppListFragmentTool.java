@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.app.tools;
+package com.tieto.systemmanagement.app.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -10,10 +10,10 @@ import android.content.pm.PackageStats;
 import android.os.Message;
 import android.os.RemoteException;
 
-import com.tieto.systemmanagement.app.adapter.AppListAdapter;
-import com.tieto.systemmanagement.app.model.AppListItemModel;
-import com.tieto.systemmanagement.app.model.AppSizeModel;
-import com.tieto.systemmanagement.app.ui.AppListFragment;
+import com.tieto.systemmanagement.app.adapters.AppListAdapter;
+import com.tieto.systemmanagement.app.fragments.AppListFragment;
+import com.tieto.systemmanagement.app.models.AppInfoModel;
+import com.tieto.systemmanagement.app.models.AppSizeModel;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -105,22 +105,22 @@ public class AppListFragmentTool {
      */
     private AppListAdapter getAllAppListAdapter(List<PackageInfo> packageInfoList) {
 
-        List<AppListItemModel> appListItemModels = new ArrayList<AppListItemModel>();
-        AppListItemModel appListItemModel = null;
+        List<AppInfoModel> appInfoModels = new ArrayList<AppInfoModel>();
+        AppInfoModel appInfoModel = null;
 
         int size = packageInfoList.size();
         for (int i = 0; i < size; i++) {
             PackageInfo packageInfo = packageInfoList.get(i);
 
             try {
-                appListItemModel = new AppListItemModel(packageInfo, mPackageManager);
-                appListItemModels.add(appListItemModel);
+                appInfoModel = new AppInfoModel(packageInfo, mPackageManager);
+                appInfoModels.add(appInfoModel);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        return new AppListAdapter(appListItemModels, mAppListFragment);
+        return new AppListAdapter(appInfoModels, mAppListFragment);
     }
 
     /**
@@ -130,8 +130,8 @@ public class AppListFragmentTool {
      */
     private AppListAdapter getRunningAppListAdapter() {
 
-        List<AppListItemModel> appListItemModels = new ArrayList<AppListItemModel>();
-        AppListItemModel appListItemModel = null;
+        List<AppInfoModel> appInfoModels = new ArrayList<AppInfoModel>();
+        AppInfoModel appInfoModel = null;
 
         List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfo = null;
         if (mActivityManager != null) {
@@ -144,8 +144,8 @@ public class AppListFragmentTool {
                 for (int j = 0; j < pkgNameList.length; j++) {
                     try {
                         PackageInfo runningPackageInfo = mPackageManager.getPackageInfo(pkgNameList[j], PackageManager.GET_UNINSTALLED_PACKAGES);
-                        appListItemModel = new AppListItemModel(runningPackageInfo, mPackageManager);
-                        appListItemModels.add(appListItemModel);
+                        appInfoModel = new AppInfoModel(runningPackageInfo, mPackageManager);
+                        appInfoModels.add(appInfoModel);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -153,7 +153,7 @@ public class AppListFragmentTool {
             }
         }
 
-        return new AppListAdapter(appListItemModels, mAppListFragment);
+        return new AppListAdapter(appInfoModels, mAppListFragment);
     }
 
     /**
@@ -164,8 +164,8 @@ public class AppListFragmentTool {
      */
     private AppListAdapter getDownloadedAppListAdapter(List<PackageInfo> packageInfoList) {
 
-        List<AppListItemModel> appListItemModels = new ArrayList<AppListItemModel>();
-        AppListItemModel appListItemModel = null;
+        List<AppInfoModel> appInfoModels = new ArrayList<AppInfoModel>();
+        AppInfoModel appInfoModel = null;
 
         int size = packageInfoList.size();
         for (int i = 0; i < size; i++) {
@@ -173,15 +173,15 @@ public class AppListFragmentTool {
 
             if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM) {
                 try {
-                    appListItemModel = new AppListItemModel(packageInfo, mPackageManager);
-                    appListItemModels.add(appListItemModel);
+                    appInfoModel = new AppInfoModel(packageInfo, mPackageManager);
+                    appInfoModels.add(appInfoModel);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        return new AppListAdapter(appListItemModels, mAppListFragment);
+        return new AppListAdapter(appInfoModels, mAppListFragment);
     }
 
     /**
@@ -214,8 +214,6 @@ public class AppListFragmentTool {
         @Override
         public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
             AppListFragment appListFragment = mAppListFragment.get();
-            if (appListFragment == null || !appListFragment.isAlive) return;
-
             if (succeeded) {
                 mAppSizeModel.setCacheSize(pStats.cacheSize);
                 mAppSizeModel.setDataSize(pStats.dataSize);

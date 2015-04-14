@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.app.ui;
+package com.tieto.systemmanagement.app.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,8 +13,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.app.adapter.AppListAdapter;
-import com.tieto.systemmanagement.app.tools.AppListFragmentTool;
+import com.tieto.systemmanagement.app.adapters.AppListAdapter;
+import com.tieto.systemmanagement.app.utils.AppListFragmentTool;
+import com.tieto.systemmanagement.app.AppDetailActivity;
 
 import java.lang.ref.WeakReference;
 

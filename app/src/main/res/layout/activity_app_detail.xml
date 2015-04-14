@@ -55,6 +55,7 @@
                 android:id="@+id/app_detail_button_force_stop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="invisible"
                 android:layout_weight="0.4"
                 android:text="@string/app_detail_force_stop" />
 
@@ -125,7 +126,7 @@
                     android:scaleType="center"
                     android:src="@mipmap/dotted_line_480px" />
 
-                <com.tieto.systemmanagement.app.ui.AutoCalculateTextView
+                <com.tieto.systemmanagement.app.view.AutoCalculateTextView
                     android:id="@+id/app_detail_total_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -162,7 +163,7 @@
                     android:scaleType="center"
                     android:src="@mipmap/dotted_line_480px" />
 
-                <com.tieto.systemmanagement.app.ui.AutoCalculateTextView
+                <com.tieto.systemmanagement.app.view.AutoCalculateTextView
                     android:id="@+id/app_detail_application_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -199,7 +200,7 @@
                     android:scaleType="center"
                     android:src="@mipmap/dotted_line_480px" />
 
-                <com.tieto.systemmanagement.app.ui.AutoCalculateTextView
+                <com.tieto.systemmanagement.app.view.AutoCalculateTextView
                     android:id="@+id/app_detail_data_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -230,6 +231,7 @@
 
             <Button
                 android:id="@+id/app_detail_button_clear_data"
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
@@ -281,7 +283,7 @@
                     android:scaleType="center"
                     android:src="@mipmap/dotted_line_480px" />
 
-                <com.tieto.systemmanagement.app.ui.AutoCalculateTextView
+                <com.tieto.systemmanagement.app.view.AutoCalculateTextView
                     android:id="@+id/app_detail_cache_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -63,6 +63,7 @@
     <string name="app_detail_uninstall">卸载</string>
     <string name="app_detail_clear_data">清理数据</string>
     <string name="app_detail_clear_cache">清理缓存</string>
+    <string name="app_detail_failure_to_get_package_info">获取应用信息失败</string>
 
     <!-- notification -->
     <string name="notification_item_icon">app icon</string>

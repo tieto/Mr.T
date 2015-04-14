@@ -1,11 +1,11 @@
-package com.tieto.systemmanagement.app.tools;
+package com.tieto.systemmanagement.app.utils;
 
 import android.app.ActivityManager;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import com.tieto.systemmanagement.app.constants.AppListCache;
+import com.tieto.systemmanagement.app.utils.constants.AppListCache;
 
 import java.lang.reflect.Method;
 import java.util.List;

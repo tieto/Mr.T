@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.app.adapter;
+package com.tieto.systemmanagement.app.adapters;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,11 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.app.model.AppListItemModel;
-import com.tieto.systemmanagement.app.model.AppSizeModel;
-import com.tieto.systemmanagement.app.tools.AppListFragmentTool;
-import com.tieto.systemmanagement.app.tools.ApplicationsState;
-import com.tieto.systemmanagement.app.ui.AppListFragment;
+import com.tieto.systemmanagement.app.models.AppInfoModel;
+import com.tieto.systemmanagement.app.models.AppSizeModel;
+import com.tieto.systemmanagement.app.utils.AppListFragmentTool;
+import com.tieto.systemmanagement.app.models.ApplicationsState;
+import com.tieto.systemmanagement.app.fragments.AppListFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -27,13 +27,13 @@ import java.util.WeakHashMap;
  */
 public class AppListAdapter extends BaseAdapter {
 
-    private List<AppListItemModel> mAppList;
+    private List<AppInfoModel> mAppList;
     private WeakHashMap<Integer, View> mAppViewMap;
     private WeakReference<AppListFragment> mAppListFragment;
 
     private AppSizeInfoSetterHandler mAppSizeInfoSetterHandler;
 
-    public AppListAdapter(List<AppListItemModel> appList, WeakReference<AppListFragment> appListFragment) {
+    public AppListAdapter(List<AppInfoModel> appList, WeakReference<AppListFragment> appListFragment) {
         mAppList = appList;
         mAppListFragment = appListFragment;
 
@@ -79,12 +79,12 @@ public class AppListAdapter extends BaseAdapter {
             mAppViewMap.remove(holder.position);
         }
 
-        AppListItemModel mAppListItemModel = mAppList.get(position);
+        AppInfoModel mAppInfoModel = mAppList.get(position);
 
-        holder.image.setImageDrawable(mAppListItemModel.getIcon());
-        holder.textView_1.setText(mAppListItemModel.getAppLabel());
-        holder.textView_2.setText(String.valueOf(mAppListItemModel.getTotalSize()));
-        holder.textView_3.setText(String.valueOf(mAppListItemModel.getFirstInstallTime()));
+        holder.image.setImageDrawable(mAppInfoModel.getIcon());
+        holder.textView_1.setText(mAppInfoModel.getAppLabel());
+        holder.textView_2.setText(String.valueOf(mAppInfoModel.getTotalSize()));
+        holder.textView_3.setText(String.valueOf(mAppInfoModel.getFirstInstallTime()));
         holder.position = position;
 
         mAppViewMap.put(Integer.valueOf(position), convertView);
@@ -110,47 +110,6 @@ public class AppListAdapter extends BaseAdapter {
         public int position;
     }
 
-//    /**
-//     * A thread to set app size info.
-//     */
-//    private static class AppSizeInfoSetterRunnable implements Runnable {
-//
-//        /**
-//         * Position of item in app list.
-//         */
-//        private int position;
-//
-//        /**
-//         * Package name of app info.
-//         */
-//        private String packageName;
-//
-//        private AppSizeInfoSetterHandler appSizeInfoSetterHandler;
-//
-//        private WeakReference<AppListAdapter> mAppListAdapter;
-//
-//        private AppSizeInfoSetterRunnable(int position, String packageName, AppSizeInfoSetterHandler appSizeInfoSetterHandler, WeakReference<AppListAdapter> appListAdapter) {
-//            this.position = position;
-//            this.packageName = packageName;
-//            this.appSizeInfoSetterHandler = appSizeInfoSetterHandler;
-//            mAppListAdapter = appListAdapter;
-//        }
-//
-//        @Override
-//        public void run() {
-//            if(mAppListAdapter.get() == null) return;
-//            AppListFragment appListFragment = mAppListAdapter.get().mAppListFragment.get();
-//            if (appListFragment == null || !appListFragment.isAlive) return;
-//
-//            AppListFragmentTool appListFragmentTool = appListFragment.getAppInfoTool();
-//            try {
-//                appListFragmentTool.getAppSizeModel(packageName, position, appSizeInfoSetterHandler);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
     public static class AppSizeInfoSetterHandler extends Handler {
 
         private WeakReference<AppListAdapter> adapter;
@@ -168,13 +127,13 @@ public class AppListAdapter extends BaseAdapter {
             }
             AppSizeModel appSizeModel = (AppSizeModel) msg.obj;
 
-            AppListItemModel appListItemModel = appListAdapter.mAppList.get(msg.arg1);
-            appListItemModel.setSizeInfo(appSizeModel);
+            AppInfoModel appInfoModel = appListAdapter.mAppList.get(msg.arg1);
+            appInfoModel.setSizeInfo(appSizeModel);
 
             View item = appListAdapter.mAppViewMap.get(Integer.valueOf(msg.arg1));
             if (item != null) {
                 TextView size = (TextView) item.findViewById(R.id.app_size);
-                size.setText(String.valueOf(appListItemModel.getTotalSize()));
+                size.setText(String.valueOf(appInfoModel.getTotalSize()));
             }
             ApplicationsState.getInstance().sizeChanged(appSizeModel);
         }
@@ -197,16 +156,11 @@ public class AppListAdapter extends BaseAdapter {
                     return;
                 }
 
-                AppListItemModel mAppListItemModel = mAppListAdapter.get().mAppList.get(i);
-//                Thread setter = null;
-//                if (!mAppListItemModel.isSizeSet()) {
-//                    setter = new Thread(new AppSizeInfoSetterRunnable(i, mAppListItemModel.getPackageName(), mAppListAdapter.get().mAppSizeInfoSetterHandler, mAppListAdapter));
-//                    AppListCache.ExecutorService.execute(setter);
-//                }
+                AppInfoModel mAppInfoModel = mAppListAdapter.get().mAppList.get(i);
 
                 AppListFragmentTool appListFragmentTool = mAppListFragment.get().getAppInfoTool();
                 try {
-                    appListFragmentTool.getAppSizeModel(mAppListItemModel.getPackageName(), i, mAppSizeInfoSetterHandler);
+                    appListFragmentTool.getAppSizeModel(mAppInfoModel.getPackageName(), i, mAppSizeInfoSetterHandler);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -219,9 +173,9 @@ public class AppListAdapter extends BaseAdapter {
         public static final String APP_PACKAGE_NAME = "app_package_name";
 
         public AppDetailIntent(int position) {
-            AppListItemModel appListItemModel = mAppList.get(position);
+            AppInfoModel appInfoModel = mAppList.get(position);
             Bundle bundle = new Bundle();
-            bundle.putString(APP_PACKAGE_NAME, appListItemModel.getPackageName());
+            bundle.putString(APP_PACKAGE_NAME, appInfoModel.getPackageName());
             this.putExtras(bundle);
         }
     }

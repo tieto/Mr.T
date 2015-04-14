@@ -81,7 +81,7 @@
             android:name=".BatteryActivity"
             android:label="@string/title_activity_battery" />
         <activity
-            android:name=".app.ui.AppDetailActivity"
+            android:name=".app.AppDetailActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden|uiMode|locale|layoutDirection"
             android:label="@string/app_detail">
         </activity>
