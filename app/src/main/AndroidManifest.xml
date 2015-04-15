@@ -51,11 +51,11 @@
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden|uiMode|locale|layoutDirection"
             android:label="@string/title_activity_app" />
         <activity
-            android:name=".authority.AuthorityActivity"
+            android:name=".authority.controller.AuthorityActivity"
             android:label="@string/title_activity_authority" >
         </activity>
         <activity
-            android:name=".authority.AuthorityDetailActivity"
+            android:name=".authority.controller.AuthorityDetailActivity"
             android:label="@string/title_activity_authority" >
         </activity>
         <activity

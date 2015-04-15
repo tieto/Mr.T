@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="@dimen/list_item_icon_width_height"
+        android:layout_height="@dimen/list_item_icon_width_height"
+        android:layout_marginTop="@dimen/list_item_two_line_padding_top_bottom"
+        android:layout_marginBottom="@dimen/list_item_two_line_padding_top_bottom"
+        android:id="@id/start_up_app_icon"
+        android:contentDescription="@string/notification_item_icon"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/list_second_column_margin_left"
+        android:layout_marginTop="@dimen/list_item_two_line_padding_top_bottom"
+        android:textSize="@dimen/primary_text_size"
+        android:id="@id/start_up_app_name"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:layout_marginEnd="@dimen/list_item_text_right_margin"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/list_second_column_margin_left"
+        android:layout_marginBottom="@dimen/list_item_two_line_padding_top_bottom"
+        android:textSize="@dimen/secondary_text_size"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:layout_marginEnd="@dimen/list_item_text_right_margin"
+        android:id="@id/start_up_secondary_name"
+        android:layout_below="@id/start_up_app_name"/>
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@id/start_up_notify_switch"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        />
+
+
+</RelativeLayout>

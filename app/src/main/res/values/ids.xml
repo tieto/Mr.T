@@ -2,4 +2,8 @@
     <item type="id" name="notification_notify_switch"/>
     <item type="id" name="notification_app_icon"/>
     <item type="id" name="notification_app_name"/>
+    <item type="id" name="start_up_notify_switch"/>
+    <item type="id" name="start_up_app_name"/>
+    <item type="id" name="start_up_app_icon"/>
+    <item type="id" name="start_up_secondary_name"/>
 </resources>

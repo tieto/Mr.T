@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.tieto.systemmanagement.authority.AuthorityActivity;
+import com.tieto.systemmanagement.authority.controller.AuthorityActivity;
 import com.tieto.systemmanagement.diskmonitor.activities.DiskActivity;
 import com.tieto.systemmanagement.intercept.views.InterceptActivity;
 import com.tieto.systemmanagement.processmanage.ProcessActivity;
