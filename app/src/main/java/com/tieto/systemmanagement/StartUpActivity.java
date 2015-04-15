@@ -1,17 +1,30 @@
 package com.tieto.systemmanagement;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import com.tieto.systemmanagement.startup.StartUpAdapter;
+
+import java.util.List;
 
 
-public class SelfStartActivity extends Activity {
+public class StartUpActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_self_start);
+        PackageManager pm = getPackageManager();
+        List<ResolveInfo> apps = pm.queryBroadcastReceivers(new Intent(Intent.ACTION_BOOT_COMPLETED), PackageManager.GET_DISABLED_COMPONENTS);
+        ListView listView = (ListView) findViewById(android.R.id.list);
+        StartUpAdapter adapter = new StartUpAdapter(this, apps);
+        listView.setAdapter(adapter);
     }
 
 

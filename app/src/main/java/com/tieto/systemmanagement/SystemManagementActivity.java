@@ -36,7 +36,7 @@ public class SystemManagementActivity extends Activity {
         ACTIVITIES.add(new FunEntity(R.string.title_activity_authority
                 , R.mipmap.ql, AuthorityActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_self_start
-                , R.mipmap.card_icon_autorun, SelfStartActivity.class));
+                , R.mipmap.card_icon_autorun, StartUpActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_traffic
                 , R.mipmap.t_app_icon, TrafficActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_disk

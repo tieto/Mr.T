@@ -99,7 +99,7 @@ public class NotificationManagerAdapter extends BaseAdapter {
         Switch aSwitch;
     }
     private void bindView(ViewHolder viewHolder, int position) {
-        final ApplicationInfo info = mApps.get(position);
+        ApplicationInfo info = mApps.get(position);
         viewHolder.imageView.setImageDrawable(info.loadIcon(pm));
         viewHolder.textView.setText(info.loadLabel(pm));
         Integer mode = modes.get(info.packageName);
