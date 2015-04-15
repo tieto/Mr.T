@@ -11,7 +11,6 @@ public class StorageInfo {
     private String   title;
     private String   total;
 
-
     public Drawable getIcon() { return icon;}
     public String   getTitle() {return title;}
     public String getTotal() {return  total;}
@@ -27,5 +26,4 @@ public class StorageInfo {
     public void setTotal(String spaceTotal) {
         total = spaceTotal;
     }
-
 }

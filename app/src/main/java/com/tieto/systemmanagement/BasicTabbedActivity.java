@@ -17,16 +17,15 @@ import java.util.List;
 
 public class BasicTabbedActivity extends FragmentActivity implements ViewPager.OnPageChangeListener{
 
-    //TODO:the class member var need start m
-    private ArrayList<Fragment> fragments;
-    private ViewPager viewPager;
-    private ViewPagerAdapter adapter;
-    private TextView tv_tab_1;
-    private TextView tv_tab_2;
-    private View cursor;
+    private ArrayList<Fragment> mFrags;
+    private ViewPager mViewPager;
+    private ViewPagerAdapter mPagerAdapter;
+    private TextView mTextviewTab1;
+    private TextView mTextviewTab2;
+    private View mCursor;
 
-    private int currentIndex = 0;
-    private long offset = 0;
+    private int mCurrIndex = 0;
+    private long mOffset = 0;
 
     @Override
     protected void onResume() {
@@ -48,18 +47,18 @@ public class BasicTabbedActivity extends FragmentActivity implements ViewPager.O
         Animation anim = null;
         switch (position) {
             case 0:
-                if(currentIndex ==1) {
-                    anim =  new TranslateAnimation(offset,0,0,0);
+                if(mCurrIndex ==1) {
+                    anim =  new TranslateAnimation(mOffset,0,0,0);
                 }
                 break;
             case 1:
-                if(currentIndex==0) {
-                    anim = new TranslateAnimation(0,offset,0,0);
+                if(mCurrIndex ==0) {
+                    anim = new TranslateAnimation(0, mOffset,0,0);
                 }
                 break;
 
         }
-        currentIndex = position;
+        mCurrIndex = position;
 
         if (anim==null)return;
 
@@ -67,7 +66,7 @@ public class BasicTabbedActivity extends FragmentActivity implements ViewPager.O
         anim.setFillAfter(true);
         anim.setRepeatCount(0);
         anim.setRepeatMode(Animation.REVERSE);
-        cursor.startAnimation(anim);
+        mCursor.startAnimation(anim);
     }
 
     @Override
@@ -83,39 +82,39 @@ public class BasicTabbedActivity extends FragmentActivity implements ViewPager.O
 
         @Override
         public void onClick(View view) {
-            viewPager.setCurrentItem(index);
+            mViewPager.setCurrentItem(index);
         }
     }
 
     public void set2Tabs(List<Class<? extends Fragment>>fs,List<String> ts) throws IllegalAccessException, InstantiationException {
         if (fs.size() !=2 || ts.size() !=2) {
-            throw new IllegalArgumentException("This class only support tabs with 2 fragments");
+            throw new IllegalArgumentException("This class only support tabs with 2 mFrags");
         }
 
         Fragment tab1Fragment = fs.get(0).newInstance();
         Fragment tab2Fragment = fs.get(1).newInstance();
 
-        cursor = findViewById(R.id.tabbed_cursor);
-        viewPager = (ViewPager) findViewById(R.id.tabbed_viewpager);
-        tv_tab_1 = (TextView) findViewById(R.id.tab_1);
-        tv_tab_2 = (TextView) findViewById(R.id.tab_2);
-        tv_tab_1.setOnClickListener(new MyOnClickListener(0));
-        tv_tab_2.setOnClickListener(new MyOnClickListener(1));
-        tv_tab_1.setText(ts.get(0).toString());
-        tv_tab_2.setText(ts.get(1).toString());
+        mCursor = findViewById(R.id.tabbed_cursor);
+        mViewPager = (ViewPager) findViewById(R.id.tabbed_viewpager);
+        mTextviewTab1 = (TextView) findViewById(R.id.tab_1);
+        mTextviewTab2 = (TextView) findViewById(R.id.tab_2);
+        mTextviewTab1.setOnClickListener(new MyOnClickListener(0));
+        mTextviewTab2.setOnClickListener(new MyOnClickListener(1));
+        mTextviewTab1.setText(ts.get(0).toString());
+        mTextviewTab2.setText(ts.get(1).toString());
 
-        offset = cursor.getLayoutParams().width;
+        mOffset = mCursor.getLayoutParams().width;
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;
-        offset = (int) (screenW / 2.0 - offset);
+        mOffset = (int) (screenW / 2.0 - mOffset);
 
-        fragments = new ArrayList<Fragment>();
-        fragments.add(tab1Fragment);
-        fragments.add(tab2Fragment);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(currentIndex);
-        viewPager.setOnPageChangeListener(this);
+        mFrags = new ArrayList<Fragment>();
+        mFrags.add(tab1Fragment);
+        mFrags.add(tab2Fragment);
+        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mFrags);
+        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setCurrentItem(mCurrIndex);
+        mViewPager.setOnPageChangeListener(this);
     }
 }
