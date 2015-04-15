@@ -2,6 +2,7 @@ package com.tieto.systemmanagement;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 
 import com.tieto.systemmanagement.startup.StartUpAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,9 +23,15 @@ public class StartUpActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_self_start);
         PackageManager pm = getPackageManager();
+        List<ResolveInfo> data = new ArrayList<ResolveInfo>();
         List<ResolveInfo> apps = pm.queryBroadcastReceivers(new Intent(Intent.ACTION_BOOT_COMPLETED), PackageManager.GET_DISABLED_COMPONENTS);
+        for(ResolveInfo info : apps) {
+            if ((info.activityInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                data.add(info);
+            }
+        }
         ListView listView = (ListView) findViewById(android.R.id.list);
-        StartUpAdapter adapter = new StartUpAdapter(this, apps);
+        StartUpAdapter adapter = new StartUpAdapter(this, data);
         listView.setAdapter(adapter);
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +56,11 @@ public class StartUpAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         if (null == convertView) {
             viewHolder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.notification_list_item, null);
-            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.notification_app_icon);
-            viewHolder.textView = (TextView) convertView.findViewById(R.id.notification_app_name);
-            viewHolder.aSwitch = (Switch) convertView.findViewById(R.id.notification_notify_switch);
+            convertView = mInflater.inflate(R.layout.start_up_list_item, null);
+            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.start_up_app_icon);
+            viewHolder.textView = (TextView) convertView.findViewById(R.id.start_up_app_name);
+            viewHolder.textViewSecondaryName = (TextView) convertView.findViewById(R.id.start_up_secondary_name);
+            viewHolder.aSwitch = (Switch) convertView.findViewById(R.id.start_up_notify_switch);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -70,6 +72,7 @@ public class StartUpAdapter extends BaseAdapter {
     class ViewHolder {
         ImageView imageView;
         TextView textView;
+        TextView textViewSecondaryName;
         Switch aSwitch;
     }
 
@@ -77,6 +80,7 @@ public class StartUpAdapter extends BaseAdapter {
         ApplicationInfo appInfo = info.activityInfo.applicationInfo;
         viewHolder.imageView.setImageDrawable(appInfo.loadIcon(pm));
         viewHolder.textView.setText(appInfo.loadLabel(pm));
+        viewHolder.textViewSecondaryName.setText(info.activityInfo.name);
         ComponentName component = new ComponentName(appInfo.packageName, info.activityInfo.name);
         viewHolder.aSwitch.setOnCheckedChangeListener(new SwitchChangeListener(component));
         int state = pm.getComponentEnabledSetting(component);
@@ -97,7 +101,7 @@ public class StartUpAdapter extends BaseAdapter {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             switch (buttonView.getId()) {
-                case R.id.notification_notify_switch:
+                case R.id.start_up_notify_switch:
                     if (isChecked) {
                         pm.setComponentEnabledSetting(mComponentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
                     } else {
