@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.authority;
+package com.tieto.systemmanagement.authority.controller;
 
 
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
@@ -14,20 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.authority.adapter.AppInfoAdapter;
 import com.tieto.systemmanagement.authority.entity.AppWrapper;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author Jiang Ping

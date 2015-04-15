@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.authority;
+package com.tieto.systemmanagement.authority.controller;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

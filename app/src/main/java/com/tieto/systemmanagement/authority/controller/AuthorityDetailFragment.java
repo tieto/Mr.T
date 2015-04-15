@@ -1,4 +1,4 @@
-package com.tieto.systemmanagement.authority;
+package com.tieto.systemmanagement.authority.controller;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
