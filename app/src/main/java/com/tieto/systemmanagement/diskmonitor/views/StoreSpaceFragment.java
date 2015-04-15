@@ -32,7 +32,7 @@ public class StoreSpaceFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = (ListView)view.findViewById(R.id.disk_list);
-        adapter = new DiskStorageAdapter((Context)(this.getActivity()), DiskData.getInstance().getStoreSpaceInfos());
+        adapter = new DiskStorageAdapter((Context)(this.getActivity()), DiskData.getInstance().getStorageSpaceInfos());
         listView.setAdapter(adapter);
         TextView tv_summary_title = (TextView)view.findViewById(R.id.title);
         tv_summary_title.setText(TApp.getInstance().getString(R.string.disk_space_store));

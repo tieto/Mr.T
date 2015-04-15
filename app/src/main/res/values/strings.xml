@@ -41,6 +41,8 @@
     <string name="disk_uninstalled_sys_sw">系统软件</string>
     <string name="disk_uninstalled_title">软件卸载</string>
 
+    <string name="disk_cleanup_text">清理</string>
+
     <!-- Authority management -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="auth_unknown_permission">未知权限</string>

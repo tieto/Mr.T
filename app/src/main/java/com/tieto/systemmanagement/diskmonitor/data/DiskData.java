@@ -6,7 +6,7 @@ import android.os.StatFs;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
-import com.tieto.systemmanagement.diskmonitor.entity.DStorageInfo;
+import com.tieto.systemmanagement.diskmonitor.entity.StorageInfo;
 import com.tieto.systemmanagement.diskmonitor.utils.FileUtils;
 import com.tieto.systemmanagement.diskmonitor.utils.Mp3Filter;
 
@@ -18,20 +18,22 @@ import java.util.List;
  * Created by wangbo on 4/3/15.
  */
 public class DiskData {
-    private static final long KILOBYTE = 1024;
-    private static final long Bytes2Megs = 1048576L;
 
-    private static DiskData ourInstance = new DiskData();
+    private static final long KILO_BYTE = 1024;
+    private static final long BYTES_2_MEGES = 1048576L;
+
     private long internalTotal = 0 ;
     private long externalTotal = 0;
 
+    private static DiskData mInstance = new DiskData();
+
+    //TODO: public functions
     public static DiskData getInstance() {
-        return ourInstance;
+        return mInstance;
     }
 
     public long getStorageTotal() {
         return  internalTotal + externalTotal;
-
     }
 
     public long getStorageUsed() {
@@ -42,16 +44,16 @@ public class DiskData {
         long externalFree;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            internalTotal = ( internalStatFs.getBlockCountLong() * internalStatFs.getBlockSizeLong() ) / ( KILOBYTE * KILOBYTE * KILOBYTE );
-            internalFree = ( internalStatFs.getAvailableBlocksLong() * internalStatFs.getBlockSizeLong() ) / ( KILOBYTE * KILOBYTE * KILOBYTE );
-            externalTotal = ( externalStatFs.getBlockCountLong() * externalStatFs.getBlockSizeLong() ) / ( KILOBYTE * KILOBYTE * KILOBYTE );
-            externalFree = ( externalStatFs.getAvailableBlocksLong() * externalStatFs.getBlockSizeLong() ) / ( KILOBYTE * KILOBYTE * KILOBYTE );
+            internalTotal = ( internalStatFs.getBlockCountLong() * internalStatFs.getBlockSizeLong() ) / ( KILO_BYTE * KILO_BYTE * KILO_BYTE);
+            internalFree = ( internalStatFs.getAvailableBlocksLong() * internalStatFs.getBlockSizeLong() ) / ( KILO_BYTE * KILO_BYTE * KILO_BYTE);
+            externalTotal = ( externalStatFs.getBlockCountLong() * externalStatFs.getBlockSizeLong() ) / ( KILO_BYTE * KILO_BYTE * KILO_BYTE);
+            externalFree = ( externalStatFs.getAvailableBlocksLong() * externalStatFs.getBlockSizeLong() ) / ( KILO_BYTE * KILO_BYTE * KILO_BYTE);
         }
         else {
-            internalTotal = ( (long) internalStatFs.getBlockCount() * (long) internalStatFs.getBlockSize() ) / ( KILOBYTE * KILOBYTE * KILOBYTE );
-            internalFree = ( (long) internalStatFs.getAvailableBlocks() * (long) internalStatFs.getBlockSize() ) / ( KILOBYTE * KILOBYTE * KILOBYTE  );
-            externalTotal = ( (long) externalStatFs.getBlockCount() * (long) externalStatFs.getBlockSize() ) / ( KILOBYTE * KILOBYTE * KILOBYTE );
-            externalFree = ( (long) externalStatFs.getAvailableBlocks() * (long) externalStatFs.getBlockSize() ) / ( KILOBYTE * KILOBYTE * KILOBYTE );
+            internalTotal = ( (long) internalStatFs.getBlockCount() * (long) internalStatFs.getBlockSize() ) / ( KILO_BYTE * KILO_BYTE * KILO_BYTE);
+            internalFree = ( (long) internalStatFs.getAvailableBlocks() * (long) internalStatFs.getBlockSize() ) / ( KILO_BYTE * KILO_BYTE * KILO_BYTE);
+            externalTotal = ( (long) externalStatFs.getBlockCount() * (long) externalStatFs.getBlockSize() ) / ( KILO_BYTE * KILO_BYTE * KILO_BYTE);
+            externalFree = ( (long) externalStatFs.getAvailableBlocks() * (long) externalStatFs.getBlockSize() ) / ( KILO_BYTE * KILO_BYTE * KILO_BYTE);
         }
 
         return internalTotal + externalTotal -(internalFree + externalFree);
@@ -61,22 +63,22 @@ public class DiskData {
         return 100*(getStorageUsed())/getStorageTotal();
     }
 
-    public List<DStorageInfo> getStoreSpaceInfos() {
-        ArrayList<DStorageInfo> spaceInfos = new ArrayList<DStorageInfo>();
+    public List<StorageInfo> getStorageSpaceInfos() {
+        ArrayList<StorageInfo> spaceInfos = new ArrayList<StorageInfo>();
 
-        DStorageInfo info1= new DStorageInfo();
+        StorageInfo info1= new StorageInfo();
         info1.setIcon(TApp.getInstance().getDrawable(R.drawable.sysclear_file_apk));
         info1.setTitle(TApp.getInstance().getString(R.string.disk_space_store_title_1));
         info1.setTotal("0M");
         spaceInfos.add(info1);
 
-        DStorageInfo info2= new DStorageInfo();
+        StorageInfo info2= new StorageInfo();
         info2.setIcon(TApp.getInstance().getDrawable(R.drawable.sysclear_file_audio));
         info2.setTitle(TApp.getInstance().getString(R.string.disk_space_store_title_2));
         info2.setTotal(displaySize(getAlbumSize()));
         spaceInfos.add(info2);
 
-        DStorageInfo info3= new DStorageInfo();
+        StorageInfo info3= new StorageInfo();
         info3.setIcon(TApp.getInstance().getDrawable(R.drawable.sysclear_file_zip));
         info3.setTitle(TApp.getInstance().getString(R.string.disk_space_store_title_3));
         info3.setTotal(displaySize(getAudioSize()));
@@ -85,10 +87,10 @@ public class DiskData {
         return spaceInfos;
     }
 
-    public List<DStorageInfo> getSystemSpaceInfos() {
-        ArrayList<DStorageInfo> systemInfos = new ArrayList<DStorageInfo>();
+    public List<StorageInfo> getSystemSpaceInfos() {
+        ArrayList<StorageInfo> systemInfos = new ArrayList<StorageInfo>();
 
-        DStorageInfo info1= new DStorageInfo();
+        StorageInfo info1= new StorageInfo();
         info1.setIcon(TApp.getInstance().getDrawable(R.drawable.sysclear_media_uninstall));
         info1.setTitle(TApp.getInstance().getString(R.string.disk_space_system_title_1));
         info1.setTotal("");
@@ -133,12 +135,12 @@ public class DiskData {
     }
 
     private String displaySize(long size) {
-        if (size > Bytes2Megs) {
-            size/= Bytes2Megs;
+        if (size > BYTES_2_MEGES) {
+            size/= BYTES_2_MEGES;
             return  size+"M";
         }
-        else if (size > KILOBYTE) {
-            size/=KILOBYTE;
+        else if (size > KILO_BYTE) {
+            size/= KILO_BYTE;
             return size+"K";
         }
         return size+"B";

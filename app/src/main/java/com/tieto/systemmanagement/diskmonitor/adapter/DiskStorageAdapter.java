@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.diskmonitor.entity.DStorageInfo;
+import com.tieto.systemmanagement.diskmonitor.entity.StorageInfo;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import java.util.List;
  */
 public class DiskStorageAdapter extends BaseAdapter {
     private Context mContext = null;
-    private List<DStorageInfo> mSpaceArray = null;
+    private List<StorageInfo> mSpaceArray = null;
     private static LayoutInflater mInflater = null;
 
-    public DiskStorageAdapter(Context context, List<DStorageInfo> list) {
+    public DiskStorageAdapter(Context context, List<StorageInfo> list) {
         mContext = context;
         mSpaceArray = list;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -44,7 +44,7 @@ public class DiskStorageAdapter extends BaseAdapter {
         if (convertView == null)
             v = mInflater.inflate(R.layout.item_disk_space, null);
 
-        DStorageInfo info = mSpaceArray.get(position);
+        StorageInfo info = mSpaceArray.get(position);
         ImageView iv = (ImageView)v.findViewById(R.id.icon);
         iv.setImageDrawable(info.getIcon());
 
