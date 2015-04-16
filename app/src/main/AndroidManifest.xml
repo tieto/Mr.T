@@ -13,6 +13,9 @@
     <user-permission android:name="android.permission.MODIFY_PHONE_STATE"></user-permission>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -114,6 +117,11 @@
             android:label="@string/title_activity_call_intercept_config" >
         </activity>
 
+        <activity
+            android:name=".intercept.views.MessageInterceptConfigActivity"
+            android:label="@string/title_activity_message_intercept_config">
+        </activity>
+
         <receiver android:name=".trafficmonitor.entity.PackageBroadCast">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"></action>
@@ -128,6 +136,7 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
+
         <service android:name=".intercept.service.PhoneFilterServer"/>
     </application>
 

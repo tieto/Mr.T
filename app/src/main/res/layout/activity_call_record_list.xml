@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="All boring records here ..."
+        android:gravity="center"
+        android:id="@+id/prepare_empty_view"/>
+
+    <ListView
+        style="@style/AppTheme.ListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:listSelector="@color/common_title_bar_pressed"
+        android:id="@android:id/list">
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/intercept_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+           <Button
+               style="@style/ButtonTheme"
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1"
+               android:text="Delete All"
+               android:id="@+id/button_delete"/>
+            <Button
+                style="@style/ButtonTheme"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Mark"
+                android:id="@+id/button_mark"/>
+        </LinearLayout>
+
+</LinearLayout>

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.intercept.service.PhoneFilterServer;
-import com.tieto.systemmanagement.intercept.util.InterceptConfiguration;
+import com.tieto.systemmanagement.intercept.util.InterceptHelper;
 
 import java.util.List;
 import java.util.Map;
@@ -20,18 +20,22 @@ import java.util.Map;
 /**
  * Created by zhaooked on 4/8/15.
  */
-public class ConfigListViewAdapter extends BaseAdapter {
+public abstract class ConfigListViewAdapter extends BaseAdapter {
 
-    private List<Map<String,Object>> data ;
-    private LayoutInflater mInflater;
-    private Context context ;
-    private SharedPreferences sharedPreferences ;
-    private PhoneFilterServer phoneFilterServer;
+    protected List<Map<String,Object>> data ;
+    protected LayoutInflater mInflater;
+    protected Context context ;
+    protected SharedPreferences sharedPreferences ;
+    protected PhoneFilterServer phoneFilterServer;
+
+    public ConfigListViewAdapter(){
+
+    }
 
     public ConfigListViewAdapter(Context context,List<Map<String,Object>> data){
         this.data =  data ;
         this.context = context ;
-        sharedPreferences = context.getSharedPreferences(InterceptConfiguration.INTERCEPT_CONFIGURATION,context.MODE_PRIVATE) ;
+        sharedPreferences = context.getSharedPreferences(InterceptHelper.INTERCEPT_CONFIGURATION,context.MODE_PRIVATE) ;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -64,42 +68,7 @@ public class ConfigListViewAdapter extends BaseAdapter {
         return v;
     }
 
-    private void bindView(final int position,View view){
-
-        final Map<String, Object> date = data.get(position);
-        TextView titleView = (TextView)view.findViewById(R.id.title) ;
-        TextView titleEnableView = (TextView)view.findViewById(R.id.title_enable_intercept) ;
-        Switch switchView = (Switch)view.findViewById(R.id.enable_intercept) ;
-
-        titleView.setText(date.get("title_call_intercept").toString());
-        titleEnableView.setText(date.get("title_is_intercept").toString());
-        switchView.setChecked(Boolean.valueOf(date.get("intercept").toString()));
-
-        switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                data.get(position).put("title_is_intercept",context.getResources().getString(isChecked ? R.string.intercept : R.string.un_intercept));
-                data.get(position).put("intercept",isChecked);
-                SharedPreferences.Editor edit = sharedPreferences.edit();
-                switch (position){
-                    case 0 :
-                        edit.putBoolean(InterceptConfiguration.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT,isChecked) ;
-                        break;
-                    case 1 :
-                        edit.putBoolean(InterceptConfiguration.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_ANONYMITY,isChecked) ;
-                        break;
-                    case 2 :
-                        edit.putBoolean(InterceptConfiguration.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_CONTRACT,isChecked) ;
-                        break;
-                }
-                edit.commit() ;
-                if(phoneFilterServer!=null){
-                    phoneFilterServer.reInit();
-                }
-                notifyDataSetChanged();
-            }
-        });
-    }
+    abstract void bindView(final int position,View view) ;
 
     public void setPhoneFilterServer(PhoneFilterServer phoneFilterServer){
         this.phoneFilterServer = phoneFilterServer ;

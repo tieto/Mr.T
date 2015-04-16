@@ -1,9 +1,12 @@
 package com.tieto.systemmanagement.intercept.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by zhaooked on 4/9/15.
  */
-public class Record {
+public class Record implements Parcelable {
 
     public interface InterceptType{
         int INCOMING_PHONE = 0 ;
@@ -20,11 +23,57 @@ public class Record {
         int CONTENT = 1 ;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(manifestType);
+        dest.writeInt(filtrationType);
+        dest.writeInt(interceptType);
+        dest.writeString(recordContent);
+        dest.writeString(date);
+        dest.writeString(reMark);
+    }
+
+    public static final Creator<Record> CREATOR = new Creator<Record>() {
+        @Override
+        public Record createFromParcel(Parcel source) {
+            Record record = new Record();
+            record.setId(source.readInt());
+            record.setManifestType(source.readInt());
+            record.setFiltrationType(source.readInt());
+            record.setInterceptType(source.readInt());
+            record.setRecordContent(source.readString());
+            record.setDate(source.readString());
+            record.setReMark(source.readString());
+            return record;
+        }
+
+        @Override
+        public Record[] newArray(int size) {
+            return new Record[size];
+        }
+    };
+
     private int id ;
 
     private int interceptType ;
     private int manifestType ;
     private int filtrationType ;
+    private String reMark ;
+
+    public String getReMark() {
+        return reMark;
+    }
+
+    public void setReMark(String reMark) {
+        this.reMark = reMark;
+    }
+
     public String getDate() {
         return date;
     }

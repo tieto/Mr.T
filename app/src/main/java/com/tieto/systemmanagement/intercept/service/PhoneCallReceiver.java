@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.tieto.systemmanagement.intercept.util.InterceptConfiguration;
+import com.tieto.systemmanagement.intercept.util.InterceptHelper;
 
 /**
  * Created by zhaooked on 4/2/15.
@@ -18,7 +18,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         if (!intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
             Intent intent2 = new Intent(context, PhoneFilterServer.class);
             intent2.putExtras(intent);
-            intent2.setAction(InterceptConfiguration.INTERCEPT_ACTION);
+            intent2.setAction(InterceptHelper.INTERCEPT_ACTION_CALL);
             context.startService(intent2);
         }
     }

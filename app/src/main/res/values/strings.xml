@@ -73,10 +73,13 @@
     <!-- Intercept management -->
     <string name="intercept_config_message">MESSAGE INTERCEPT</string>
     <string name="intercept_config_call">CALL INTERCEPT</string>
-    <string name="title_activity_call_intercept_config">CallInterceptConfigActivity</string>
-    <string name="title_call_intercept_strange">Unknown Number</string>
+    <string name="title_activity_call_intercept_config">CallInterceptConfig</string>
+    <string name="title_activity_message_intercept_config">MessageInterceptConfig</string>
+    <string name="title_enable_intercept">Enable Intercept</string>
+    <string name="title_call_intercept_strange">Strange Number</string>
     <string name="title_call_intercept_anonymous">Anonymous Number</string>
     <string name="title_call_intercept_contract">Contracts</string>
+    <string name="title_message_intercept_strange">Strange Message</string>
     <string name="intercept">Intercept</string>
     <string name="un_intercept">No intercept</string>
 </resources>

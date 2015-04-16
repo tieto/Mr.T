@@ -13,7 +13,9 @@ import android.widget.Toast;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.intercept.adapter.CallRecordAdapter;
+import com.tieto.systemmanagement.intercept.adapter.MessageRecordAdapter;
 import com.tieto.systemmanagement.intercept.entity.Record;
+import com.tieto.systemmanagement.intercept.entity.SmsInfo;
 import com.tieto.systemmanagement.intercept.recordmanagement.RecordDBHelper;
 
 import java.util.List;
@@ -21,9 +23,9 @@ import java.util.List;
 /**
  * Created by zhaooked on 4/10/15.
  */
-public class CallRecordFragment extends ListFragment implements RecordDBHelper.Notification{
+public class MessageRecordFragment extends ListFragment implements RecordDBHelper.Notification{
 
-    private CallRecordAdapter mCallRecordAdapter;
+    private MessageRecordAdapter mMessageRecordAdapter;
 
     private List<Record> mRecordList;
 
@@ -39,8 +41,8 @@ public class CallRecordFragment extends ListFragment implements RecordDBHelper.N
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mCallRecordAdapter = new CallRecordAdapter(this.getActivity(), mRecordList) ;
-        setListAdapter(mCallRecordAdapter);
+        mMessageRecordAdapter = new MessageRecordAdapter(this.getActivity(), mRecordList) ;
+        setListAdapter(mMessageRecordAdapter);
         getListView().setEmptyView(getView().findViewById(R.id.prepare_empty_view));
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -76,8 +78,7 @@ public class CallRecordFragment extends ListFragment implements RecordDBHelper.N
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecordDBHelper.deleteAllPhoneRecords() ;
-
+                mRecordDBHelper.deleteAllMessageRecords() ;
             }
         });
     }
@@ -85,7 +86,7 @@ public class CallRecordFragment extends ListFragment implements RecordDBHelper.N
     @Override
     public void onAttach(Activity activity) {
         mRecordDBHelper = new RecordDBHelper(getActivity()) ;
-        mRecordList = mRecordDBHelper.queryPhoneInterceptRecord() ;
+        mRecordList = mRecordDBHelper.queryMessageInterceptRecord() ;
         mRecordDBHelper.registerNotification(this);
         super.onAttach(activity);
     }
@@ -95,9 +96,9 @@ public class CallRecordFragment extends ListFragment implements RecordDBHelper.N
         if(record != null) {
             mRecordList.add(record);
         }else{
-            mRecordList = mRecordDBHelper.queryPhoneInterceptRecord() ;
+            mRecordList = mRecordDBHelper.queryMessageInterceptRecord() ;
         }
-        mCallRecordAdapter.notifyDataSetChanged();
+        mMessageRecordAdapter.notifyDataSetChanged();
     }
 
     @Override

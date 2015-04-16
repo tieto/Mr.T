@@ -9,21 +9,23 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.intercept.entity.Record;
+import com.tieto.systemmanagement.intercept.entity.SmsInfo;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
  * Created by zhaooked on 4/10/15.
  */
-public class CallRecordAdapter extends BaseAdapter {
+public class MessageRecordAdapter extends BaseAdapter {
 
-    private List<Record> records ;
+    private List<Record> records;
     private LayoutInflater layoutInflater ;
     private Context context ;
 
-    public CallRecordAdapter(Context context ,List<Record> records) {
+    public MessageRecordAdapter(Context context, List<Record> record) {
         this.context = context ;
-        this.records = records ;
+        this.records = record ;
         layoutInflater = LayoutInflater.from(context) ;
     }
 
@@ -47,15 +49,16 @@ public class CallRecordAdapter extends BaseAdapter {
 
         ViewHolder viewHolder;
         if(convertView == null){
-            convertView = layoutInflater.inflate(R.layout.item_call_record_list,parent,false) ;
+            convertView = layoutInflater.inflate(R.layout.item_message_record_list,parent,false) ;
             viewHolder = new ViewHolder();
-            viewHolder.recordView = (TextView)convertView.findViewById(R.id.record_content) ;
+            viewHolder.recordNumberView = (TextView)convertView.findViewById(R.id.record_number) ;
+            viewHolder.recordView = (TextView)convertView.findViewById(R.id.content) ;
             viewHolder.dateView = (TextView)convertView.findViewById(R.id.date);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag() ;
         }
-        bindView(viewHolder,position);
+        bindView(viewHolder, position);
 
         return convertView ;
     }
@@ -63,9 +66,11 @@ public class CallRecordAdapter extends BaseAdapter {
     private void bindView(ViewHolder viewHolder , int position){
         viewHolder.dateView.setText(records.get(position).getDate());
         viewHolder.recordView.setText(records.get(position).getRecordContent());
+        viewHolder.recordNumberView.setText(records.get(position).getReMark());
     }
 
     static class ViewHolder {
+        public TextView recordNumberView ;
         public TextView recordView ;
         public TextView dateView ;
     }

@@ -15,6 +15,7 @@ import android.widget.ListView;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.intercept.adapter.ConfigCallListViewAdapter;
 import com.tieto.systemmanagement.intercept.adapter.ConfigListViewAdapter;
+import com.tieto.systemmanagement.intercept.adapter.ConfigMessageListViewAdapter;
 import com.tieto.systemmanagement.intercept.service.PhoneFilterServer;
 import com.tieto.systemmanagement.intercept.util.InterceptHelper;
 
@@ -23,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CallInterceptConfigActivity extends Activity {
+public class MessageInterceptConfigActivity extends Activity {
 
     private PhoneFilterServer phoneFilterServer ;
     private ConfigListViewAdapter configListViewAdapter ;
@@ -34,40 +35,31 @@ public class CallInterceptConfigActivity extends Activity {
         setContentView(R.layout.activity_call_intercept_config);
 
         ListView view = (ListView)findViewById(R.id.intercept_config_management_item);
-        configListViewAdapter = new ConfigCallListViewAdapter(this, getDate());
+        configListViewAdapter = new ConfigMessageListViewAdapter(this, getDate());
         view.setAdapter(configListViewAdapter);
 
         bindService(new Intent(this,PhoneFilterServer.class),serviceConnection, Context.BIND_AUTO_CREATE) ;
-
-        setTitle("电话拦截设置");
     }
 
     private List<Map<String,Object>> getDate(){
 
         SharedPreferences sharedPreferences = getSharedPreferences(InterceptHelper.INTERCEPT_CONFIGURATION,MODE_PRIVATE) ;
 
-        boolean isIntercept = sharedPreferences.getBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT, InterceptHelper.InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT);
-        boolean interceptContract = sharedPreferences.getBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_CONTRACT, InterceptHelper.InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_CONTRACT) ;
-        boolean interceptAnonymity = sharedPreferences.getBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_ANONYMITY, InterceptHelper.InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_ANONYMITY) ;
+        boolean isIntercept = sharedPreferences.getBoolean(InterceptHelper.InterceptMessageConfiguration.ENABLE_MESSAGE_INTERCEPT, InterceptHelper.InterceptMessageConfiguration.DEFAULT_ENABLE_MESSAGE_INTERCEPT);
+        boolean interceptStrange = sharedPreferences.getBoolean(InterceptHelper.InterceptMessageConfiguration.ENABLE_MESSAGE_INTERCEPT_STRANGE, InterceptHelper.InterceptMessageConfiguration.DEFAULT_ENABLE_MESSAGE_INTERCEPT_STRANGE) ;
 
         List<Map<String,Object>> date = new ArrayList<Map<String, Object>>() ;
         Map<String,Object> strangeMap = new HashMap<String,Object>() ;
-        strangeMap.put("title_call_intercept",getResources().getString(R.string.title_call_intercept_strange)) ;
+        strangeMap.put("title_enable_intercept",getResources().getString(R.string.title_enable_intercept)) ;
         strangeMap.put("title_is_intercept",getResources().getString(isIntercept ? R.string.intercept : R.string.un_intercept)) ;
         strangeMap.put("intercept",isIntercept) ;
         date.add(strangeMap) ;
 
         Map<String,Object> anonymousMap = new HashMap<String,Object>() ;
-        anonymousMap.put("title_call_intercept",getResources().getString(R.string.title_call_intercept_anonymous)) ;
-        anonymousMap.put("title_is_intercept",getResources().getString(interceptAnonymity ? R.string.intercept : R.string.un_intercept)) ;
-        anonymousMap.put("intercept",interceptAnonymity) ;
+        anonymousMap.put("title_enable_intercept",getResources().getString(R.string.title_message_intercept_strange)) ;
+        anonymousMap.put("title_is_intercept",getResources().getString(interceptStrange ? R.string.intercept : R.string.un_intercept)) ;
+        anonymousMap.put("intercept",interceptStrange) ;
         date.add(anonymousMap) ;
-
-        Map<String,Object> contractMap = new HashMap<String,Object>() ;
-        contractMap.put("title_call_intercept",getResources().getString(R.string.title_call_intercept_contract)) ;
-        contractMap.put("title_is_intercept",getResources().getString(interceptContract ? R.string.intercept : R.string.un_intercept)) ;
-        contractMap.put("intercept",interceptContract) ;
-        date.add(contractMap) ;
 
         return date ;
     }
