@@ -145,6 +145,7 @@ public class AppListFragmentTool {
                     try {
                         PackageInfo runningPackageInfo = mPackageManager.getPackageInfo(pkgNameList[j], PackageManager.GET_UNINSTALLED_PACKAGES);
                         appInfoModel = new AppInfoModel(runningPackageInfo, mPackageManager);
+                        appInfoModel.setUID(running.uid);
                         appInfoModels.add(appInfoModel);
                     } catch (Exception e) {
                         e.printStackTrace();

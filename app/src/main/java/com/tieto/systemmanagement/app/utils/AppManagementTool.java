@@ -1,6 +1,7 @@
 package com.tieto.systemmanagement.app.utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.IPackageStatsObserver;
@@ -9,10 +10,11 @@ import android.content.pm.PackageStats;
 import android.net.Uri;
 import android.os.RemoteException;
 
+import com.tieto.systemmanagement.app.AppDetailActivity;
 import com.tieto.systemmanagement.app.models.AppSizeModel;
 import com.tieto.systemmanagement.app.models.ApplicationsState;
 
-import java.io.DataOutputStream;
+import java.lang.reflect.Method;
 
 
 /**
@@ -20,14 +22,12 @@ import java.io.DataOutputStream;
  */
 public class AppManagementTool {
 
-    public static final int REQUEST_UNINSTALL = 1;
-
     public static boolean Uninstall(Activity activity, String packageName) {
         try {
             Uri uri = Uri.parse("package:" + packageName);
             Intent intent = new Intent(Intent.ACTION_DELETE, uri);
             intent.putExtra(Intent.ACTION_UNINSTALL_PACKAGE, true);
-            activity.startActivityForResult(intent, REQUEST_UNINSTALL);
+            activity.startActivityForResult(intent, AppDetailActivity.REQUEST_UNINSTALL);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -37,12 +37,10 @@ public class AppManagementTool {
 
     public static boolean ForceStop(Context context, String packageName) {
         try {
-            Process process = Runtime.getRuntime().exec("su");
-            DataOutputStream dos = new DataOutputStream(process.getOutputStream());
-            dos.writeBytes("adb shell" + " \n");
-            dos.flush();
-            dos.writeBytes("am force-stop " + packageName + " \n");
-            dos.flush();
+            ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+            Method forceStopPackage = am.getClass().getMethod("forceStopPackage", String.class);
+            forceStopPackage.setAccessible(true);
+            forceStopPackage.invoke(am, packageName);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

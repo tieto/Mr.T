@@ -38,13 +38,13 @@ public class ApplicationsState {
     public static interface Callbacks {
         public void onRunningStateChanged(boolean running);
 
-        public void onPackageIconChanged();
+        public void onPackageStateChanged();
 
         public void onPackageSizeChanged(AppSizeModel appSizeModel);
     }
 
     class MainHandler extends Handler {
-        static final int MSG_PACKAGE_ICON_CHANGED = 1;
+        static final int MSG_PACKAGE_STATE_CHANGED = 1;
         static final int MSG_PACKAGE_SIZE_CHANGED = 2;
         static final int MSG_RUNNING_STATE_CHANGED = 3;
 
@@ -53,9 +53,11 @@ public class ApplicationsState {
 
             switch (msg.what) {
 
-                case MSG_PACKAGE_ICON_CHANGED: {
-                    for (int i = 0; i < mActiveCallbacks.size(); i++) {
-                        mActiveCallbacks.get(i).onPackageIconChanged();
+                case MSG_PACKAGE_STATE_CHANGED: {
+                    String packageName = (String) msg.obj;
+                    Callbacks callback = mActiveCallbacks.get(packageName);
+                    if (callback != null) {
+                        callback.onPackageStateChanged();
                     }
                 }
                 break;
@@ -86,6 +88,11 @@ public class ApplicationsState {
             appInfoModel.setSizeInfo(appSizeModel);
         }
         Message msg = mMainHandler.obtainMessage(MainHandler.MSG_PACKAGE_SIZE_CHANGED, appSizeModel);
+        mMainHandler.sendMessage(msg);
+    }
+
+    public synchronized void stateChanged(String packageName) {
+        Message msg = mMainHandler.obtainMessage(MainHandler.MSG_PACKAGE_STATE_CHANGED,packageName);
         mMainHandler.sendMessage(msg);
     }
 

@@ -51,8 +51,7 @@ public class AppInfoModel {
     private Drawable icon;
 
     /**
-     * 0 : Not system app.
-     * 1 : System app.
+     * System app.
      */
     private int flag;
 
@@ -78,32 +77,12 @@ public class AppInfoModel {
     private long totalSize;
 
     private String codePath;
+    private int UID = -1;
 
     /**
      * Is the size info set?
      */
     private boolean isSizeSet = false;
-
-    public AppInfoModel(String packageName, String appLabel, String versionName, int versionCode, long firstInstallTime, int installLocation, long lastUpdateTime, Drawable icon, int flag, long cacheSize, long dataSize, long programSize, long totalSize, String codePath) {
-        this.packageName = packageName;
-        this.appLabel = appLabel;
-        this.versionName = versionName;
-        this.versionCode = versionCode;
-        this.firstInstallTime = firstInstallTime;
-        this.installLocation = installLocation;
-        this.lastUpdateTime = lastUpdateTime;
-        this.icon = icon;
-        this.flag = flag;
-        this.cacheSize = cacheSize;
-        this.dataSize = dataSize;
-        this.programSize = programSize;
-        this.totalSize = totalSize;
-        this.codePath = codePath;
-
-        isSizeSet = true;
-
-        AppListCache.AppListItemModelCache.put(packageName, this);
-    }
 
     public AppInfoModel(PackageInfo packageinfo, AppSizeModel appSize, PackageManager pm) {
         this.packageName = packageinfo.packageName;
@@ -123,7 +102,7 @@ public class AppInfoModel {
 
         isSizeSet = true;
 
-        AppListCache.AppListItemModelCache.put(packageName, this);
+        addToCache();
     }
 
     public AppInfoModel(PackageInfo packageinfo, PackageManager pm) {
@@ -136,8 +115,9 @@ public class AppInfoModel {
         this.lastUpdateTime = packageinfo.lastUpdateTime;
         this.icon = packageinfo.applicationInfo.loadIcon(pm);
         this.flag = packageinfo.applicationInfo.flags;
+        this.codePath = packageinfo.applicationInfo.dataDir;
 
-        AppListCache.AppListItemModelCache.put(packageName, this);
+        addToCache();
     }
 
     public synchronized void setSizeInfo(AppSizeModel appSize) {
@@ -147,6 +127,14 @@ public class AppInfoModel {
         this.totalSize = appSize.getTotalSize();
 
         isSizeSet = true;
+
+        addToCache();
+    }
+
+    private void addToCache() {
+        if(AppListCache.AppListItemModelCache.get(packageName) != null) {
+            return;
+        }
         AppListCache.AppListItemModelCache.put(packageName, this);
     }
 
@@ -206,4 +194,16 @@ public class AppInfoModel {
         return isSizeSet;
     }
 
+    public int getUID() {
+        return UID;
+    }
+
+    public void setUID(int UID) {
+        this.UID = UID;
+        AppListCache.AppListItemModelCache.put(packageName, this);
+    }
+
+    public String getCodePath() {
+        return codePath;
+    }
 }

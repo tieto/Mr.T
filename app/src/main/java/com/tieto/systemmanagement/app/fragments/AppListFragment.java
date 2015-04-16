@@ -1,5 +1,6 @@
 package com.tieto.systemmanagement.app.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +24,11 @@ import java.lang.ref.WeakReference;
  * Created by jinpei on 25/03/15.
  */
 public abstract class AppListFragment extends Fragment implements View.OnClickListener, ListView.OnItemClickListener {
+
+    /**
+     * Request code.
+     */
+    public static final int REQUEST_DETAIL = 1;
 
     /**
      * App List type.
@@ -164,7 +170,19 @@ public abstract class AppListFragment extends Fragment implements View.OnClickLi
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         AppListAdapter.AppDetailIntent intent = mAppListAdapter.new AppDetailIntent(position);
         intent.setClass(this.getActivity(), AppDetailActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,REQUEST_DETAIL);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_DETAIL:
+                if(resultCode == AppDetailActivity.RESULT_PACKAGE_STATE_CHANGED) {
+                    String packageName = data.getStringExtra(AppListAdapter.AppDetailIntent.APP_PACKAGE_NAME);
+                    mAppListAdapter.removeItem(packageName);
+                }
+                break;
+        }
     }
 
     /**

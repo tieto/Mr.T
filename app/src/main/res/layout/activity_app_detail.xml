@@ -55,7 +55,7 @@
                 android:id="@+id/app_detail_button_force_stop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:layout_weight="0.4"
                 android:text="@string/app_detail_force_stop" />
 

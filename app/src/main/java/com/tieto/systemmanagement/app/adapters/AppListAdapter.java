@@ -17,6 +17,7 @@ import com.tieto.systemmanagement.app.models.AppSizeModel;
 import com.tieto.systemmanagement.app.utils.AppListFragmentTool;
 import com.tieto.systemmanagement.app.models.ApplicationsState;
 import com.tieto.systemmanagement.app.fragments.AppListFragment;
+import com.tieto.systemmanagement.app.utils.constants.AppListCache;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -100,6 +101,14 @@ public class AppListAdapter extends BaseAdapter {
             mAppSizeInfoSetterHandler = new AppSizeInfoSetterHandler(this);
             new Thread(new AppSizeInfoRunnable(this)).start();
         }
+    }
+
+    /**
+     * Remove item which has been deleted.
+     */
+    public void removeItem(String packageName) {
+        mAppList.remove(AppListCache.AppListItemModelCache.get(packageName));
+        this.notifyDataSetChanged();
     }
 
     final class AppListItemViewHolder {

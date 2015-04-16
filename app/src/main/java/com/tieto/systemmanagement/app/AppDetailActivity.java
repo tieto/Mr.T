@@ -1,6 +1,7 @@
 package com.tieto.systemmanagement.app;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -13,13 +14,25 @@ import android.widget.Toast;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.app.adapters.AppListAdapter;
-import com.tieto.systemmanagement.app.utils.constants.AppListCache;
 import com.tieto.systemmanagement.app.models.AppInfoModel;
 import com.tieto.systemmanagement.app.models.AppSizeModel;
-import com.tieto.systemmanagement.app.utils.AppManagementTool;
 import com.tieto.systemmanagement.app.models.ApplicationsState;
+import com.tieto.systemmanagement.app.utils.AppManagementTool;
+import com.tieto.systemmanagement.app.utils.constants.AppListCache;
 
 public class AppDetailActivity extends FragmentActivity implements ApplicationsState.Callbacks, View.OnClickListener {
+
+    /**
+     * Request code.
+     */
+    public static final int REQUEST_UNINSTALL = 1;
+
+    /**
+     * Result code.
+     */
+    public static final int RESULT_NO_CHANGE = RESULT_OK;
+    public static final int RESULT_PACKAGE_STATE_CHANGED = 2;
+    public static final int RESULT_RUNNING_STATE_CHANGED = 3;
 
     /**
      * Package name from intent.
@@ -90,6 +103,14 @@ public class AppDetailActivity extends FragmentActivity implements ApplicationsS
                 app_detail_data_size.setText(String.valueOf(mAppInfoModel.getDataSize()));
                 app_detail_cache_size.setText(String.valueOf(mAppInfoModel.getCacheSize()));
             }
+
+            if(mAppInfoModel.getUID() == -1) {
+                app_detail_button_force_stop.setVisibility(View.INVISIBLE);
+            }
+
+            if((mAppInfoModel.getFlag() & ApplicationInfo.FLAG_INSTALLED) == 0) {
+                app_detail_button_uninstall.setEnabled(false);
+            }
         } else {
             Toast.makeText(this,R.string.app_detail_failure_to_get_package_info,Toast.LENGTH_LONG);
             finish();
@@ -106,15 +127,20 @@ public class AppDetailActivity extends FragmentActivity implements ApplicationsS
         if (appInfoModel != null) {
             return appInfoModel;
         }
+        return null;
+    }
+
+    private boolean checkPackage() {
         PackageManager pm = getPackageManager();
         try {
             PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES);
-            appInfoModel = new AppInfoModel(packageInfo, pm);
-            return appInfoModel;
+            if(packageInfo != null)
+            return true;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return false;
         }
-        return null;
+        return false;
     }
 
     private String getPackageNameFromIntent(Intent intent) {
@@ -127,8 +153,13 @@ public class AppDetailActivity extends FragmentActivity implements ApplicationsS
     }
 
     @Override
-    public void onPackageIconChanged() {
-
+    public void onPackageStateChanged() {
+        if(!checkPackage()) {
+            Intent intent = getIntent();
+            intent.putExtra(AppListAdapter.AppDetailIntent.APP_PACKAGE_NAME, packageName);
+            setResult(RESULT_PACKAGE_STATE_CHANGED, intent);
+            finish();
+        }
     }
 
     @Override
@@ -157,5 +188,12 @@ public class AppDetailActivity extends FragmentActivity implements ApplicationsS
         }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_UNINSTALL:
+                ApplicationsState.getInstance().stateChanged(packageName);
+                break;
+        }
+    }
 }
