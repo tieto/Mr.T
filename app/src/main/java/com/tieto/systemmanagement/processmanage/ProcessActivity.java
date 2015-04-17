@@ -7,35 +7,37 @@
 
 package com.tieto.systemmanagement.processmanage;
 
-import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Debug;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.text.TextUtils;
-import android.util.Log;
-import android.os.Handler;
-import android.os.Debug.MemoryInfo;
 import android.widget.Button;
 import android.widget.TextView;
-
-import java.lang.Thread;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Random;
 
 import com.tieto.common.util.ShellUtils;
 import com.tieto.common.util.ShellUtils.CommandResult;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.processmanage.views.SlidingChartView;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class ProcessActivity extends Activity {
 
@@ -140,6 +142,8 @@ public class ProcessActivity extends Activity {
 
         mProcessMgr=new ProcessManagerDefault();
 
+        mProcessMgr.getBatteryUsage();
+
         mResourceUsageThread=new ResourceUsageThread();
         mResourceUsageThread.start();
 
@@ -156,7 +160,7 @@ public class ProcessActivity extends Activity {
 
                     mTxtCPUCurrentFeq.setText(String.format("%1.1fGHz",info.cpuInfo.getCurrentFrequency()/1000000.0f));
                     mTxtCPUMaxFeq.setText(String.format("MAX %1.1fGHz",info.cpuInfo.getMaxFrequency()/1000000.0f));
-                    mTxtCPUMinFeq.setText(String.format("MIN %1.1fGHz",info.cpuInfo.getMinFrequency()/1000000.0f));
+                    mTxtCPUMinFeq.setText(String.format("MIN  %1.1fGHz",info.cpuInfo.getMinFrequency()/1000000.0f));
                 }
 
                 if(null!=mCharViewMem) {
@@ -349,12 +353,15 @@ public class ProcessActivity extends Activity {
         private CommandExecutorManager mCmdExecutor;
         private IProcessParser mProcessParser;
         private ActivityManager mActivityManager = null;
+        //private BatteryStatsService mBatteryStatsService=null;
+
 
         public ProcessManagerDefault() {
             mCmdExecutor=new CommandExecutorManager();
             mCmdExecutor.config(new CommandExecutorDefault());
             mProcessParser=new ProcessParserDefault();
             mActivityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            //mBatteryStatsService = (BatteryStatsService) getSystemService(Context.BATTERY_SERVICE);
         }
 
         public List<ProcessInfo> getRunningProcessInfo(int processTypeFlags) {
@@ -508,10 +515,48 @@ public class ProcessActivity extends Activity {
             }
         }
 
+        public void getBatteryUsage() {
+
+            /**
+             * TODO: Huanqi: This method is very slow,need optimize
+             */
+
+            String cmd = "dumpsys batterystats";
+            CommandExecutorResult result=mCmdExecutor.executeCommand(cmd);
+            if(0==result.result) {
+
+                String raw=result.successMsg.replaceAll("\\([^)]*\\)"," ");
+
+                InputStream inputStream = new ByteArrayInputStream(result.successMsg.getBytes(Charset.forName("UTF-8")));
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line=null;
+                Boolean foundStartLine=false;
+                try {
+                    while(null!=(line=bufferedReader.readLine())) {
+
+                        if(!foundStartLine) {
+                            if(line.indexOf("Battery History")>=0) {
+                                foundStartLine=true;
+                            }
+                        } else {
+
+                            //if(line.trim().length()>)
+
+                        }
+                    }
+                } catch (IOException ex) {
+
+                }
+
+
+            }
+        }
+
         public void getWakeLockUsage(){
             // cat /proc/wakelocks
             // name	count	expire_count	wake_count	active_since	total_time	sleep_time	max_time	last_change
-
+            // cat /sys/kernel/debug/wakeup_sources
             String cmd = "cat /proc/wakelocks";
             CommandExecutorResult result=mCmdExecutor.executeCommand(cmd);
 
@@ -541,15 +586,6 @@ public class ProcessActivity extends Activity {
                 }
             }
             return packageName;
-        }
-
-        private int getCpuInfoByPID() {
-
-            return 0;
-        }
-
-        private int getMemInfoByPID() {
-            return 0;
         }
     }
     //endregion

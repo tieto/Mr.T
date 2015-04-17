@@ -26,9 +26,9 @@ public class SystemManagementActivity extends Activity {
 
     static {
         ACTIVITIES.add(new FunEntity(R.string.title_activity_process_management
-                , R.mipmap.dh, ProcessActivity.class));
-//        ACTIVITIES.add(new FunEntity(R.string.title_activity_memory
-//                , R.mipmap.card_icon_speedup, MemoryActivity.class));
+                , R.mipmap.ic_launcher, ProcessActivity.class));
+        //ACTIVITIES.add(new FunEntity(R.string.title_activity_memory
+        //        , R.mipmap.card_icon_speedup, MemoryActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_notification
                 , R.mipmap.hl, NotificationActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_app
@@ -42,11 +42,11 @@ public class SystemManagementActivity extends Activity {
         ACTIVITIES.add(new FunEntity(R.string.title_activity_disk
                 , R.mipmap.card_icon_media, DiskActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_no_spam
-                , R.mipmap.jm, InterceptActivity.class));
-//        ACTIVITIES.add(new FunEntity(R.string.title_activity_net_control
-//                , R.mipmap.wl, NetControlActivity.class));
-        ACTIVITIES.add(new FunEntity(R.string.title_activity_battery
-                , R.mipmap.sl, BatteryActivity.class));
+                , R.mipmap.ic_launcher, InterceptActivity.class));
+        //ACTIVITIES.add(new FunEntity(R.string.title_activity_net_control
+        //        , R.mipmap.ic_launcher, NetControlActivity.class));
+        //ACTIVITIES.add(new FunEntity(R.string.title_activity_battery
+        //        , R.mipmap.ic_launcher, BatteryActivity.class));
     }
 
     @Override
