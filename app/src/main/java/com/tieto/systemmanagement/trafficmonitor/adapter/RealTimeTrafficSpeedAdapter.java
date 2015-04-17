@@ -1,16 +1,17 @@
 package com.tieto.systemmanagement.trafficmonitor.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntity;
+import com.tieto.systemmanagement.authority.entity.AppWrapper;
+import com.tieto.systemmanagement.trafficmonitor.entity.AppTrafficInfo;
 import com.tieto.systemmanagement.trafficmonitor.entity.IptablesForDroidWall;
 import com.tieto.systemmanagement.trafficmonitor.entity.TrafficSpeed;
 
@@ -21,12 +22,12 @@ import java.util.List;
  * Created by jane on 15-3-26.
  */
 public class RealTimeTrafficSpeedAdapter extends NetworkManageBasicAdapter {
-    private List<AppInfoEntity> mAppInfos;
+    private List<AppTrafficInfo> mAppInfos;
     private LayoutInflater mInflater;
 
-    public RealTimeTrafficSpeedAdapter(Context context, List<AppInfoEntity> appInfos) {
+    public RealTimeTrafficSpeedAdapter(Context context, List<AppTrafficInfo> appInfos) {
         if(appInfos == null) {
-            appInfos = new ArrayList<AppInfoEntity>();
+            appInfos = new ArrayList<AppTrafficInfo>();
         }
         this.context = context;
         this.mAppInfos = appInfos;
@@ -59,7 +60,8 @@ public class RealTimeTrafficSpeedAdapter extends NetworkManageBasicAdapter {
             holder.mAppNetSpeed = (TextView) convertView.findViewById(R.id.realtime_app_netspeed);
             holder.mNetAllowedInfo = (TextView) convertView.findViewById(R.id.realtime_net_allowed);
             holder.mAllowNetworkButton = (ImageButton) convertView.findViewById(R.id.realtime_allow_net);
-
+            holder.mRealtime_firewall_panel = (LinearLayout) convertView.findViewById(
+                    R.id.realtime_firewall_panel);
             holder.trafficSpeed = new TrafficSpeed();
             holder.speedListener = new SpeedListener(holder.mAppNetSpeed);
             convertView.setTag(holder);
@@ -67,21 +69,22 @@ public class RealTimeTrafficSpeedAdapter extends NetworkManageBasicAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final AppInfoEntity appInfo = mAppInfos.get(i);
-
-        holder.trafficSpeed.setUid(appInfo.getUid());
+        final AppTrafficInfo appInfo = mAppInfos.get(i);
+        final AppWrapper appWrapper = appInfo.getmAppWrapper();
+        holder.trafficSpeed.setUid(appWrapper.getUid());
         holder.trafficSpeed.registerUpdate(1000, holder.speedListener);
 
-        holder.mAppIcon.setImageDrawable(appInfo.getmAppIcon());
-        holder.mAppName.setText(appInfo.getmAppName());
-        holder.mNetAllowedInfo.setText(appInfo.getFirewallType());
+        holder.mAppIcon.setImageDrawable(appWrapper.loadIcon(context));
+        holder.mAppName.setText(appWrapper.getName(context));
+        holder.mNetAllowedInfo.setText(appInfo.getmFirewallType());
 
         final CallbackImpl impl = new CallbackImpl(holder.mNetAllowedInfo);
-        holder.mAllowNetworkButton.setOnClickListener(new View.OnClickListener() {
+        final ViewHolder finalHolder = holder;
+        holder.mRealtime_firewall_panel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!IptablesForDroidWall.hasRootAccess(context, false)) {
-                    showWindow(view, appInfo, impl);
+                    showWindow(view, finalHolder.mAllowNetworkButton,appWrapper, impl);
                 }
             }
         });
@@ -95,6 +98,7 @@ public class RealTimeTrafficSpeedAdapter extends NetworkManageBasicAdapter {
         private TextView mAppNetSpeed;
         private TextView mNetAllowedInfo;
         private ImageButton mAllowNetworkButton;
+        private LinearLayout mRealtime_firewall_panel;
 
         // Other objects
         private TrafficSpeed trafficSpeed;

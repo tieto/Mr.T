@@ -16,13 +16,4 @@ public class BasicActivity extends Activity{
         super.onCreate(savedInstanceState);
     }
 
-    public String getReadableString(long byteSize) {
-        if (byteSize < 1024) {
-            return String.format("%dB/s", byteSize);
-        } else if (byteSize < 1024 * 1024) {
-            return String.format("%dKB/s", Math.round(byteSize / 1024.0f));
-        } else {
-            return String.format("%.1fMB/s", byteSize / (float)(1024 * 1024));
-        }
-    }
 }

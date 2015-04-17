@@ -6,11 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntity;
+import com.tieto.systemmanagement.authority.entity.AppWrapper;
+import com.tieto.systemmanagement.trafficmonitor.entity.AppTrafficInfo;
 import com.tieto.systemmanagement.trafficmonitor.entity.IptablesForDroidWall;
+import com.tieto.systemmanagement.trafficmonitor.utils.CommonMethod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +22,12 @@ import java.util.List;
  * Created by jane on 15-3-26.
  */
 public class MonthTrafficStaticAdapter extends NetworkManageBasicAdapter {
-    private List<AppInfoEntity> mAppInfos;
+    private List<AppTrafficInfo> mAppInfos;
     private LayoutInflater mInflater;
 
-    public MonthTrafficStaticAdapter(Context context, List<AppInfoEntity> appInfos) {
+    public MonthTrafficStaticAdapter(Context context, List<AppTrafficInfo> appInfos) {
         if(appInfos == null) {
-            appInfos = new ArrayList<AppInfoEntity>();
+            appInfos = new ArrayList<AppTrafficInfo>();
         }
         this.mAppInfos = appInfos;
         this.context = context;
@@ -60,27 +63,34 @@ public class MonthTrafficStaticAdapter extends NetworkManageBasicAdapter {
             holder.mSneakedTraffic = (TextView) view.findViewById(R.id.mon_traffic_sneak);
             holder.mFirewallType = (TextView) view.findViewById(R.id.mon_net_allowed_info);
             holder.mAllowNetwork = (ImageButton) view.findViewById(R.id.mon_allow_net);
+            holder.mMonth_firewall_panel = (LinearLayout) view.findViewById(
+                    R.id.month_firewall_panel);
             view.setTag(holder);
         }else{
             holder = (ViewHolder) view.getTag();
         }
 
-        final AppInfoEntity appInfo = mAppInfos.get(i);
-        holder.mAppIcon.setImageDrawable(appInfo.getmAppIcon());
-        holder.mAppName.setText(appInfo.getmAppName());
-        holder.mAppUsedTraffic.setText("已用" + formatString(appInfo.getmAppTrafficUsed(), false));
-        holder.mBackgroundUsedTraffic.setText("后台" + formatString(appInfo.getmAppTrafficUsedBg(), false));
-        holder.mSneakedTraffic.setText("本月已偷跑" + appInfo.getmAppTrafficSneaked() + "M");
-        holder.mFirewallType.setText(appInfo.getFirewallType());
+        final AppTrafficInfo appInfo = mAppInfos.get(i);
+        final AppWrapper appWrapper = appInfo.getmAppWrapper();
+
+        holder.mAppIcon.setImageDrawable(appWrapper.loadIcon(context));
+        holder.mAppName.setText(appWrapper.getName(context));
+        holder.mAppUsedTraffic.setText("已用" + CommonMethod.formatString(
+                appInfo.getmUsdTrafficInMonth(), false));
+        holder.mBackgroundUsedTraffic.setText("后台" + CommonMethod.formatString(
+                appInfo.getmBgUsedTrafficInMonth(), false));
+        holder.mSneakedTraffic.setText("本月已偷跑" + appInfo.getmSneakedTrafficInMonth() + "M");
+        holder.mFirewallType.setText(appInfo.getmFirewallType());
 
         final CallbackImpl impl = new CallbackImpl(holder.mFirewallType);
-        holder.mAllowNetwork.setOnClickListener(new View.OnClickListener() {
+        final ViewHolder finalHolder = holder;
+        holder.mMonth_firewall_panel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //popup window,and when  the item is clicked ,the info should be changed.
                 //check the root permission first
                 if (IptablesForDroidWall.hasRootAccess(context, true)) {
-                    showWindow(view, appInfo, impl);
+                    showWindow(view, finalHolder.mAllowNetwork ,appWrapper, impl);
                 }
             }
         });
@@ -96,5 +106,6 @@ public class MonthTrafficStaticAdapter extends NetworkManageBasicAdapter {
         private TextView mSneakedTraffic;
         private TextView mFirewallType;
         private ImageButton mAllowNetwork;
+        private LinearLayout mMonth_firewall_panel;
     }
 }

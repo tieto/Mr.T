@@ -6,14 +6,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.tieto.systemmanagement.trafficmonitor.entity.FirewallType;
+
 /**
  * Created by jane on 15-3-25.
  */
-public class TrafficStasticPreferrence {
+public class TrafficMonitorPref {
 
-    //keep all the traffic stastic info
-
-    private static final String PREFERENCE_NAME = "trafficStaticPreference";
+    private static final String PREFERENCE_NAME = "TrafficMonitorPref";
     //key for the total traffic used in the month
     private static final String KEY_TOTAL = "keyTotal";
     //key for the total traffic used by the specified uid app in the month
@@ -22,8 +22,12 @@ public class TrafficStasticPreferrence {
     private static final String KEY_UID_BACKGROUND = "keyUidBackground";
     //key for traffic used in background
     private static final String KEY_TOTAL_BACKGROUND = "keyTotalBackground";
+    //key for app's firewall type
+    private static final String KEY_FIREWALL_TYPE = "keyFirewallType";
     //the default value when no value is saved
-    private static final long DEFAULT = 0;
+    private static final int DEFAULT = 0;
+    //flag for app's firewall type
+    public  static final int FLAG_FIREWALL_TYPE = 5;
     //flag for save the value for special app
     public static final int FLAG_UID_TOTAL = 4;
     // flag for save all traffic used in background
@@ -53,6 +57,9 @@ public class TrafficStasticPreferrence {
                 long uidTotal = pref.getLong(uid+KEY_UID_TOTAL,DEFAULT);
                 editor.putLong(uid+KEY_UID_TOTAL,(uidTotal+value));
                 break;
+            case FLAG_FIREWALL_TYPE:
+                editor.putInt(uid+KEY_FIREWALL_TYPE, (int) value);
+                break;
         }
         editor.commit();
     }
@@ -73,6 +80,8 @@ public class TrafficStasticPreferrence {
             case FLAG_UID_TOTAL:
                 value = pref.getLong(uid+KEY_UID_TOTAL,DEFAULT);
                 break;
+            case FLAG_FIREWALL_TYPE:
+                value = pref.getInt(uid+KEY_FIREWALL_TYPE,FirewallType.NETWORK_ALLOWED);
         }
 
         return value;

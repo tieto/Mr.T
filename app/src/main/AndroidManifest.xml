@@ -124,13 +124,13 @@
             android:label="@string/title_activity_message_intercept_config">
         </activity>
 
-        <receiver android:name=".trafficmonitor.entity.PackageBroadCast">
+        <receiver android:name=".trafficmonitor.broadcast.PackageBroadCast">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"></action>
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".trafficmonitor.entity.ShutDownBroadCast">
+        <receiver android:name=".trafficmonitor.broadcast.ShutDownBroadCast">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"></action>
             </intent-filter>

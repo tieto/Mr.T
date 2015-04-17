@@ -1,8 +1,11 @@
 package com.tieto.systemmanagement;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +17,7 @@ import com.tieto.systemmanagement.diskmonitor.activities.DiskActivity;
 import com.tieto.systemmanagement.intercept.views.InterceptActivity;
 import com.tieto.systemmanagement.processmanage.ProcessActivity;
 import com.tieto.systemmanagement.trafficmonitor.TrafficActivity;
+import com.tieto.systemmanagement.trafficmonitor.service.CalculateBackGroundTrafficService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,7 @@ public class SystemManagementActivity extends Activity {
     private final static List<FunEntity> ACTIVITIES = new ArrayList<FunEntity>();
     //TODO:the class member var need start m
     private SystemManagementAdapter adapter;
+
 
     static {
         ACTIVITIES.add(new FunEntity(R.string.title_activity_process_management
@@ -65,6 +70,7 @@ public class SystemManagementActivity extends Activity {
 
             }
         });
+
     }
 
     @Override
@@ -83,4 +89,6 @@ public class SystemManagementActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

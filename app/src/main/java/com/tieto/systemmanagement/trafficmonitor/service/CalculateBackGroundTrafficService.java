@@ -12,7 +12,8 @@ import android.net.TrafficStats;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.tieto.systemmanagement.trafficmonitor.storage.TrafficStasticPreferrence;
+import com.tieto.systemmanagement.trafficmonitor.entity.TrafficStatsWrapper;
+import com.tieto.systemmanagement.trafficmonitor.storage.TrafficMonitorPref;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ import java.util.Map;
  */
 public class CalculateBackGroundTrafficService extends Service {
     //check the background app list every 1 sec.
-    private static final long SCAN_INTERVAL = 1000;
+    private static final long SCAN_INTERVAL = 1000*10;
 
     private TrafficStats mTrafficStats;
     private ActivityManager mManager;
@@ -37,6 +38,7 @@ public class CalculateBackGroundTrafficService extends Service {
     private Map<Integer,Long> mUidTrafficMaps;
     //whether is the first time to check.
     private boolean isFirstCheck;
+    private String TAG = "CalculateBackGroundTrafficService";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -99,8 +101,8 @@ public class CalculateBackGroundTrafficService extends Service {
                     long trafficUsedEnd = mTrafficStats.getUidRxBytes(uid);
                     long trafficUsedBackground = trafficUsedEnd - mUidTrafficMaps.get(uid);
                     //save to sharePref
-                    TrafficStasticPreferrence.save(this,trafficUsedBackground,
-                            TrafficStasticPreferrence.FLAG_UID_BACKGROUND,uid);
+                    TrafficMonitorPref.save(this, trafficUsedBackground,
+                            TrafficMonitorPref.FLAG_UID_BACKGROUND, uid);
                     //remove the uid-traffic
                     iterator.remove();
                 }
@@ -130,6 +132,25 @@ public class CalculateBackGroundTrafficService extends Service {
      */
     private List<ApplicationInfo> searchAllBackgroundApp() {
         // all running processes
+        ArrayList<ActivityManager.RunningAppProcessInfo> backgroundRunningProcess =
+                getBackgroundRunningAppInfos();
+
+        Map<Integer,ApplicationInfo> applicationInfosMaps =
+                new HashMap<Integer,ApplicationInfo>();
+        applicationInfosMaps = new TrafficStatsWrapper(this).getListAppMap();
+
+        //all the list apps which runs in the background
+        for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo:backgroundRunningProcess) {
+            int uid = runningAppProcessInfo.uid;
+            if (applicationInfosMaps.containsKey(uid)) {
+                mBackgroundRunningApplication.add((ApplicationInfo) applicationInfosMaps.get(uid));
+            }
+        }
+        return mBackgroundRunningApplication;
+    }
+
+    // all background running applications
+    private ArrayList<ActivityManager.RunningAppProcessInfo> getBackgroundRunningAppInfos() {
         List<ActivityManager.RunningAppProcessInfo> runningProcesses =
                 mManager.getRunningAppProcesses();
         // all the running process in the background
@@ -143,34 +164,7 @@ public class CalculateBackGroundTrafficService extends Service {
                 backgroundRunningProcess.add(runningAppProcessInfo);
             }
         }
-
-        // all the non-system app which get network permission
-        List<PackageInfo> packageInfos = mPackageManager.getInstalledPackages(
-                PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
-        Map applicationInfosMaps = new HashMap<Integer,ApplicationInfo>();
-        for (PackageInfo p : packageInfos) {
-            String[] permissions = p.requestedPermissions;
-            if (permissions != null) {
-                for (String permission : permissions) {
-                    if (permission.equals(android.Manifest.permission.INTERNET)) {
-                        ApplicationInfo appInfo = p.applicationInfo;
-                        if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0) {
-                        } else {
-                            applicationInfosMaps.put(appInfo.uid,appInfo);
-                        }
-                    }
-                }
-            }
-        }
-
-        //all the list apps which runs in the background
-        for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo:backgroundRunningProcess) {
-            int uid = runningAppProcessInfo.uid;
-            if (applicationInfosMaps.containsKey(uid)) {
-                mBackgroundRunningApplication.add((ApplicationInfo) applicationInfosMaps.get(uid));
-            }
-        }
-        return mBackgroundRunningApplication;
+        return backgroundRunningProcess;
     }
 
     @Override

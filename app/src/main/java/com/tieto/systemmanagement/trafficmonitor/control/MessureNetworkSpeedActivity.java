@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.tieto.systemmanagement.BasicActivity;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.trafficmonitor.entity.TrafficSpeed;
+import com.tieto.systemmanagement.trafficmonitor.utils.CommonMethod;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,27 +74,23 @@ public class MessureNetworkSpeedActivity extends BasicActivity implements View.O
                         mNetworkDelayTextView.setText(midPoint+"s");
                         break;
                     case UPDATE_MAX_SPEED:
-                        mMaxSpeedTextView.setText(getReadableString(realtime_speed));
+                        mMaxSpeedTextView.setText(CommonMethod.formatString(realtime_speed,true));
                         if(realtime_speed!=0) {
                             mSpeedList.add(realtime_speed);
                         }
                         break;
                     case UPDATE_AVERAGE_SPEED:
-                        mMaxSpeedTextView.setText(getReadableString(realtime_speed));
-                        if(realtime_speed != 0) {
-                            mSpeedList.add(realtime_speed);
-                        }
+                        mMaxSpeedTextView.setText(CommonMethod.formatString(realtime_speed,true));
+                        mSpeedList.add(realtime_speed);
                         long total = 0;
                         int totalCount = 0;
                         for (int i=0;i< mSpeedList.size();i++) {
                             long temp = mSpeedList.get(i);
-                            if(temp != 0) {
-                                total =total + mSpeedList.get(i);
-                                totalCount += 1;
-                            }
+                            total = total + mSpeedList.get(i);
+                            totalCount += 1;
                         }
                         average = total/totalCount;
-                        mAverageSpeedTextView.setText(getReadableString(average));
+                        mAverageSpeedTextView.setText(CommonMethod.formatString(average,true));
                         mCalSpeedTextView.setClickable(true);
                         mNetspeedMeasureLoadingLayout.setVisibility(View.GONE);
                         break;
@@ -135,7 +132,8 @@ public class MessureNetworkSpeedActivity extends BasicActivity implements View.O
             public void run() {
                 super.run();
                 //send handler for updating the current network speed
-                while(mTrafficSpeed.getmHadReadBytes()< mTrafficSpeed.getmTotalBytes()|| mTrafficSpeed.getmHadReadBytes()==0){
+                while(mTrafficSpeed.getmHadReadBytes()< mTrafficSpeed.getmTotalBytes()||
+                        mTrafficSpeed.getmHadReadBytes()==0){
                     if(isExitedFlag) {
                         if(mTrafficSpeed.getmHadReadBytes() == 0) {
                             mHandler.sendEmptyMessageDelayed(UPDATE_NEWORK_DELAY,POST_DELAY);

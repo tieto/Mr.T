@@ -17,6 +17,7 @@ import com.tieto.systemmanagement.BasicActivity;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.trafficmonitor.control.MessureNetworkSpeedActivity;
 import com.tieto.systemmanagement.trafficmonitor.control.NetworkManageActivity;
+import com.tieto.systemmanagement.trafficmonitor.utils.CommonMethod;
 import com.tieto.systemmanagement.trafficmonitor.utils.NetworkUtil;
 
 
@@ -86,7 +87,7 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
                 super.handleMessage(msg);
                 //check whether the activity is still exited before update the ui info
                 if (!TrafficActivity.this.isDestroyed()) {
-                    mCurrentNetSpededText.setText(getReadableString(msg.arg1));
+                    mCurrentNetSpededText.setText(CommonMethod.formatString(msg.arg1,true));
                 }
             }
         };

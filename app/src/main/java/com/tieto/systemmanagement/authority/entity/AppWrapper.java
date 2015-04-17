@@ -30,6 +30,10 @@ public final class AppWrapper implements Parcelable {
         mAppInfo = packageInfo.applicationInfo;
     }
 
+    public AppWrapper(ApplicationInfo mAppInfo) {
+        this.mAppInfo = mAppInfo;
+    }
+
     public Drawable loadIcon(Context context) {
         return mAppInfo.loadIcon(context.getPackageManager());
     }
