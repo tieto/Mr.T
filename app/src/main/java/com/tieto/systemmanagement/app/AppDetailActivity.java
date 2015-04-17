@@ -26,6 +26,7 @@ public class AppDetailActivity extends FragmentActivity implements ApplicationsS
      * Request code.
      */
     public static final int REQUEST_UNINSTALL = 1;
+    public static final int REQUEST_MANAGE_SPACE = 1;
 
     /**
      * Result code.
@@ -104,7 +105,7 @@ public class AppDetailActivity extends FragmentActivity implements ApplicationsS
                 app_detail_cache_size.setText(String.valueOf(mAppInfoModel.getCacheSize()));
             }
 
-            if(mAppInfoModel.getUID() == -1) {
+            if(mAppInfoModel.getUID() == AppInfoModel.UID_UNSET) {
                 app_detail_button_force_stop.setVisibility(View.INVISIBLE);
             }
 
@@ -149,7 +150,13 @@ public class AppDetailActivity extends FragmentActivity implements ApplicationsS
 
     @Override
     public void onRunningStateChanged(boolean running) {
-
+        if(!running) {
+            mAppInfoModel.setUID(AppInfoModel.UID_UNSET);
+            Intent intent = getIntent();
+            intent.putExtra(AppListAdapter.AppDetailIntent.APP_PACKAGE_NAME, packageName);
+            setResult(RESULT_RUNNING_STATE_CHANGED, intent);
+            finish();
+        }
     }
 
     @Override

@@ -70,9 +70,10 @@ public class ApplicationsState {
                 }
                 break;
                 case MSG_RUNNING_STATE_CHANGED: {
-                    for (int i = 0; i < mActiveCallbacks.size(); i++) {
-                        mActiveCallbacks.get(i).onRunningStateChanged(
-                                msg.arg1 != 0);
+                    String packageName = (String) msg.obj;
+                    Callbacks callback = mActiveCallbacks.get(packageName);
+                    if (callback != null) {
+                        callback.onRunningStateChanged(false);
                     }
                 }
                 break;
@@ -93,6 +94,14 @@ public class ApplicationsState {
 
     public synchronized void stateChanged(String packageName) {
         Message msg = mMainHandler.obtainMessage(MainHandler.MSG_PACKAGE_STATE_CHANGED,packageName);
+        mMainHandler.sendMessage(msg);
+    }
+
+    public synchronized void runningStateChanged(String packageName, boolean isRunning) {
+        if(isRunning) {
+            return;
+        }
+        Message msg = mMainHandler.obtainMessage(MainHandler.MSG_RUNNING_STATE_CHANGED,packageName);
         mMainHandler.sendMessage(msg);
     }
 

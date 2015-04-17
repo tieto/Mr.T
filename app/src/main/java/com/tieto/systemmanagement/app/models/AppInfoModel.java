@@ -77,7 +77,10 @@ public class AppInfoModel {
     private long totalSize;
 
     private String codePath;
-    private int UID = -1;
+
+    private int UID = UID_UNSET;
+
+    public static final int UID_UNSET = -1;
 
     /**
      * Is the size info set?

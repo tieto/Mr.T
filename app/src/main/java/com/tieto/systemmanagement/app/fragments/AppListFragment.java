@@ -177,7 +177,11 @@ public abstract class AppListFragment extends Fragment implements View.OnClickLi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_DETAIL:
-                if(resultCode == AppDetailActivity.RESULT_PACKAGE_STATE_CHANGED) {
+                if (resultCode == AppDetailActivity.RESULT_PACKAGE_STATE_CHANGED) {
+                    String packageName = data.getStringExtra(AppListAdapter.AppDetailIntent.APP_PACKAGE_NAME);
+                    mAppListAdapter.removeItem(packageName);
+                }
+                if (resultCode == AppDetailActivity.RESULT_RUNNING_STATE_CHANGED) {
                     String packageName = data.getStringExtra(AppListAdapter.AppDetailIntent.APP_PACKAGE_NAME);
                     mAppListAdapter.removeItem(packageName);
                 }
