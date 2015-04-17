@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tieto.systemmanagement.R;
 
@@ -60,7 +60,7 @@ public class StartUpAdapter extends BaseAdapter {
             viewHolder.imageView = (ImageView) convertView.findViewById(R.id.start_up_app_icon);
             viewHolder.textView = (TextView) convertView.findViewById(R.id.start_up_app_name);
             viewHolder.textViewSecondaryName = (TextView) convertView.findViewById(R.id.start_up_secondary_name);
-            viewHolder.aSwitch = (Switch) convertView.findViewById(R.id.start_up_notify_switch);
+            viewHolder.aSwitch = (CompoundButton) convertView.findViewById(R.id.start_up_notify_switch);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -73,7 +73,7 @@ public class StartUpAdapter extends BaseAdapter {
         ImageView imageView;
         TextView textView;
         TextView textViewSecondaryName;
-        Switch aSwitch;
+        CompoundButton aSwitch;
     }
 
     private void bindView(ViewHolder viewHolder, ResolveInfo info) {
@@ -102,10 +102,16 @@ public class StartUpAdapter extends BaseAdapter {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             switch (buttonView.getId()) {
                 case R.id.start_up_notify_switch:
-                    if (isChecked) {
-                        pm.setComponentEnabledSetting(mComponentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-                    } else {
-                        pm.setComponentEnabledSetting(mComponentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                    try {
+                        if (isChecked) {
+                            pm.setComponentEnabledSetting(mComponentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                        } else {
+                            pm.setComponentEnabledSetting(mComponentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(mContext, R.string.notification_prohibit_text, Toast.LENGTH_SHORT).show();
+                        buttonView.setChecked(!isChecked);
                     }
                     break;
                 default:

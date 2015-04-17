@@ -10,13 +10,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tieto.systemmanagement.R;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +81,7 @@ public class NotificationManagerAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.notification_list_item, null);
             viewHolder.imageView = (ImageView) convertView.findViewById(R.id.notification_app_icon);
             viewHolder.textView = (TextView) convertView.findViewById(R.id.notification_app_name);
-            viewHolder.aSwitch = (Switch) convertView.findViewById(R.id.notification_notify_switch);
+            viewHolder.aSwitch = (CompoundButton) convertView.findViewById(R.id.notification_notify_switch);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -96,7 +94,7 @@ public class NotificationManagerAdapter extends BaseAdapter {
     class ViewHolder {
         ImageView imageView;
         TextView textView;
-        Switch aSwitch;
+        CompoundButton aSwitch;
     }
     private void bindView(ViewHolder viewHolder, int position) {
         ApplicationInfo info = mApps.get(position);

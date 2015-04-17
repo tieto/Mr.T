@@ -69,7 +69,7 @@
 
     <!-- notification -->
     <string name="notification_item_icon">app icon</string>
-    <string name="notification_prohibit_text">Operation is prohibited</string>
+    <string name="notification_prohibit_text">Operation is prohibited, just system app can do this!</string>
     <!-- Intercept management -->
     <string name="intercept_config_message">MESSAGE INTERCEPT</string>
     <string name="intercept_config_call">CALL INTERCEPT</string>

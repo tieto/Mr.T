@@ -22,7 +22,7 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:layout_marginEnd="@dimen/list_item_text_right_margin"/>
-    <CheckBox
+    <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@id/notification_notify_switch"
