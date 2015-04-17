@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author Jiang Ping
  */
-public class AppInfoAdapter extends BaseAdapter {
+public class AppListAdapter extends BaseAdapter {
 
     private List<AppWrapper> mData;
     private LayoutInflater mInflater;
@@ -28,7 +28,7 @@ public class AppInfoAdapter extends BaseAdapter {
     private static String FORMATTER_HTML = null;
     private IconLoader mLoader = null;
 
-    public AppInfoAdapter(Context context) {
+    public AppListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         FORMATTER_HTML = context.getString(R.string.auth_permission_count_format);
         mLoader = new IconLoader(context);

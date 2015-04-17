@@ -12,5 +12,6 @@
     <dimen name="list_item_two_line_padding_top_bottom">12dp</dimen>
 
     //traffic
-    <dimen name="t_common_font_size">14sp</dimen>>
+    <dimen name="t_common_font_size">14sp</dimen>
+
 </resources>

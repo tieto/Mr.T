@@ -7,6 +7,6 @@ public class AuthorityActivity extends AbsFragmentActivity {
 
     @Override
     protected Fragment onCreateFragment(Bundle savedInstanceState) {
-        return AuthorityAppListFragment.newInstance();
+        return MainPagerFragment.newInstance();
     }
 }

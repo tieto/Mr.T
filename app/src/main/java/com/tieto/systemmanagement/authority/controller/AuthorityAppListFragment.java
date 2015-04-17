@@ -1,5 +1,8 @@
 package com.tieto.systemmanagement.authority.controller;
 
+import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.authority.adapter.AppListAdapter;
+import com.tieto.systemmanagement.authority.entity.AppWrapper;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,10 +18,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 
-import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.authority.adapter.AppInfoAdapter;
-import com.tieto.systemmanagement.authority.entity.AppWrapper;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import java.util.List;
  */
 public class AuthorityAppListFragment extends ListFragment {
 
-    private AppInfoAdapter mAdapter;
+    private AppListAdapter mAdapter;
 
     public static AuthorityAppListFragment newInstance() {
         AuthorityAppListFragment fragment = new AuthorityAppListFragment();
@@ -49,7 +48,7 @@ public class AuthorityAppListFragment extends ListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mAdapter = new AppInfoAdapter(getActivity());
+        mAdapter = new AppListAdapter(getActivity());
         getListView().setAdapter(mAdapter);
         getListView().getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
