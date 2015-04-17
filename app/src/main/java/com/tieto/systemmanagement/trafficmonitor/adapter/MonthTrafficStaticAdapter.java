@@ -55,7 +55,7 @@ public class MonthTrafficStaticAdapter extends NetworkManageBasicAdapter {
             holder.mAppIcon = (ImageView) view.findViewById(R.id.mon_app_icon);
             holder.mAppName = (TextView) view.findViewById(R.id.mon_app_name);
             holder.mSneakTrafficTip = (TextView) view.findViewById(R.id.mon_traffic_sneak_tip);
-            holder.mUsedTraffic = (TextView) view.findViewById(R.id.mon_traffic_used);
+            holder.mAppUsedTraffic = (TextView) view.findViewById(R.id.mon_traffic_used);
             holder.mBackgroundUsedTraffic = (TextView) view.findViewById(R.id.mon_traffic_bg);
             holder.mSneakedTraffic = (TextView) view.findViewById(R.id.mon_traffic_sneak);
             holder.mFirewallType = (TextView) view.findViewById(R.id.mon_net_allowed_info);
@@ -68,8 +68,8 @@ public class MonthTrafficStaticAdapter extends NetworkManageBasicAdapter {
         final AppInfoEntity appInfo = mAppInfos.get(i);
         holder.mAppIcon.setImageDrawable(appInfo.getmAppIcon());
         holder.mAppName.setText(appInfo.getmAppName());
-        holder.mUsedTraffic.setText("已用" + appInfo.getmAppTrafficUsed() + "M");
-        holder.mBackgroundUsedTraffic.setText("后台" + appInfo.getmAppTrafficUsedBg() + "M");
+        holder.mAppUsedTraffic.setText("已用" + formatString(appInfo.getmAppTrafficUsed(), false));
+        holder.mBackgroundUsedTraffic.setText("后台" + formatString(appInfo.getmAppTrafficUsedBg(), false));
         holder.mSneakedTraffic.setText("本月已偷跑" + appInfo.getmAppTrafficSneaked() + "M");
         holder.mFirewallType.setText(appInfo.getFirewallType());
 
@@ -91,7 +91,7 @@ public class MonthTrafficStaticAdapter extends NetworkManageBasicAdapter {
         private ImageView mAppIcon;
         private TextView mAppName;
         private TextView mSneakTrafficTip;
-        private TextView mUsedTraffic;
+        private TextView mAppUsedTraffic;
         private TextView mBackgroundUsedTraffic;
         private TextView mSneakedTraffic;
         private TextView mFirewallType;

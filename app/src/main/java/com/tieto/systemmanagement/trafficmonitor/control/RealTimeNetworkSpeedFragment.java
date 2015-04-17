@@ -3,7 +3,7 @@ package com.tieto.systemmanagement.trafficmonitor.control;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.trafficmonitor.adapter.RealTimeTrafficSpeedAdapter;
 import com.tieto.systemmanagement.trafficmonitor.entity.AppInfoEntity;
-import com.tieto.systemmanagement.trafficmonitor.entity.TrafficStatsImpl;
+import com.tieto.systemmanagement.trafficmonitor.entity.TrafficStatsWrapper;
 import com.tieto.systemmanagement.trafficmonitor.entity.TrafficSpeed;
 
 import android.os.Bundle;
@@ -22,7 +22,7 @@ public class RealTimeNetworkSpeedFragment extends Fragment {
     private ListView mListView;
     private RealTimeTrafficSpeedAdapter mAdapter;
     private List<AppInfoEntity> mAppInfoList;
-    private TrafficStatsImpl mTrafficStats;
+    private TrafficStatsWrapper mTrafficStats;
 
     public RealTimeNetworkSpeedFragment() {
         super();
@@ -33,8 +33,8 @@ public class RealTimeNetworkSpeedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mListView = (ListView) view.findViewById(R.id.firewall_listView);
         mAppInfoList = new ArrayList<AppInfoEntity>();
-        mTrafficStats = new TrafficStatsImpl(this.getActivity());
-        mAppInfoList = mTrafficStats.getTrafficInfoForEachApp();
+        mTrafficStats = new TrafficStatsWrapper(this.getActivity());
+        mAppInfoList = mTrafficStats.getmTrafficStaticAppInfoLists();
         mAdapter = new RealTimeTrafficSpeedAdapter(this.getActivity(), mAppInfoList);
         mListView.setAdapter(mAdapter);
     }

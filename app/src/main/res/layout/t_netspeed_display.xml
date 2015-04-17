@@ -1,73 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:padding="5dip"
               android:layout_height="match_parent">
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
+        android:gravity="center_horizontal"
+        android:layout_gravity="center|top"
+        android:id="@+id/netspeed_top_panel"
+        android:layout_marginBottom="20dip"
+        android:weightSum="3">
+        <LinearLayout
+            android:id="@+id/netsped_delay_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textColor="#2f8f58"
-            android:text="当前网速:"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/netspeed_current"
-            android:textSize="24sp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_marginLeft="5dip"
-            android:text="   "/>
-        <TextView
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="网络延迟"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:id="@+id/netspeed_delay"
+                android:text=""/>
+            </LinearLayout>
+        <LinearLayout
+            android:id="@+id/netsped_maxspeed_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:visibility="gone"
-            android:layout_marginLeft="5dip"
-            android:text="KB/S"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_toRightOf="@id/netsped_delay_ll"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="最大网速"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:id="@+id/netspeed_max"
+                android:text=""/>
         </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:orientation="horizontal">
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textColor="#2f8f58"
-            android:text="平均网速:"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/netspeed_average"
-            android:textSize="24sp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_marginLeft="5dip"
-            android:text=""/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:visibility="gone"
-            android:layout_marginLeft="5dip"
-            android:text="KB/S"/>
+            android:layout_toRightOf="@id/netsped_maxspeed_ll"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="平均网速"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/netspeed_average"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_marginLeft="5dip"
+                android:text=""/>
+        </LinearLayout>
     </LinearLayout>
 
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/netspeed_calculate"
-        android:text="开始测速"
-        android:textSize="20sp"
-        android:background="#2f8f58"
+    <com.tieto.systemmanagement.trafficmonitor.entity.SpeedPanelView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/speed_bottom_panel"
+        android:layout_below="@id/netspeed_top_panel"
+        android:layout_marginBottom="20dip"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dip"
         android:layout_gravity="center|bottom"
-        android:layout_marginTop="100dip"></Button>
+        android:gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:id="@+id/speed_bottom_panel">
+        <RelativeLayout
+            android:id="@+id/netspeed_measure_loading_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_above="@+id/netspeed_calculate"
+            android:layout_marginBottom="10dip"
+            android:visibility="gone">
 
-</LinearLayout>
+            <ProgressBar
+                android:id="@+id/netspeed_measure_progress"
+                android:layout_width="30.0dip"
+                android:layout_height="30.0dip"
+                android:layout_centerVertical="true"
+                android:indeterminate="true"
+                android:indeterminateDuration="1250"/>
+
+            <TextView
+                android:id="@+id/netspeed_measure_loading_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/netspeed_measure_progress"
+                android:text="正在测速"
+                android:textSize="18sp"/>
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/netspeed_calculate"
+            android:text="开始测速"
+            android:textSize="20sp"
+            android:background="#2f8f58"
+            >
+        </Button>
+        </LinearLayout>
+
+
+
+</RelativeLayout>

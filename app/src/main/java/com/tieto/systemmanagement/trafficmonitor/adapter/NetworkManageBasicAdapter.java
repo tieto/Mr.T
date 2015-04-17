@@ -35,6 +35,7 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
     private ListView mListView;
     private SharedPreferences mSharedPreferences;
     public SharedPreferences.Editor mEditor;
+    private boolean FLAG_SPPED = true;
 
     /**
      * display the popupWindow when the button was clicked
@@ -42,7 +43,8 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
      * @param appinfo
      * @param callBack to change the info when the choice is changed
      */
-    public void showWindow(final View parent,final AppInfoEntity appinfo, final CallBack callBack) {
+    public void showWindow(final View parent,final AppInfoEntity appinfo,
+                           final CallBack callBack) {
         //parent should be changed by animation
         int h = parent.getLayoutParams().height;
         int w = parent.getLayoutParams().width;
@@ -60,14 +62,17 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
 
         final int uid = appinfo.getUid();
         if(popupWindow == null) {
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater)context.getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.t_popup_window,null);
             mListView = (ListView) view.findViewById(R.id.pop_list);
-            ArrayAdapter adapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, mPop_list);
+            ArrayAdapter adapter = new ArrayAdapter(
+                    context, android.R.layout.simple_list_item_1, mPop_list);
             mListView.setAdapter(adapter);
             popupWindow = new PopupWindow(view,250,400);
 
-            mSharedPreferences = context.getSharedPreferences(IptablesForDroidWall.PREFS_NAME,Context.MODE_PRIVATE);
+            mSharedPreferences = context.getSharedPreferences(
+                    IptablesForDroidWall.PREFS_NAME,Context.MODE_PRIVATE);
             mEditor = mSharedPreferences.edit();
         }
 
@@ -75,8 +80,10 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String uids_wifi = mSharedPreferences.getString(IptablesForDroidWall.PREF_WIFI_UIDS, "");
-                String uids_3g = mSharedPreferences.getString(IptablesForDroidWall.PREF_3G_UIDS, "");
+                String uids_wifi = mSharedPreferences.getString(
+                        IptablesForDroidWall.PREF_WIFI_UIDS, "");
+                String uids_3g = mSharedPreferences.getString(
+                        IptablesForDroidWall.PREF_3G_UIDS, "");
                 boolean uid_3g_existed = isUidExisted(uids_3g, uid);
                 boolean uid_wifi_existed = isUidExisted(uids_wifi, uid);
                 String uids_wifi_new = "";
@@ -84,7 +91,8 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
                 switch (i) {
                     case 0://sneak prohibit
                         callBack.onNetAllowedInfoUpdated(mPop_list[0]);
-                        FirewallTypePreferrence.saveNetworkState(context, uid, FirewallType.SNEAKING_PROHIBIT.ordinal());
+                        FirewallTypePreferrence.saveNetworkState(
+                                context, uid, FirewallType.SNEAKING_PROHIBIT.ordinal());
                         break;
                     case 1://network prohibit
                         callBack.onNetAllowedInfoUpdated(mPop_list[1]);
@@ -94,7 +102,8 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
                         if (uid_3g_existed) {
                             uids_3g_new = delete(uids_3g, uid);
                         }
-                        FirewallTypePreferrence.saveNetworkState(context, uid, FirewallType.NETWORK_PROHIBIT.ordinal());
+                        FirewallTypePreferrence.saveNetworkState(
+                                context, uid, FirewallType.NETWORK_PROHIBIT.ordinal());
                         break;
                     case 2://network allowed
                         callBack.onNetAllowedInfoUpdated(mPop_list[2]);
@@ -108,7 +117,8 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
                         } else {
                             uids_3g_new = uids_3g;
                         }
-                        FirewallTypePreferrence.saveNetworkState(context, uid, FirewallType.NETWORK_ALLOWED.ordinal());
+                        FirewallTypePreferrence.saveNetworkState(
+                                context, uid, FirewallType.NETWORK_ALLOWED.ordinal());
                         break;
                     case 3://only wifi allowed
                         callBack.onNetAllowedInfoUpdated(mPop_list[3]);
@@ -118,7 +128,8 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
                             uids_wifi_new = uids_wifi;
                         }
                         uids_3g_new = uids_3g;
-                        FirewallTypePreferrence.saveNetworkState(context, uid, FirewallType.WIFI_ALLOWED_ONLY.ordinal());
+                        FirewallTypePreferrence.saveNetworkState(
+                                context, uid, FirewallType.WIFI_ALLOWED_ONLY.ordinal());
                         break;
                 }
                 parent.startAnimation(anim2);
@@ -127,8 +138,6 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
                 mEditor.putString(IptablesForDroidWall.PREF_3G_UIDS, uids_3g_new).commit();
                 //dismiss the popup window
                 popupWindow.dismiss();
-                Log.e("TAG", ",uid:" + uid + ",uids_wifi_new:" + uids_wifi_new + ",uids_3g_new:" + uids_3g_new);
-
             }
         });
 
@@ -139,7 +148,8 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
         popupWindow.setOutsideTouchable(true);
         // 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) context.getSystemService(
+                Context.WINDOW_SERVICE);
         // 显示的位置为:屏幕的宽度的一半-PopupWindow的高度的一半
         int xPos = windowManager.getDefaultDisplay().getWidth()
                 - popupWindow.getWidth() / 2;
@@ -235,10 +245,27 @@ public class NetworkManageBasicAdapter extends BaseAdapter {
         public CallbackImpl(TextView mText){
             mNetAllowedInfo = mText;
         }
-
         @Override
         public void onNetAllowedInfoUpdated(String info) {
             mNetAllowedInfo.setText(info);
+        }
+    }
+
+    /**
+     * format the value to specified type
+     * @param byteSize
+     * @param isSpeed
+     * @return
+     */
+    public String formatString(long byteSize, boolean isSpeed) {
+        if (byteSize < 1024) {
+            return isSpeed ? String.format("%dB/s", byteSize):String.format("%dB", byteSize);
+        } else if (byteSize < 1024 * 1024) {
+            return isSpeed ? String.format("%dKB/s", Math.round(byteSize / 1024.0f))
+                    : String.format("%dKB", Math.round(byteSize / 1024.0f));
+        } else {
+            return isSpeed ?String.format("%.1fMB/s", byteSize / (float)(1024 * 1024))
+                    :String.format("%.1fMB", byteSize / (float)(1024 * 1024));
         }
     }
 }

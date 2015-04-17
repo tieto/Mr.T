@@ -80,7 +80,7 @@ public class RealTimeTrafficSpeedAdapter extends NetworkManageBasicAdapter {
         holder.mAllowNetworkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (IptablesForDroidWall.hasRootAccess(context, true)) {
+                if (!IptablesForDroidWall.hasRootAccess(context, false)) {
                     showWindow(view, appInfo, impl);
                 }
             }

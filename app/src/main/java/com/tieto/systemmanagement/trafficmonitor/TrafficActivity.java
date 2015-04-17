@@ -1,10 +1,6 @@
 package com.tieto.systemmanagement.trafficmonitor;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,8 +15,8 @@ import android.widget.Toast;
 
 import com.tieto.systemmanagement.BasicActivity;
 import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.trafficmonitor.control.MessureNetworkSpeedActivity;
 import com.tieto.systemmanagement.trafficmonitor.control.NetworkManageActivity;
-import com.tieto.systemmanagement.trafficmonitor.control.NetworkSpeedCalculateActivity;
 import com.tieto.systemmanagement.trafficmonitor.utils.NetworkUtil;
 
 
@@ -142,7 +138,7 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
     public void onClick(View v) {
         //before you proceeding networkSpeedCalculating or networkManagement,
         //you must check whether the network is reached.
-        if(NetworkUtil.TYPE_NONE.equals(mNetworkConnectType)) {
+        if(!NetworkUtil.isNetworkConnected(this)) {
             Toast.makeText(this,"无网络连接，请检查你的联网状态",Toast.LENGTH_SHORT).show();
         } else {
             int id = v.getId();
@@ -155,7 +151,7 @@ public class TrafficActivity extends BasicActivity implements View.OnClickListen
                 case R.id.act_main_speed_btn:
                     Intent intentNetworkSpeedCalculate = new Intent();
                     intentNetworkSpeedCalculate.setClass(TrafficActivity.this,
-                            NetworkSpeedCalculateActivity.class);
+                            MessureNetworkSpeedActivity.class);
                     TrafficActivity.this.startActivity(intentNetworkSpeedCalculate);
                     break;
             }

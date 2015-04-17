@@ -11,20 +11,20 @@ public class AppInfoEntity {
     //app name
     private String mAppName;
     //app在本月使用的流量
-    private float mAppTrafficUsed;
+    private long mAppTrafficUsed;
     //后台使用的流量
-    private float mAppTrafficUsedBg;
+    private long mAppTrafficUsedBg;
     //防火墙设置类型
     private int firewallType;
     //app网速
     private float mAppNetSpeeed;
     //后台偷跑流量
-    private float mAppTrafficSneaked;
+    private long mAppTrafficSneaked;
 
     public AppInfoEntity() {
     }
 
-    public AppInfoEntity(String appName, float appTrafficUsed, float appTrafficUsedBg, int isNetworkAllowed, float appNetSpeeed, float appTrafficSneaked) {
+    public AppInfoEntity(String appName, long appTrafficUsed, long appTrafficUsedBg, int isNetworkAllowed, long appNetSpeeed, long appTrafficSneaked) {
 
         this.mAppName = appName;
         this.mAppTrafficUsed = appTrafficUsed;
@@ -50,19 +50,19 @@ public class AppInfoEntity {
         this.mAppName = mAppName;
     }
 
-    public float getmAppTrafficUsedBg() {
+    public long getmAppTrafficUsedBg() {
         return mAppTrafficUsedBg;
     }
 
-    public void setmAppTrafficUsedBg(float mAppTrafficUsedBg) {
+    public void setmAppTrafficUsedBg(long mAppTrafficUsedBg) {
         this.mAppTrafficUsedBg = mAppTrafficUsedBg;
     }
 
-    public float getmAppTrafficUsed() {
+    public long getmAppTrafficUsed() {
         return mAppTrafficUsed;
     }
 
-    public void setmAppTrafficUsed(float mAppTrafficUsed) {
+    public void setmAppTrafficUsed(long mAppTrafficUsed) {
         this.mAppTrafficUsed = mAppTrafficUsed;
     }
 
@@ -109,11 +109,11 @@ public class AppInfoEntity {
         this.mUid = uid;
     }
 
-    public float getmAppTrafficSneaked() {
+    public long getmAppTrafficSneaked() {
         return mAppTrafficSneaked;
     }
 
-    public void setmAppTrafficSneaked(float mAppTrafficSneaked) {
+    public void setmAppTrafficSneaked(long mAppTrafficSneaked) {
         this.mAppTrafficSneaked = mAppTrafficSneaked;
     }
 }

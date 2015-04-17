@@ -62,7 +62,7 @@
         <include
             layout="@layout/t_act_main_part_net"
             android:layout_width="fill_parent"
-            android:layout_height="192.0dip"/>
+            android:layout_height="match_parent"/>
 
     <View
         android:id="@+id/act_main_net_bottom"
@@ -74,6 +74,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:visibility="gone"
         android:orientation="vertical">
 
          <include

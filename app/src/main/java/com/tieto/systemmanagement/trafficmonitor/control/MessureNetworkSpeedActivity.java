@@ -6,6 +6,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.BasicActivity;
@@ -22,30 +23,40 @@ import java.util.List;
 /**
  * Created by jane on 15-4-2.
  */
-public class NetworkSpeedCalculateActivity extends BasicActivity implements View.OnClickListener{
+public class MessureNetworkSpeedActivity extends BasicActivity implements View.OnClickListener{
 
-    private TextView mCurrentSpeedTextView;
-    private TextView mAveragSpeedTextView;
+    private TextView mMaxSpeedTextView;
+    private TextView mAverageSpeedTextView;
     private Button mCalSpeedTextView;
+    private TextView mNetworkDelayTextView;
+    private RelativeLayout mNetspeedMeasureLoadingLayout;
 
     private static final String URL = "http://apk.hiapk.com/appdown/com.pianke.client?planid=692894" +
             "&seid=c68e2360-3720-0001-11d6-13201cb01f3f";
     private static final long POST_DELAY = 1000;
-    private static final int UPDATE = 0;
-    private static final int FINISHED =1;
 
-    private boolean mFlag = true;
+    private static final int UPDATE_NEWORK_DELAY = 0;
+    private static final int UPDATE_MAX_SPEED = 1;
+    private static final int UPDATE_AVERAGE_SPEED =2;
+
+    private boolean isExitedFlag = true;
     private TrafficSpeed mTrafficSpeed;
     private Handler mHandler;
     private List<Long> mSpeedList;
+    //the point begin to measure network speed
+    private long startPoint;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.t_netspeed_display);
-        mCurrentSpeedTextView = (TextView) findViewById(R.id.netspeed_current);
-        mAveragSpeedTextView = (TextView) findViewById(R.id.netspeed_average);
+
+        mMaxSpeedTextView = (TextView) findViewById(R.id.netspeed_max);
+        mAverageSpeedTextView = (TextView) findViewById(R.id.netspeed_average);
+        mNetworkDelayTextView = (TextView) findViewById(R.id.netspeed_delay);
+        mNetspeedMeasureLoadingLayout = (RelativeLayout)
+                findViewById(R.id.netspeed_measure_loading_layout);
         mCalSpeedTextView = (Button) findViewById(R.id.netspeed_calculate);
         mCalSpeedTextView.setOnClickListener(this);
 
@@ -56,15 +67,19 @@ public class NetworkSpeedCalculateActivity extends BasicActivity implements View
                 long realtime_speed = mTrafficSpeed.getmSpeed();
                 long average = 0;
                 switch (msg.what){
-                    case UPDATE://update the realtime speedInfo
-                        mCurrentSpeedTextView.setText(getReadableString(realtime_speed));
+                    case UPDATE_NEWORK_DELAY:
+                        long midPoint = 0;
+                        midPoint = Math.round((System.currentTimeMillis() - startPoint)/1000);
+                        mNetworkDelayTextView.setText(midPoint+"s");
+                        break;
+                    case UPDATE_MAX_SPEED:
+                        mMaxSpeedTextView.setText(getReadableString(realtime_speed));
                         if(realtime_speed!=0) {
                             mSpeedList.add(realtime_speed);
-//                        Log.e("TAG","RT:"+realtime_speed);
                         }
                         break;
-                    case FINISHED://update the realtime netspeed info and average netspeed info
-                        mCurrentSpeedTextView.setText(getReadableString(realtime_speed));
+                    case UPDATE_AVERAGE_SPEED:
+                        mMaxSpeedTextView.setText(getReadableString(realtime_speed));
                         if(realtime_speed != 0) {
                             mSpeedList.add(realtime_speed);
                         }
@@ -77,12 +92,10 @@ public class NetworkSpeedCalculateActivity extends BasicActivity implements View
                                 totalCount += 1;
                             }
                         }
-                        Log.e("TAG","totalCount = "+totalCount+" ,total = "+total);
                         average = total/totalCount;
-                        Log.e("TAG","average:"+average);
-                        mAveragSpeedTextView.setText(getReadableString(average));
+                        mAverageSpeedTextView.setText(getReadableString(average));
                         mCalSpeedTextView.setClickable(true);
-                        Log.e("TAG","AV:"+average);
+                        mNetspeedMeasureLoadingLayout.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -99,8 +112,10 @@ public class NetworkSpeedCalculateActivity extends BasicActivity implements View
         //start to download file
         //每隔1000ms,更新一次当前的网速 temp,并保存当前的网速list
         //下载完成时,计算平均网速，并显示当前的网速
-        mCurrentSpeedTextView.setText("   ");
-        mAveragSpeedTextView.setText("   ");
+        startPoint = System.currentTimeMillis();
+        mNetspeedMeasureLoadingLayout.setVisibility(View.VISIBLE);
+        mMaxSpeedTextView.setText("   ");
+        mAverageSpeedTextView.setText("   ");
         Log.e("TAG","Begin to downLoad!!!");
         mTrafficSpeed = new TrafficSpeed();
         mSpeedList = new ArrayList<Long>();
@@ -121,13 +136,17 @@ public class NetworkSpeedCalculateActivity extends BasicActivity implements View
                 super.run();
                 //send handler for updating the current network speed
                 while(mTrafficSpeed.getmHadReadBytes()< mTrafficSpeed.getmTotalBytes()|| mTrafficSpeed.getmHadReadBytes()==0){
-                    if(mFlag) {
-                            mHandler.sendEmptyMessageDelayed(UPDATE, POST_DELAY);
+                    if(isExitedFlag) {
+                        if(mTrafficSpeed.getmHadReadBytes() == 0) {
+                            mHandler.sendEmptyMessageDelayed(UPDATE_NEWORK_DELAY,POST_DELAY);
+                        } else {
+                            mHandler.sendEmptyMessageDelayed(UPDATE_MAX_SPEED, POST_DELAY);
+                        }
                     } else {
                         break;
                     }
                 }
-                mHandler.sendEmptyMessage(FINISHED);
+                mHandler.sendEmptyMessage(UPDATE_AVERAGE_SPEED);
             }
         }.start();
     }
@@ -156,7 +175,7 @@ public class NetworkSpeedCalculateActivity extends BasicActivity implements View
             long interval = 0;
             int len = 0;
                 while((len = input.read()) != -1){
-                    if(mFlag) {
+                    if(isExitedFlag) {
                         trafficSpeed.setmHadReadBytes((trafficSpeed.getmHadReadBytes())+1);
                         interval = System.currentTimeMillis()-startTime;
                         if(interval == 0) {
@@ -186,7 +205,7 @@ public class NetworkSpeedCalculateActivity extends BasicActivity implements View
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mFlag = false;
+        isExitedFlag = false;
     }
 
 

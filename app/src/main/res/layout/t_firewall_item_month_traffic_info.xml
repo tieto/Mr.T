@@ -11,13 +11,13 @@
 
     <ImageView
         android:id="@+id/mon_app_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
         android:layout_margin="5dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_toRightOf="@id/mon_app_icon"
         android:gravity="center_vertical"
         android:layout_centerVertical="true"
@@ -41,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="12dp"
                 android:text="疑似偷跑"
+                android:visibility="gone"
                 android:id="@+id/mon_traffic_sneak_tip"
                 android:layout_marginLeft="2dp"
                 android:textSize="10sp"
@@ -63,6 +64,7 @@
                 android:id="@+id/mon_traffic_bg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
                 android:text="后台21K"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -72,12 +74,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="本月已偷跑23K"
+            android:visibility="gone"
             android:textSize="11sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:gravity="center_vertical"
         android:layout_centerVertical="true"
@@ -88,14 +91,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="允许联网"
-
-            android:textSize="14sp" />
+            android:textColor="#2f8f58"
+            android:textSize="12sp" />
 
         <ImageButton
-            android:layout_width="20dip"
+            android:layout_width="15dip"
             android:id="@+id/mon_allow_net"
-            android:layout_height="20dip"
-            android:layout_marginLeft="3dip"
+            android:layout_height="15dip"
+            android:layout_marginLeft="5dip"
             android:background="@drawable/t_nettraffic_list_tip_arrow_close" />
     </LinearLayout>
 </RelativeLayout>
