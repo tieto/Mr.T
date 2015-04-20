@@ -26,4 +26,6 @@ dependencies {
     compile project(':libcommon')
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.android.support:appcompat-v7:22.0.0'
+
+    compile 'cn.pedant.sweetalert:library:1.3'
 }

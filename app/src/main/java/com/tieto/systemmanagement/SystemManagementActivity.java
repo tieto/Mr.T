@@ -1,11 +1,8 @@
 package com.tieto.systemmanagement;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +14,6 @@ import com.tieto.systemmanagement.diskmonitor.activities.DiskActivity;
 import com.tieto.systemmanagement.intercept.views.InterceptActivity;
 import com.tieto.systemmanagement.processmanage.ProcessActivity;
 import com.tieto.systemmanagement.trafficmonitor.TrafficActivity;
-import com.tieto.systemmanagement.trafficmonitor.service.CalculateBackGroundTrafficService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +27,7 @@ public class SystemManagementActivity extends Activity {
 
     static {
         ACTIVITIES.add(new FunEntity(R.string.title_activity_process_management
-                , R.mipmap.ic_launcher, ProcessActivity.class));
+                , R.mipmap.dh, ProcessActivity.class));
         //ACTIVITIES.add(new FunEntity(R.string.title_activity_memory
         //        , R.mipmap.card_icon_speedup, MemoryActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_notification
@@ -47,7 +43,7 @@ public class SystemManagementActivity extends Activity {
         ACTIVITIES.add(new FunEntity(R.string.title_activity_disk
                 , R.mipmap.card_icon_media, DiskActivity.class));
         ACTIVITIES.add(new FunEntity(R.string.title_activity_no_spam
-                , R.mipmap.ic_launcher, InterceptActivity.class));
+                , R.mipmap.sl, InterceptActivity.class));
         //ACTIVITIES.add(new FunEntity(R.string.title_activity_net_control
         //        , R.mipmap.ic_launcher, NetControlActivity.class));
         //ACTIVITIES.add(new FunEntity(R.string.title_activity_battery

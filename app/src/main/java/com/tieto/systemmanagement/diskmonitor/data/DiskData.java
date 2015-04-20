@@ -8,7 +8,6 @@ import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
 import com.tieto.systemmanagement.diskmonitor.entity.StorageInfo;
 import com.tieto.systemmanagement.diskmonitor.utils.FileUtils;
-import com.tieto.systemmanagement.diskmonitor.utils.Mp3Filter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -102,10 +101,12 @@ public class DiskData {
     //get the song list from sd-card
     public List<String> getAudioList() {
         List<String> audioList = new ArrayList<String>();
-        File home = new File("/");
+        String path = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_RINGTONES).getAbsolutePath();
+        File home = new File(path);
 
-        if (home.listFiles(new Mp3Filter()).length > 0) {
-            for (File file : home.listFiles(new Mp3Filter())) {
+        if (home.listFiles().length > 0) {
+            for (File file : home.listFiles()) {
                 audioList.add(file.getName());
             }
         }
