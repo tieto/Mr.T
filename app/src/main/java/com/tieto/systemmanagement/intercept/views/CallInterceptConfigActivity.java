@@ -34,27 +34,33 @@ public class CallInterceptConfigActivity extends Activity {
         setContentView(R.layout.activity_call_intercept_config);
 
         ListView view = (ListView)findViewById(R.id.intercept_config_management_item);
-        configListViewAdapter = new ConfigCallListViewAdapter(this, getDate());
+        configListViewAdapter = new ConfigCallListViewAdapter(this, prepareConfigDate());
         view.setAdapter(configListViewAdapter);
 
         bindService(new Intent(this,PhoneFilterServer.class),serviceConnection, Context.BIND_AUTO_CREATE) ;
 
-        setTitle("电话拦截设置");
     }
 
-    private List<Map<String,Object>> getDate(){
+    private List<Map<String,Object>> prepareConfigDate(){
 
         SharedPreferences sharedPreferences = getSharedPreferences(InterceptHelper.INTERCEPT_CONFIGURATION,MODE_PRIVATE) ;
 
         boolean isIntercept = sharedPreferences.getBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT, InterceptHelper.InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT);
+        boolean interceptStrange = sharedPreferences.getBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_STRANGE, InterceptHelper.InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_STRANGE) ;
         boolean interceptContract = sharedPreferences.getBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_CONTRACT, InterceptHelper.InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_CONTRACT) ;
         boolean interceptAnonymity = sharedPreferences.getBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_ANONYMITY, InterceptHelper.InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_ANONYMITY) ;
 
         List<Map<String,Object>> date = new ArrayList<Map<String, Object>>() ;
+        Map<String,Object> isInterceptMap = new HashMap<String,Object>() ;
+        isInterceptMap.put("title_call_intercept",getResources().getString(R.string.title_enable_intercept)) ;
+        isInterceptMap.put("title_is_intercept",getResources().getString(isIntercept ? R.string.intercept : R.string.un_intercept)) ;
+        isInterceptMap.put("intercept",isIntercept) ;
+        date.add(isInterceptMap) ;
+
         Map<String,Object> strangeMap = new HashMap<String,Object>() ;
         strangeMap.put("title_call_intercept",getResources().getString(R.string.title_call_intercept_strange)) ;
-        strangeMap.put("title_is_intercept",getResources().getString(isIntercept ? R.string.intercept : R.string.un_intercept)) ;
-        strangeMap.put("intercept",isIntercept) ;
+        strangeMap.put("title_is_intercept",getResources().getString(interceptStrange ? R.string.intercept : R.string.un_intercept)) ;
+        strangeMap.put("intercept",interceptStrange) ;
         date.add(strangeMap) ;
 
         Map<String,Object> anonymousMap = new HashMap<String,Object>() ;

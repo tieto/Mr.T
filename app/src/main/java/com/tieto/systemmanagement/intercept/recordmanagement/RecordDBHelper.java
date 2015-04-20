@@ -130,17 +130,23 @@ public class RecordDBHelper extends SQLiteOpenHelper {
     }
 
     public void deleteAllPhoneRecords(){
-        getWritableDatabase().delete(RECORD,INTERCEPT_TYPE + " = ? and " + MANIFEST_TYPE + " = ?",new String[]{String.valueOf(Record.InterceptType.INCOMING_PHONE),String.valueOf(Record.ManifestType.RECORD_LIST)}) ;
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(RECORD, INTERCEPT_TYPE + " = ? and " + MANIFEST_TYPE + " = ?", new String[]{String.valueOf(Record.InterceptType.INCOMING_PHONE), String.valueOf(Record.ManifestType.RECORD_LIST)}) ;
+        db.close();
         notifyUI(null) ;
     }
 
     public void deleteAllMessageRecords(){
-        getWritableDatabase().delete(RECORD,INTERCEPT_TYPE + " = ? and " + MANIFEST_TYPE + " = ?",new String[]{String.valueOf(Record.InterceptType.INCOMING_MESSAGE),String.valueOf(Record.ManifestType.RECORD_LIST)}) ;
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(RECORD, INTERCEPT_TYPE + " = ? and " + MANIFEST_TYPE + " = ?", new String[]{String.valueOf(Record.InterceptType.INCOMING_MESSAGE), String.valueOf(Record.ManifestType.RECORD_LIST)}) ;
+        db.close();
         notifyUI(null) ;
     }
 
     public void deleteRecords(Record record) {
-        getWritableDatabase().delete(RECORD,ID + " = ?" ,new String[]{String.valueOf(record.getId())}) ;
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(RECORD, ID + " = ?", new String[]{String.valueOf(record.getId())}) ;
+        db.close();
     }
 
 

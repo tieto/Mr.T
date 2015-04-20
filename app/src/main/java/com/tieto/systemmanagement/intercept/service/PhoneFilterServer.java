@@ -35,7 +35,7 @@ public class PhoneFilterServer extends Service {
 
     private static final String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
     private static final String TAG = "Phone Filter Server";
-    private static final Uri mUri= Uri.parse("content://sms/inbox");
+    private static final Uri mUri= Uri.parse("content://sms");
 
     private boolean mIsIntercept;
     private boolean mInterceptContract;
@@ -52,7 +52,7 @@ public class PhoneFilterServer extends Service {
     private ITelephony telephonyService;
     private TelephonyManager telephonyManager ;
     private RecordDBHelper mRecordDBHelper;
-    private static ContentObserver mContentObserver ;
+    private ContentObserver mContentObserver ;
 
 
     @Override
@@ -77,49 +77,56 @@ public class PhoneFilterServer extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.d(TAG,"called action " + intent.getAction()) ;
-        if (intent.getAction().equals(InterceptHelper.INTERCEPT_ACTION_CALL)) {
-            Log.e(TAG, "Telephony Manager:" + telephonyManager.getCallState());
-            switch (telephonyManager.getCallState()) {
-                case TelephonyManager.CALL_STATE_RINGING:
-                    String incomingNumber = intent.getStringExtra("incoming_number");
-                    Log.i(TAG, "RINGING :" + incomingNumber);
-                    if (isIntercept(incomingNumber)) {
-                        try {
-                            if (telephonyService == null) {
-                                Class c = Class.forName(telephonyManager.getClass().getName());
-                                Method m = c.getDeclaredMethod("getITelephony");
-                                m.setAccessible(true);
-                                telephonyService = (ITelephony) m.invoke(telephonyManager);
+        String action = intent.getAction();
+        Log.d(TAG,"called action " + action) ;
+
+        if(action != null) {
+            if (action.equals(InterceptHelper.INTERCEPT_ACTION_CALL)) {
+                Log.e(TAG, "Telephony Manager:" + telephonyManager.getCallState());
+                switch (telephonyManager.getCallState()) {
+                    case TelephonyManager.CALL_STATE_RINGING:
+                        String incomingNumber = intent.getStringExtra("incoming_number");
+                        Log.i(TAG, "RINGING :" + incomingNumber);
+                        if (isIntercept(incomingNumber)) {
+                            try {
+                                if (telephonyService == null) {
+                                    Class c = Class.forName(telephonyManager.getClass().getName());
+                                    Method m = c.getDeclaredMethod("getITelephony");
+                                    m.setAccessible(true);
+                                    telephonyService = (ITelephony) m.invoke(telephonyManager);
+                                }
+                                telephonyService.endCall();
+
+                            } catch (Exception e) {
+                                //
                             }
-                            telephonyService.endCall();
-
-                        } catch (Exception e) {
-                            //
+                            Record record = new Record();
+                            record.setRecordContent(incomingNumber);
+                            record.setInterceptType(Record.InterceptType.INCOMING_PHONE);
+                            record.setFiltrationType(Record.FiltrationType.NUMBER);
+                            record.setManifestType(Record.ManifestType.RECORD_LIST);
+                            String format = getCurrentDate();
+                            record.setDate(format);
+                            mRecordDBHelper.insert(record);
                         }
-                        Record record = new Record();
-                        record.setRecordContent(incomingNumber);
-                        record.setInterceptType(Record.InterceptType.INCOMING_PHONE);
-                        record.setFiltrationType(Record.FiltrationType.NUMBER);
-                        record.setManifestType(Record.ManifestType.RECORD_LIST);
-                        String format = getCurrentDate();
-                        record.setDate(format);
-                        mRecordDBHelper.insert(record);
-                    }
-                    break;
-            }
-        } else if(intent.getAction().equals(InterceptHelper.INTERCEPT_ACTION_MESSAGE)){
+                        break;
+                }
+            } else if (action.equals(InterceptHelper.INTERCEPT_ACTION_MESSAGE)) {
 
-            SmsInfo smsInfo = intent.getParcelableExtra("smsinfo") ;
-            if (isInterceptMessage(smsInfo.getAddress())) {
-                deleteSmsAndAddRecord(smsInfo);
+                SmsInfo smsInfo = intent.getParcelableExtra("smsinfo");
+                if (isInterceptMessage(smsInfo.getAddress())) {
+                    deleteSmsAndAddRecord(smsInfo);
+                }
             }
         }
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY ;
     }
 
     private boolean isInterceptMessage(String address) {
+        if(!mIsMessageIntercept){
+            return false ;
+        }
         if (mWhiteList.contains(address)) {
             return false;
         }
@@ -134,13 +141,13 @@ public class PhoneFilterServer extends Service {
 
     private void deleteSmsAndAddRecord(SmsInfo smsInfo) {
         //delete sms
-        getContentResolver().delete(mUri, "_id=?", new String[]{String.valueOf(smsInfo.getId())});
+        getContentResolver().delete(mUri, "_id=? ", new String[]{String.valueOf(smsInfo.getId())});
         //insert sms record
         Record record = new Record();
         record.setInterceptType(Record.InterceptType.INCOMING_MESSAGE);
         record.setRecordContent(smsInfo.getBody());
         record.setManifestType(Record.ManifestType.RECORD_LIST);
-        record.setReMark(smsInfo.getPerson());
+        record.setReMark(smsInfo.getAddress());
         record.setDate(DateLongToString(smsInfo.getDate()));
         mRecordDBHelper.insert(record);
     }
@@ -186,7 +193,7 @@ public class PhoneFilterServer extends Service {
     }
 
     public void reInit(){
-        initFilter();
+        prepareConditions();
     }
 
     /**
@@ -195,13 +202,8 @@ public class PhoneFilterServer extends Service {
     private void initFilter() {
 
         //Prepare intercept condition
-        SharedPreferences sharedPreferences = getSharedPreferences(InterceptHelper.INTERCEPT_CONFIGURATION, MODE_PRIVATE);
-        mIsIntercept = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT,InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT);
-        mInterceptContract = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_CONTRACT,InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_CONTRACT) ;
-        mInterceptAnonymity = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_ANONYMITY,InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_ANONYMITY) ;
-        mInterceptStrange = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_STRANGE,InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_STRANGE) ;
-        mIsMessageIntercept = sharedPreferences.getBoolean(InterceptHelper.InterceptMessageConfiguration.ENABLE_MESSAGE_INTERCEPT,InterceptHelper.InterceptMessageConfiguration.DEFAULT_ENABLE_MESSAGE_INTERCEPT) ;
-        mMessageInterceptStrange = sharedPreferences.getBoolean(InterceptHelper.InterceptMessageConfiguration.ENABLE_MESSAGE_INTERCEPT_STRANGE,InterceptHelper.InterceptMessageConfiguration.DEFAULT_ENABLE_MESSAGE_INTERCEPT_STRANGE) ;
+        prepareConditions();
+
         //Get all contract number
         mPhoneNumberList.clear();
         Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
@@ -233,11 +235,20 @@ public class PhoneFilterServer extends Service {
             telephonyManager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
         }
 
-        if(mIsMessageIntercept) {
-            registerSmsDataBase();
-        }else{
-            unRegisterSmsDataBase() ;
-        }
+        registerSmsDataBase() ;
+    }
+
+    private void prepareConditions() {
+
+        SharedPreferences sharedPreferences = getSharedPreferences(InterceptHelper.INTERCEPT_CONFIGURATION, MODE_PRIVATE);
+
+        mIsIntercept = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT, InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT);
+        mInterceptContract = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_CONTRACT, InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_CONTRACT) ;
+        mInterceptAnonymity = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_ANONYMITY, InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_ANONYMITY) ;
+        mInterceptStrange = sharedPreferences.getBoolean(InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_STRANGE, InterceptCallConfiguration.DEFAULT_ENABLE_CALL_INTERCEPT_STRANGE) ;
+
+        mIsMessageIntercept = sharedPreferences.getBoolean(InterceptHelper.InterceptMessageConfiguration.ENABLE_MESSAGE_INTERCEPT,InterceptHelper.InterceptMessageConfiguration.DEFAULT_ENABLE_MESSAGE_INTERCEPT) ;
+        mMessageInterceptStrange = sharedPreferences.getBoolean(InterceptHelper.InterceptMessageConfiguration.ENABLE_MESSAGE_INTERCEPT_STRANGE,InterceptHelper.InterceptMessageConfiguration.DEFAULT_ENABLE_MESSAGE_INTERCEPT_STRANGE) ;
     }
 
     private void registerSmsDataBase() {
@@ -258,8 +269,8 @@ public class PhoneFilterServer extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         unRegisterSmsDataBase();
+        super.onDestroy();
     }
 }
 

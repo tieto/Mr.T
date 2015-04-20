@@ -14,6 +14,7 @@ import android.widget.GridView;
 
 import com.tieto.systemmanagement.authority.controller.AuthorityActivity;
 import com.tieto.systemmanagement.diskmonitor.activities.DiskActivity;
+import com.tieto.systemmanagement.intercept.service.PhoneFilterServer;
 import com.tieto.systemmanagement.intercept.views.InterceptActivity;
 import com.tieto.systemmanagement.processmanage.ProcessActivity;
 import com.tieto.systemmanagement.trafficmonitor.TrafficActivity;
@@ -71,6 +72,8 @@ public class SystemManagementActivity extends Activity {
             }
         });
 
+        //First Start . need to keep running in background
+        startService(new Intent(this, PhoneFilterServer.class)) ;
     }
 
     @Override
