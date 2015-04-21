@@ -30,6 +30,9 @@
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    //Disk management related
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".TApp"
         android:allowBackup="true"
@@ -110,6 +113,10 @@
             android:name=".diskmonitor.activities.DiskAudioActivity"
             android:label="@string/title_activity_disk_audio" >
         </activity>
+        <activity
+            android:name=".diskmonitor.activities.DiskGalleryActivity" >
+        </activity>
+
         <activity
             android:name=".trafficmonitor.control.NetworkManageActivity"
             android:icon="@drawable/t_common_title_icon"

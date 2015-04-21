@@ -26,7 +26,7 @@ public class DiskAudioActivity extends BasicActivity {
         final String LOG_TAG = this.toString();
 
         listView = (ListView)findViewById(R.id.listView);
-        adapter = new AudioItemAdapter(this, DiskData.getInstance().getAudioList());
+        adapter = new AudioItemAdapter(this, DiskData.getInstance().getAudioData());
         listView.setAdapter(adapter);
 
         ImageButton btnCleanup = (ImageButton)findViewById(R.id.btnCleanup);

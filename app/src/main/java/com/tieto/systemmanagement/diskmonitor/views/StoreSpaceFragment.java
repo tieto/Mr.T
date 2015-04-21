@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
-import com.tieto.systemmanagement.diskmonitor.activities.DiskAlbumActivity;
 import com.tieto.systemmanagement.diskmonitor.activities.DiskAudioActivity;
+import com.tieto.systemmanagement.diskmonitor.activities.DiskGalleryActivity;
 import com.tieto.systemmanagement.diskmonitor.activities.DiskPackagesActivity;
 import com.tieto.systemmanagement.diskmonitor.adapter.DiskStorageAdapter;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
@@ -50,7 +50,7 @@ public class StoreSpaceFragment extends Fragment {
                         break;
                     }
                     case 1: {//album
-                        Intent intent = new Intent(getActivity(),DiskAlbumActivity.class);
+                        Intent intent = new Intent(getActivity(),DiskGalleryActivity.class);
                         startActivity(intent);
                         break;
                     }

@@ -1,12 +1,16 @@
 package com.tieto.systemmanagement.diskmonitor.data;
 
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.provider.MediaStore;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
 import com.tieto.systemmanagement.diskmonitor.entity.StorageInfo;
+import com.tieto.systemmanagement.diskmonitor.entity.ThumbNailInfo;
 import com.tieto.systemmanagement.diskmonitor.utils.FileUtils;
 
 import java.io.File;
@@ -98,8 +102,48 @@ public class DiskData {
         return systemInfos;
     }
 
+    public ThumbNailInfo getThumbnailData() {
+        int count;
+        int imageColumnIndex;
+
+        Cursor imageCursor;
+
+        //Specify the columns to read
+        String[] columns = {MediaStore.Images.Thumbnails.DATA,
+                MediaStore.Images.Thumbnails._ID,
+                MediaStore.Images.Thumbnails.KIND,
+                MediaStore.Images.Thumbnails.IMAGE_ID};
+        String orderBy = MediaStore.Images.Thumbnails._ID;
+        String selection1 = MediaStore.Images.Thumbnails.KIND + "=" + // Select only mini's
+                MediaStore.Images.Thumbnails.MINI_KIND;
+
+        imageCursor = TApp.getInstance().getApplicationContext().getContentResolver().query(
+                MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
+                columns,
+                selection1,
+                null,
+                orderBy);
+        imageColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID);
+
+        count = imageCursor.getCount();
+        ThumbNailInfo info = new ThumbNailInfo(count);
+
+        for (int i = 0; i < count; i++) {
+            imageCursor.moveToPosition(i);
+            int id = imageCursor.getInt(imageColumnIndex);
+            int dataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
+            info.mThumbnails[i] = MediaStore.Images.Thumbnails.getThumbnail(
+                    TApp.getInstance().getApplicationContext().getContentResolver(), id,
+                    MediaStore.Images.Thumbnails.MINI_KIND, null);
+            info.mThumbnailPath[i] = imageCursor.getString(imageCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
+            info.mArrPath[i] = imageCursor.getString(dataColumnIndex);
+        }
+
+        return info;
+    }
+
     //get the song list from sd-card
-    public List<String> getAudioList() {
+    public List<String> getAudioData() {
         List<String> audioList = new ArrayList<String>();
         String path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_RINGTONES).getAbsolutePath();
