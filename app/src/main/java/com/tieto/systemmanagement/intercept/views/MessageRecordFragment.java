@@ -1,6 +1,8 @@
 package com.tieto.systemmanagement.intercept.views;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
@@ -23,7 +25,7 @@ import java.util.List;
 /**
  * Created by zhaooked on 4/10/15.
  */
-public class MessageRecordFragment extends ListFragment implements RecordDBHelper.Notification{
+public class MessageRecordFragment extends ListFragment{
 
     private MessageRecordAdapter mMessageRecordAdapter;
 
@@ -78,32 +80,64 @@ public class MessageRecordFragment extends ListFragment implements RecordDBHelpe
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRecordDBHelper.deleteAllMessageRecords() ;
+                if(!mRecordList.isEmpty()) {
+
+                    new AsyncTask<String,Integer,String>(){
+
+                        private ProgressDialog progressDialog ;
+
+                        @Override
+                        protected String doInBackground(String[] params) {
+                            mRecordDBHelper.deleteAllMessageRecords() ;
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPreExecute() {
+                            progressDialog = new ProgressDialog(getActivity()).show(getActivity(), null, "Deleting ...", true);
+                        }
+
+                        @Override
+                        protected void onPostExecute(String s) {
+                            progressDialog.dismiss();
+                        }
+                    }.execute(null,null,null) ;
+                }
             }
         });
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        mRecordDBHelper = new RecordDBHelper(getActivity()) ;
-        mRecordList = mRecordDBHelper.queryMessageInterceptRecord() ;
-        mRecordDBHelper.registerNotification(this);
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void notify(Record record) {
-        if(record != null) {
+    private void updateUI(Record record) {
+        if(record == null) {
+            mRecordList.clear();
+            mRecordList.addAll(mRecordDBHelper.queryPhoneInterceptRecord());
+        }else if(record.getInterceptType() == Record.InterceptType.INCOMING_MESSAGE){
             mRecordList.add(record);
-        }else{
-            mRecordList = mRecordDBHelper.queryMessageInterceptRecord() ;
         }
         mMessageRecordAdapter.notifyDataSetChanged();
     }
 
+    private NotifyUIInterface notifyListener ;
+
+    @Override
+    public void onAttach(Activity activity) {
+
+        notifyListener = new NotifyUIInterface(getActivity()) {
+            @Override
+            public void doNotify(Record record) {
+                updateUI(record);
+            }
+        } ;
+
+        mRecordDBHelper = new RecordDBHelper(getActivity()) ;
+        mRecordList = mRecordDBHelper.queryMessageInterceptRecord() ;
+        mRecordDBHelper.registerNotification(notifyListener);
+        super.onAttach(activity);
+    }
+
     @Override
     public void onDestroy() {
-        mRecordDBHelper.unRegisterNotification(this);
+        mRecordDBHelper.unRegisterNotification(notifyListener);
         super.onDestroy();
     }
 }

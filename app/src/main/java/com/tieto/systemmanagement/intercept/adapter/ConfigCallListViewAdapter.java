@@ -49,9 +49,12 @@ public class ConfigCallListViewAdapter extends ConfigListViewAdapter {
                         edit.putBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT,isChecked) ;
                         break;
                     case 1 :
-                        edit.putBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_ANONYMITY,isChecked) ;
+                        edit.putBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_STRANGE,isChecked) ;
                         break;
                     case 2 :
+                        edit.putBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_ANONYMITY,isChecked) ;
+                        break;
+                    case 3 :
                         edit.putBoolean(InterceptHelper.InterceptCallConfiguration.ENABLE_CALL_INTERCEPT_CONTRACT,isChecked) ;
                         break;
                 }
