@@ -2,6 +2,7 @@ package com.tieto.systemmanagement.app.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.IPackageDataObserver;
@@ -9,10 +10,10 @@ import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.net.Uri;
-import android.os.Process;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.app.AppDetailActivity;
 import com.tieto.systemmanagement.app.models.AppSizeModel;
 import com.tieto.systemmanagement.app.models.ApplicationsState;
@@ -38,11 +39,11 @@ public class AppManagementTool {
         return true;
     }
 
-    public static void ForceStop(Context context, String packageName) {
+    public static void ForceStop(Activity context, String packageName) {
         boolean stopped = false;
         if(context.checkPermission("android.permission.FORCE_STOP_PACKAGES", android.os.Process.myPid(), android.os.Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
-            String command = "am force-stop --use " + Process.myUid() / 100000 + " " + packageName;
-            stopped = CommandByADB(command);
+            createNotRootDialog(context);
+            return;
         } else {
             try {
                 Class[] arrayOfClass = new Class[1];
@@ -90,7 +91,11 @@ public class AppManagementTool {
     }
 
     public static void ClearData(Activity activity, final String pName) {
-        if(activity.checkPermission("android.permission.CLEAR_APP_USER_DATA", android.os.Process.myPid(), android.os.Process.myUid()) != PackageManager.PERMISSION_GRANTED)
+        if(activity.checkPermission("android.permission.CLEAR_APP_USER_DATA", android.os.Process.myPid(), android.os.Process.myUid()) != PackageManager.PERMISSION_GRANTED){
+            createNotRootDialog(activity);
+            return;
+        }
+
         try {
             Class[] arrayOfClass = new Class[2];
             arrayOfClass[0] = String.class;
@@ -113,6 +118,10 @@ public class AppManagementTool {
     }
 
     public static void ClearCache(Activity activity, final String pName) {
+        if(activity.checkPermission("android.permission.DELETE_CACHE_FILES", android.os.Process.myPid(), android.os.Process.myUid()) != PackageManager.PERMISSION_GRANTED){
+            createNotRootDialog(activity);
+            return;
+        }
         boolean cleared = false;
             try {
                 Class[] arrayOfClass = new Class[2];
@@ -132,6 +141,12 @@ public class AppManagementTool {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+    }
+
+    public static void createNotRootDialog(Activity activity) {
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.app_notice)
+                .setMessage(R.string.app_have_not_been_root).show();
     }
 
     /**

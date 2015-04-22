@@ -92,12 +92,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_storage"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:colorPrimaryDark" />
+                style="@style/TextColorAsPrimaryDarkStyle" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2dip"
-                android:src="@drawable/marker" />
+                style="@style/BackgroundAsPrimaryDarkStyle" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -248,12 +248,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_cache"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:colorPrimaryDark" />
+                style="@style/TextColorAsPrimaryDarkStyle" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2dip"
-                android:src="@drawable/marker" />
+                style="@style/BackgroundAsPrimaryDarkStyle" />
 
             <LinearLayout
                 android:layout_width="match_parent"

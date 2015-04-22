@@ -36,4 +36,12 @@
         <item name="android:background">@color/app_actionbar_background_color</item>
     </style>
 
+    <style name="TextColorAsPrimaryDarkStyle">
+        <item name="android:textColor">@color/app_actionbar_background_color</item>
+    </style>
+
+    <style name="BackgroundAsPrimaryDarkStyle">
+        <item name="android:background">@color/app_actionbar_background_color</item>
+    </style>
+
 </resources>
