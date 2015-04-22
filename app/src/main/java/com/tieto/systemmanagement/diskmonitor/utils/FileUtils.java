@@ -1,6 +1,7 @@
 package com.tieto.systemmanagement.diskmonitor.utils;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 
@@ -28,17 +29,46 @@ public class FileUtils {
     }
 
     public static long getSize(File f) {
-       if(!(f.exists())) return 0;
+        if (!(f.exists())) return 0;
 
-       long size = 0;
+        long size = 0;
         if (f.isDirectory()) {
 
             for (File file : f.listFiles()) {
                 size += getSize(file);
             }
         } else {
-            size=f.length();
+            size = f.length();
         }
         return size;
+    }
+
+    public static String getItemSelected(boolean itemsChecked[], String pathsChecked[]) {
+        boolean[] itemsSelected = itemsChecked;
+        String[] arrPath = pathsChecked;
+
+        int len = itemsSelected.length;
+        int cnt = 0;
+        String itemsPathSelected = "";
+        for (int i = 0; i < len; i++) {
+            if (itemsSelected[i]) {
+                cnt++;
+                itemsPathSelected = itemsPathSelected + arrPath[i] + "|";
+            }
+        }
+
+        String[] split = itemsPathSelected.split("|");
+        Log.v("length", "" + split.length + " " + cnt);
+
+        if (cnt == 0) {
+            DebugToast.debugToast("",
+                    "Please select at least one item");
+        } else {
+            DebugToast.debugToast("",
+                    "You've selected Total " + cnt + "----" +
+                            itemsPathSelected + " item(s).");
+
+        }
+        return  itemsPathSelected;
     }
 }

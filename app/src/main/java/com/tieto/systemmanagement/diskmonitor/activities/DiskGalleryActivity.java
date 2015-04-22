@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -19,6 +18,7 @@ import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.diskmonitor.adapter.GalleryItemAdapter;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
 import com.tieto.systemmanagement.diskmonitor.entity.ThumbNailInfo;
+import com.tieto.systemmanagement.diskmonitor.utils.FileUtils;
 
 import java.net.URL;
 
@@ -56,36 +56,8 @@ public class DiskGalleryActivity extends Activity implements OnItemClickListener
 
         final ImageButton btnCleanup = (ImageButton) findViewById(R.id.btnCleanup);
         btnCleanup.setOnClickListener(new OnClickListener() {
-
             public void onClick(View v) {
-
-                boolean[] thumbnailSelected = imageAdapter.getImagesChecked();
-                String[] arrPath = imageAdapter.mPaths;
-
-                int len = thumbnailSelected.length;
-                int cnt = 0;
-                String imagesPathSelected = "";
-                for (int i = 0; i < len; i++) {
-                    if (thumbnailSelected[i]) {
-                        cnt++;
-                        imagesPathSelected = imagesPathSelected + arrPath[i] + "|";
-                    }
-                }
-
-                String[] split = imagesPathSelected.split("|");
-                Log.v("length", "" + split.length + " " + cnt);
-
-                if (cnt == 0) {
-                    Toast.makeText(getApplicationContext(),
-                            "Please select at least one image",
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getApplicationContext(),
-                            "You've selected Total " + cnt + "----" +
-                                    imagesPathSelected + " image(s).",
-                            Toast.LENGTH_LONG).show();
-                    Log.d("SelectedImages", imagesPathSelected);
-                }
+            FileUtils.getItemSelected(imageAdapter.getItemsChecked(), imageAdapter.mPaths);
             }
         });
     }

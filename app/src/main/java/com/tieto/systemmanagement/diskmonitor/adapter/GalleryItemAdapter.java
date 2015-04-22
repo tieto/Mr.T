@@ -23,17 +23,17 @@ import com.tieto.systemmanagement.diskmonitor.views.GalleryItemViewHolder;
 public class GalleryItemAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private int count;
-    private boolean[] mImagesChecked;
+    private boolean[] mItemsChecked;
     public String[] mPaths;
-     String mThumbnailPath[];
-     Bitmap[] mThumbnails;
+     String mItemsPath[];
+     Bitmap[] mItems;
 
     public GalleryItemAdapter(ThumbNailInfo info) {
         mPaths = info.mArrPath;
-        mThumbnailPath = info.mThumbnailPath;
-        mThumbnails = info.mThumbnails;
-        count = mThumbnailPath.length;
-        mImagesChecked = new boolean[count];
+        mItemsPath = info.mItemlPath;
+        mItems = info.mItem;
+        count = mItemsPath.length;
+        mItemsChecked = new boolean[count];
 
         mInflater = (LayoutInflater) TApp.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -72,13 +72,13 @@ public class GalleryItemAdapter extends BaseAdapter {
             public void onClick(View v) {
                 CheckBox cb = (CheckBox)v;
                 int id = cb.getId();
-                if (mImagesChecked[id]){
+                if (mItemsChecked[id]){
                     cb.setChecked(false);
-                    mImagesChecked[id] = false;
+                    mItemsChecked[id] = false;
                 } else {
                     cb.setChecked(true);
                     cb.setVisibility(View.VISIBLE);
-                    mImagesChecked[id] = true;
+                    mItemsChecked[id] = true;
                 }
             }
         });
@@ -93,14 +93,14 @@ public class GalleryItemAdapter extends BaseAdapter {
             }
         });
 
-        holder.mImageView.setImageBitmap(mThumbnails[position]);
-        holder.mCheckbox.setChecked(mImagesChecked[position]);
+        holder.mImageView.setImageBitmap(mItems[position]);
+        holder.mCheckbox.setChecked(mItemsChecked[position]);
 
         holder.mImageID = position;
         return convertView;
     }
 
-    public boolean[] getImagesChecked() {
-        return mImagesChecked;
+    public boolean[] getItemsChecked() {
+        return mItemsChecked;
     }
 }

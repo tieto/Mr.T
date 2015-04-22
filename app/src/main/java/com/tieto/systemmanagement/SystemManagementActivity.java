@@ -24,7 +24,7 @@ public class SystemManagementActivity extends Activity {
     private final static List<FunEntity> ACTIVITIES = new ArrayList<FunEntity>();
     //TODO:the class member var need start m
     private SystemManagementAdapter adapter;
-
+    private static Activity gContext;
 
     static {
         ACTIVITIES.add(new FunEntity(R.string.title_activity_process_management
@@ -55,6 +55,8 @@ public class SystemManagementActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_system_management);
+        gContext = this;
+
         GridView contentView = (GridView) findViewById(R.id.container);
         adapter = new SystemManagementAdapter(this, ACTIVITIES);
         contentView.setAdapter(adapter);
@@ -89,5 +91,7 @@ public class SystemManagementActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    static public Activity getContext() {
+        return gContext;
+    }
 }

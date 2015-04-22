@@ -1,7 +1,7 @@
 package com.tieto.systemmanagement.diskmonitor.data;
 
+import android.content.pm.PackageInfo;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -12,6 +12,7 @@ import com.tieto.systemmanagement.TApp;
 import com.tieto.systemmanagement.diskmonitor.entity.StorageInfo;
 import com.tieto.systemmanagement.diskmonitor.entity.ThumbNailInfo;
 import com.tieto.systemmanagement.diskmonitor.utils.FileUtils;
+import com.tieto.systemmanagement.diskmonitor.entity.ProcessInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class DiskData {
         StorageInfo info1= new StorageInfo();
         info1.setIcon(TApp.getInstance().getDrawable(R.drawable.sysclear_file_apk));
         info1.setTitle(TApp.getInstance().getString(R.string.disk_space_store_title_1));
-        info1.setTotal("0M");
+        info1.setTotal(displaySize(getInstalledAppSize(true)));
         spaceInfos.add(info1);
 
         StorageInfo info2= new StorageInfo();
@@ -132,10 +133,10 @@ public class DiskData {
             imageCursor.moveToPosition(i);
             int id = imageCursor.getInt(imageColumnIndex);
             int dataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
-            info.mThumbnails[i] = MediaStore.Images.Thumbnails.getThumbnail(
+            info.mItem[i] = MediaStore.Images.Thumbnails.getThumbnail(
                     TApp.getInstance().getApplicationContext().getContentResolver(), id,
                     MediaStore.Images.Thumbnails.MINI_KIND, null);
-            info.mThumbnailPath[i] = imageCursor.getString(imageCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
+            info.mItemlPath[i] = imageCursor.getString(imageCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA));
             info.mArrPath[i] = imageCursor.getString(dataColumnIndex);
         }
 
@@ -155,6 +156,56 @@ public class DiskData {
             }
         }
         return audioList;
+    }
+
+    public ArrayList<ProcessInfo> getPackages() {
+        ArrayList<ProcessInfo> apps = getInstalledApps(false); /* false = no system packages */
+        final int max = apps.size();
+        for (int i=0; i<max; i++) {
+            apps.get(i).prettyPrint();
+        }
+        return apps;
+    }
+
+    public ArrayList<ProcessInfo> getInstalledApps(boolean getSysPackages) {
+        ArrayList<ProcessInfo> res = new ArrayList<ProcessInfo>();
+        List<PackageInfo> packs = TApp.getInstance().getPackageManager().getInstalledPackages(0);
+        for(int i=0;i<packs.size();i++) {
+            PackageInfo p = packs.get(i);
+            if ((!getSysPackages) && (p.versionName == null)) {
+                continue ;
+            }
+
+            ProcessInfo newInfo = new ProcessInfo();
+            newInfo.mAppName = p.applicationInfo.loadLabel(TApp.getInstance().getPackageManager()).toString();
+            newInfo.mName = p.packageName;
+            newInfo.mVersionName = p.versionName;
+            newInfo.mVersionCode = p.versionCode;
+            newInfo.mPath = p.applicationInfo.sourceDir;
+            newInfo.icon = p.applicationInfo.loadIcon(TApp.getInstance().getPackageManager());
+            File file = new File(newInfo.mPath);
+            long sizeinByte = file.length();
+            newInfo.mSize = sizeinByte;
+            res.add(newInfo);
+        }
+        return res;
+    }
+
+    public long getInstalledAppSize(boolean getSysPackages) {
+        List<PackageInfo> packs = TApp.getInstance().getPackageManager().getInstalledPackages(0);
+
+        long total = 0;
+        for(int i=0;i<packs.size();i++) {
+            PackageInfo p = packs.get(i);
+            if ((!getSysPackages) && (p.versionName == null)) {
+                continue ;
+            }
+
+            File file = new File(p.applicationInfo.sourceDir);
+            long sizeInByte = file.length();
+            total += sizeInByte;
+        }
+        return total;
     }
 
     //TODO: private functions
@@ -179,7 +230,7 @@ public class DiskData {
         return total;
     }
 
-    private String displaySize(long size) {
+    public String displaySize(long size) {
         if (size > BYTES_2_MEGES) {
             size/= BYTES_2_MEGES;
             return  size+"M";
@@ -203,40 +254,4 @@ public class DiskData {
 
         return total;
     }
-
-//    public ArrayList<DProcessInfo> getPackages() {
-//        ArrayList<DProcessInfo> apps = getInstalledApps(false); /* false = no system packages */
-//        final int max = apps.size();
-//        for (int i=0; i<max; i++) {
-//            apps.get(i).prettyPrint();
-//        }
-//        return apps;
-//    }
-//
-//    public ArrayList<DProcessInfo> getInstalledApps(boolean getSysPackages) {
-//        ArrayList<DProcessInfo> res = new ArrayList<DProcessInfo>();
-//        List<PackageInfo> packs = TApp.getInstance().getPackageManager().getInstalledPackages(0);
-//        for(int i=0;i<packs.size();i++) {
-//            PackageInfo p = packs.get(i);
-//            if ((!getSysPackages) && (p.versionName == null)) {
-//                continue ;
-//            }
-//
-//            DProcessInfo newInfo = new DProcessInfo();
-//            newInfo.appname = p.applicationInfo.loadLabel(TApp.getInstance().getPackageManager()).toString();
-//            newInfo.pname = p.packageName;
-//            newInfo.versionName = p.versionName;
-//            newInfo.versionCode = p.versionCode;
-//            newInfo.path = p.applicationInfo.sourceDir;
-//            newInfo.icon = p.applicationInfo.loadIcon(TApp.getInstance().getPackageManager());
-//
-//            File file = new File(newInfo.path);
-//            long sizeinByte = file.length();
-//            long sizeinMb = sizeinByte / (1024*1024);
-//
-//            Toast.makeText(TApp.getInstance(), newInfo.appname + "\t"/*"\t" + newInfo.pname + "\t" + newInfo.versionName + "\t" + newInfo.versionCode + "\t" */ + sizeinMb + "Mb", Toast.LENGTH_SHORT).show();
-//            res.add(newInfo);
-//        }
-//        return res;
-//    }
-}
+ }

@@ -6,13 +6,13 @@ import android.graphics.Bitmap;
  * Created by wangbo on 4/21/15.
  */
 public class ThumbNailInfo {
-    public String mThumbnailPath[];
+    public String mItemlPath[];
     public String[] mArrPath;
-    public Bitmap[] mThumbnails;
+    public Bitmap[] mItem;
 
     public ThumbNailInfo(final Integer count) {
-        mThumbnailPath = new String[count];
+        mItemlPath = new String[count];
         mArrPath = new String[count];
-        mThumbnails = new Bitmap[count];
+        mItem = new Bitmap[count];
     }
 }
