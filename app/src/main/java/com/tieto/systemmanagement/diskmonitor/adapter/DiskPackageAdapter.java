@@ -46,25 +46,30 @@ public class DiskPackageAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = convertView;
-        if (convertView == null)
-            v = mInflater.inflate(R.layout.item_disk_package, null);
 
-        ProcessInfo info = mPackages.get(position);
-        ImageView iv = (ImageView)v.findViewById(R.id.disk_package_icon);
-        iv.setImageDrawable(info.icon);
+        PackageItemViewHolder holder;
+        if (convertView == null) {
+            holder = new PackageItemViewHolder();
+            convertView = mInflater.inflate(
+                    R.layout.item_disk_package, null);
+            holder.mImageView = (ImageView) convertView.findViewById(R.id.disk_package_icon);
+            holder.mCheckbox = (CheckBox) convertView.findViewById(R.id.disk_package_checkBox);
+            holder.mTitle = (TextView) convertView.findViewById(R.id.disk_package_title);
+            holder.mSizeDisplay = (TextView) convertView.findViewById(R.id.disk_package_summary);
+            convertView.setTag(holder);
+        }
+        else {
+            holder = (PackageItemViewHolder) convertView.getTag();
+        }
 
-        TextView tv = (TextView)v.findViewById(R.id.disk_package_summary);
-        tv.setText(DiskData.getInstance().displaySize(info.mSize));
+       ProcessInfo info = mPackages.get(position);
+        holder.mImageView.setImageDrawable(info.icon);
+        holder.mSizeDisplay.setText(DiskData.getInstance().displaySize(info.mSize));
+        holder.mTitle.setText(info.mAppName);
 
-        TextView summary = (TextView)v.findViewById(R.id.disk_package_title);
-        summary.setText(info.mAppName);
-
-        //TODO: refactor to view holder
-        CheckBox checkBox = (CheckBox)v.findViewById(R.id.disk_package_checkBox);
-        checkBox.setId(position);
-
-        checkBox.setOnClickListener(new View.OnClickListener() {
+        holder.mCheckbox.setChecked(mItemsChecked[position]);
+        holder.mCheckbox.setId(position);
+        holder.mCheckbox.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 CheckBox cb = (CheckBox)v;
                 int id = cb.getId();
@@ -78,7 +83,7 @@ public class DiskPackageAdapter extends BaseAdapter {
                 }
             }
         });
-        return v;
+        return convertView;
     }
 
     public boolean[] getItemsChecked() {

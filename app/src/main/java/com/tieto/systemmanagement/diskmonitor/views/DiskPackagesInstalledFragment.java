@@ -54,7 +54,7 @@ public class DiskPackagesInstalledFragment extends Fragment {
             }
         });
 
-        SyncPackages syncPackages = new SyncPackages();
+        ASyncPackages syncPackages = new ASyncPackages();
         syncPackages.execute();
     }
 
@@ -69,7 +69,7 @@ public class DiskPackagesInstalledFragment extends Fragment {
         super.onDestroy();
     }
 
-    class SyncPackages extends AsyncTask<URL, Integer, List<ProcessInfo>> {
+    class ASyncPackages extends AsyncTask<URL, Integer, List<ProcessInfo>> {
         protected List<ProcessInfo> doInBackground(URL... arg0) {
             return DiskData.getInstance().getPackages();
         }

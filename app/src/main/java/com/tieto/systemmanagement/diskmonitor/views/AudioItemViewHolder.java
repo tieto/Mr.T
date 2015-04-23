@@ -9,30 +9,7 @@ import android.widget.TextView;
  */
 
 public class AudioItemViewHolder {
-    private CheckBox mCheckBox;
-    private TextView mTextView;
+    public CheckBox mCheckBox;
+    public TextView mTextView;
 
-    public AudioItemViewHolder() {
-    }
-
-    public AudioItemViewHolder(TextView textView, CheckBox checkBox) {
-        this.mCheckBox = checkBox;
-        this.mTextView = textView;
-    }
-
-    public CheckBox getCheckBox() {
-        return mCheckBox;
-    }
-
-    public void setCheckBox(CheckBox checkBox) {
-        this.mCheckBox = checkBox;
-    }
-
-    public TextView getTextView() {
-        return mTextView;
-    }
-
-    public void setTextView(TextView textView) {
-        this.mTextView = textView;
-    }
 }

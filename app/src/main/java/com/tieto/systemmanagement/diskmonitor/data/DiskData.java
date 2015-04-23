@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
+import com.tieto.systemmanagement.diskmonitor.entity.AudioInfo;
 import com.tieto.systemmanagement.diskmonitor.entity.StorageInfo;
 import com.tieto.systemmanagement.diskmonitor.entity.ThumbNailInfo;
 import com.tieto.systemmanagement.diskmonitor.utils.FileUtils;
@@ -144,15 +145,18 @@ public class DiskData {
     }
 
     //get the song list from sd-card
-    public List<String> getAudioData() {
-        List<String> audioList = new ArrayList<String>();
+    public List<AudioInfo> getAudioData() {
+        List<AudioInfo> audioList = new ArrayList<AudioInfo>();
         String path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_RINGTONES).getAbsolutePath();
         File home = new File(path);
-
         if (home.listFiles().length > 0) {
             for (File file : home.listFiles()) {
-                audioList.add(file.getName());
+                AudioInfo info = new AudioInfo();
+                info.mFileName = file.getName();
+                info.mPath     = file.getAbsolutePath();
+                info.mSizeDisplay = displaySize(FileUtils.getSize(file));
+                audioList.add(info);
             }
         }
         return audioList;

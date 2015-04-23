@@ -45,7 +45,7 @@ public class DiskGalleryActivity extends Activity implements OnItemClickListener
             mDialog.setCancelable(false);
             mDialog.show();
 
-            SyncImages syncImagesTask = new SyncImages();
+            ASyncImages syncImagesTask = new ASyncImages();
             syncImagesTask.execute();
         } else {
             Toast.makeText(getApplicationContext(),
@@ -62,7 +62,7 @@ public class DiskGalleryActivity extends Activity implements OnItemClickListener
         });
     }
 
-    class SyncImages extends AsyncTask<URL, Integer, ThumbNailInfo> {
+    class ASyncImages extends AsyncTask<URL, Integer, ThumbNailInfo> {
         protected ThumbNailInfo doInBackground(URL... arg0) {
             return DiskData.getInstance().getThumbnailData();
         }

@@ -10,33 +10,32 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.diskmonitor.entity.AudioInfo;
 import com.tieto.systemmanagement.diskmonitor.views.AudioItemViewHolder;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by wangbo on 4/20/15.
  */
 public class AudioItemAdapter  extends BaseAdapter {
     private Context mContext = null;
-    private List<String> mArray = null;
-    private Map<String, Integer> mCheckedMap = null;
+    private List<AudioInfo> mItems = null;
+    private boolean [] mItemsChecked = null;
 
     private static LayoutInflater mInflater = null;
     final String LOG_TAG = this.toString();
 
-    public AudioItemAdapter(Context context, List<String> list) {
+    public AudioItemAdapter(Context context, List<AudioInfo> list) {
         mContext = context;
-        mArray = list;
-        mCheckedMap = new HashMap<String, Integer>();
+        mItems = list;
+        mItemsChecked = new boolean[mItems.size()];
 
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public int getCount() {
-        return mArray.size();
+        return mItems.size();
     }
 
     public Object getItem(int position) {
@@ -47,43 +46,54 @@ public class AudioItemAdapter  extends BaseAdapter {
         return position;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final CheckBox checkBox;
-        final TextView textView;
-        final String info = mArray.get(position);
-
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final AudioInfo info = mItems.get(position);
+        AudioItemViewHolder holder;
         if (convertView == null) {
+            holder = new AudioItemViewHolder();
             convertView = mInflater.inflate(R.layout.item_disk_audio, null);
-            textView = (TextView) convertView.findViewById(R.id.title);
-            textView.setText(info);
 
-            checkBox = (CheckBox) convertView.findViewById(R.id.check);
-            convertView.setTag(new AudioItemViewHolder(textView, checkBox));
-            checkBox.setOnClickListener(new View.OnClickListener() {
+            holder.mTextView= (TextView) convertView.findViewById(R.id.title);
+            holder.mTextView.setText(info.mFileName);
+
+            holder.mCheckBox = (CheckBox) convertView.findViewById(R.id.check);
+            convertView.setTag(holder);
+
+            holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Log.e(LOG_TAG, "audio item " + " - "+ info);
-                    mCheckedMap.put(info,isChecked(checkBox.isChecked()));
+                    CheckBox cb = (CheckBox)v;
+                    int id = cb.getId();
+                    if (mItemsChecked[id]){
+                        cb.setChecked(false);
+                        mItemsChecked[id] = false;
+                    } else {
+                        cb.setChecked(true);
+                        cb.setVisibility(View.VISIBLE);
+                        mItemsChecked[id] = true;
+                    }
+
                 }
             });
         }
         else {
-
-            /**
-             * Reuse:Using a ViewHolder to avoid having to call findViewById().
-             */
-            AudioItemViewHolder viewHolder = (AudioItemViewHolder) convertView.getTag();
-            textView = viewHolder.getTextView();
-            textView.setText(info);
-
+           holder = (AudioItemViewHolder) convertView.getTag();
         }
+
+        holder.mCheckBox.setId(position);
+        holder.mCheckBox.setChecked(mItemsChecked[position]);
         return convertView;
     }
 
-    public Map<String, Integer> getCheckedItems( ) {
-        return mCheckedMap;
+    public boolean[] getItemsChecked( ) {
+        return mItemsChecked;
     }
 
-        private Integer isChecked(boolean b) {
-        return b?1:0;
+    public String[] getItemsPath() {
+        String[] paths = new String[mItems.size()];
+        for (int i=0; i< mItems.size();i++) {
+            paths[i] = mItems.get(i).mPath;
+        }
+        return paths;
     }
 }

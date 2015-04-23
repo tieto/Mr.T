@@ -67,6 +67,7 @@ public class GalleryItemAdapter extends BaseAdapter {
 
         holder.mCheckbox.setId(position);
         holder.mImageView.setId(position);
+        holder.mCheckbox.setChecked(mItemsChecked[position]);
 
         holder.mCheckbox.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

@@ -1,9 +1,9 @@
 package com.tieto.systemmanagement.diskmonitor.utils;
 
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by wangbo on 4/9/15.
@@ -43,22 +43,19 @@ public class FileUtils {
         return size;
     }
 
-    public static String getItemSelected(boolean itemsChecked[], String pathsChecked[]) {
+    public static String[]  getItemSelected(boolean itemsChecked[], String pathsChecked[]) {
         boolean[] itemsSelected = itemsChecked;
         String[] arrPath = pathsChecked;
 
         int len = itemsSelected.length;
         int cnt = 0;
-        String itemsPathSelected = "";
+        ArrayList<String> itemsPathSelected = new ArrayList<String>();
         for (int i = 0; i < len; i++) {
             if (itemsSelected[i]) {
                 cnt++;
-                itemsPathSelected = itemsPathSelected + arrPath[i] + "|";
+                itemsPathSelected.add(arrPath[i]);
             }
         }
-
-        String[] split = itemsPathSelected.split("|");
-        Log.v("length", "" + split.length + " " + cnt);
 
         if (cnt == 0) {
             DebugToast.debugToast("",
@@ -69,6 +66,11 @@ public class FileUtils {
                             itemsPathSelected + " item(s).");
 
         }
-        return  itemsPathSelected;
+
+        String[] results = new String[itemsPathSelected.size()];
+        for (int i=0; i<itemsPathSelected.size();i++) {
+            results[i] = itemsPathSelected.get(i);
+        }
+        return results;
     }
 }
