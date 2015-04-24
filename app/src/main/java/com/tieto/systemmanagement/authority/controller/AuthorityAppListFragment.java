@@ -76,7 +76,7 @@ public class AuthorityAppListFragment extends ListFragment {
         PackageManager pm = context.getPackageManager();
         List<PackageInfo> packageInfo = pm.getInstalledPackages(
                 PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_PERMISSIONS);
-        List<AppWrapper> list = new ArrayList<AppWrapper>();
+        List<AppWrapper> appList = new ArrayList<AppWrapper>();
         for (final PackageInfo pkg : packageInfo) {
             ApplicationInfo app = pkg.applicationInfo;
 
@@ -86,9 +86,10 @@ public class AuthorityAppListFragment extends ListFragment {
             }
 
             if (app != null) {
-                list.add(new AppWrapper(pkg));
+                AppWrapper appWrapper = new AppWrapper(pkg);
+                appList.add(appWrapper);
             }
         }
-        return list;
+        return appList;
     }
 }

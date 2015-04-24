@@ -48,6 +48,7 @@
     <string name="auth_unknown_permission">未知权限</string>
     <string name="auth_permission_count_format"><![CDATA[<font color=\'#880000\'>%1$d</font>&nbsp;项危险权限]]></string>
     <string name="auth_empty_loading">正在加载</string>
+    <string name="can_not_set_permission">不能设置权限</string>
 
     <!-- App管理 Zhou Jinpei -->
     <string name="app_downloaded">已下载</string>
@@ -84,4 +85,9 @@
     <string name="title_message_intercept_strange">Strange Message</string>
     <string name="intercept">Intercept</string>
     <string name="un_intercept">No intercept</string>
+    <string name="title_activity_app_list_for_one_permission">AppListForOnePermissionActivity</string>
+
+
+
+
 </resources>

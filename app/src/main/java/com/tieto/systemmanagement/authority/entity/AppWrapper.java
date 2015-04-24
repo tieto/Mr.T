@@ -10,6 +10,8 @@ import android.os.*;
 import android.util.Log;
 
 import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.TApp;
+import com.tieto.systemmanagement.authority.model.PermissionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +24,24 @@ public final class AppWrapper implements Parcelable {
     private PackageInfo mPackageInfo;
     private ApplicationInfo mAppInfo;
 
+    //the app package permission info
+    private List<Object> mPermissionPackageInfo;
+
     public AppWrapper(PackageInfo packageInfo) {
         if (packageInfo == null) {
             throw new NullPointerException("Attempt to access the null object of packageInfo.");
         }
         mPackageInfo = packageInfo;
         mAppInfo = packageInfo.applicationInfo;
+        if(PermissionManager.getInstance() != null)
+        {
+            mPermissionPackageInfo = PermissionManager.getInstance().getPerMissionByPacking(packageInfo);
+        }
+    }
+
+    public ApplicationInfo getApplicationInfo()
+    {
+        return  mPackageInfo.applicationInfo;
     }
 
     public AppWrapper(ApplicationInfo mAppInfo) {
@@ -55,7 +69,12 @@ public final class AppWrapper implements Parcelable {
     }
 
     public int getPermissionCount() {
-        return mPackageInfo.permissions == null? 0 : mPackageInfo.permissions.length;
+        return PermissionManager.getInstance() == null? 0
+                : PermissionManager.getInstance().getPermissionCountByPackage(mPermissionPackageInfo);
+    }
+
+    public List<Object> getPermissionInfos() {
+        return mPermissionPackageInfo;
     }
 
     @Override
@@ -81,4 +100,5 @@ public final class AppWrapper implements Parcelable {
             return new AppWrapper[size];
         }
     };
+
 }

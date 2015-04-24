@@ -1,17 +1,26 @@
 package com.tieto.systemmanagement.authority.controller;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
+import com.tieto.systemmanagement.authority.entity.AppPermission;
+import com.tieto.systemmanagement.authority.entity.AppWrapper;
+import com.tieto.systemmanagement.authority.model.PermissionManager;
 
 import org.w3c.dom.Text;
 
@@ -23,15 +32,7 @@ import java.util.List;
  * @author Jiang Ping
  */
 public class PermissionListFragment extends Fragment {
-
-    private static List<PermissionItem> PERMISSION_LIST = new ArrayList<PermissionItem>();
-    static {
-        PERMISSION_LIST.add(new PermissionItem("Call", "%d apps have permission to make call"));
-        PERMISSION_LIST.add(new PermissionItem("SMS", "%d apps have permission to read/write SMS"));
-        PERMISSION_LIST.add(new PermissionItem("Contacts", "%d apps have permission to read/write contacts"));
-        PERMISSION_LIST.add(new PermissionItem("Call log", "%d apps have permission to read/write call logs"));
-        PERMISSION_LIST.add(new PermissionItem("Location", "%d apps have permission to read your location"));
-    }
+    private Adapter mAdapter;
 
     public static PermissionListFragment newInstance() {
         return new PermissionListFragment();
@@ -47,25 +48,65 @@ public class PermissionListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ListView list = (ListView) getView().findViewById(android.R.id.list);
-        list.setAdapter(new Adapter(getActivity()));
+
+        //TODO:use async to permission list
+        final ArrayMap<String,ArrayList<Object>> permissionList = getPermissonList();
+        mAdapter = new Adapter(getActivity(),permissionList);
+        list.setAdapter(mAdapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                Intent intent = new Intent(getActivity(), AppListForOnePermissionActivity.class);
+                intent.putExtra("app_list", mAdapter.getItem(pos));
+
+                //TODO: use bundle transfer data
+                PermissionManager.getInstance().appList = mAdapter.getItem(pos);
+                PermissionManager.getInstance().permissionName = permissionList.keyAt(pos);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private ArrayMap<String,ArrayList<Object>> getPermissonList() {
+        ArrayMap<String,ArrayList<Object>> permissionList = new ArrayMap<String,ArrayList<Object>>();
+
+        PermissionManager permissionManager = PermissionManager.getInstance();
+        List<Object> listPackageOps =  permissionManager.getAllPermissionpackageOps();
+        for (Object packageOps: listPackageOps) {
+            ArrayList<AppPermission> appPermissions = permissionManager.getAppPermissionByPackage(packageOps, null);
+            for(AppPermission appPermission:appPermissions)
+            {
+                ArrayList<Object> applist = permissionList.get(appPermission.label);
+                if(applist == null)
+                {
+                    applist = new ArrayList<Object>();
+                }
+                applist.add(packageOps);
+                permissionList.put(appPermission.label,applist);
+            }
+        }
+        return permissionList;
     }
 
     private static class Adapter extends BaseAdapter {
-
         private LayoutInflater mInflater;
-
-        public Adapter(Context context) {
+        private ArrayMap<String,ArrayList<Object>> mList;
+        public Adapter(Context context,ArrayMap<String,ArrayList<Object>> permissionList ) {
             mInflater = LayoutInflater.from(context);
+            mList = permissionList;
         }
 
         @Override
         public int getCount() {
-            return PERMISSION_LIST.size();
+            return mList.size();
         }
 
         @Override
-        public PermissionItem getItem(int i) {
-            return PERMISSION_LIST.get(i);
+        public ArrayList<Object> getItem(int i) {
+            String key = mList.keyAt(i);
+            return mList.get(key);
         }
 
         @Override
@@ -85,9 +126,11 @@ public class PermissionListFragment extends Fragment {
             } else {
                 holder = (ViewHolder) view.getTag();
             }
-            PermissionItem item = PERMISSION_LIST.get(i);
-            holder.title.setText(item.getTitle());
-            holder.description.setText(String.format(item.getDescription(), i));
+
+            String key = mList.keyAt(i);
+            holder.title.setText(key);
+            ArrayList<Object> objects = mList.get(key);
+            holder.description.setText(String.format("%d个App" , objects.size()));
             return view;
         }
     }
@@ -95,23 +138,5 @@ public class PermissionListFragment extends Fragment {
     private final static class ViewHolder {
         TextView title;
         TextView description;
-    }
-
-    private final static class PermissionItem {
-        private String mTitle;
-        private String mDescription;
-
-        public PermissionItem(String title, String desc) {
-            mTitle = title;
-            mDescription = desc;
-        }
-
-        public String getTitle() {
-            return mTitle;
-        }
-
-        public String getDescription() {
-            return mDescription;
-        }
     }
 }

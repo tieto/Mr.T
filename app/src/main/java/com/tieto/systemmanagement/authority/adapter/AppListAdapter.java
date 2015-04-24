@@ -30,7 +30,7 @@ public class AppListAdapter extends BaseAdapter {
 
     public AppListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
-        FORMATTER_HTML = context.getString(R.string.auth_permission_count_format);
+        FORMATTER_HTML =    context.getString(R.string.auth_permission_count_format);
         mLoader = new IconLoader(context);
     }
 

@@ -30,21 +30,10 @@
             android:text="Twitter" />
     </LinearLayout>
 
-    <LinearLayout
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:padding="10dp">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="16dp"
-            android:text="自动启动"/>
+        android:id="@+id/listview_permission_list"
+        android:layout_height="match_parent">
+    </ListView>
 
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@id/notification_notify_switch" />
-    </LinearLayout>
 </LinearLayout>

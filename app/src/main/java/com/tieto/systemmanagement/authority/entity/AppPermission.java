@@ -1,15 +1,24 @@
 package com.tieto.systemmanagement.authority.entity;
 
+import android.content.pm.ApplicationInfo;
+
 /**
  * @author Jiang Ping
  */
 public final class AppPermission {
 
-    private String mLabel;
-    private String mDescription;
+    public  int op;
+    public  int mode;
+    public String label;
+    private String description;
+    public ApplicationInfo applicationInfo;
 
-    public AppPermission(String label, String desc) {
-        mLabel = label;
-        mDescription = desc;
+
+    public AppPermission(String name, int aOp, int aMode,ApplicationInfo aApplicationInfo) {
+        label = name;
+        op = aOp;
+        mode = aMode;
+        applicationInfo = aApplicationInfo;
     }
+
 }
