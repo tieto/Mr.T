@@ -1,9 +1,6 @@
 package com.tieto.systemmanagement.diskmonitor.data;
 
-import android.content.ContentResolver;
 import android.content.pm.PackageInfo;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -120,10 +117,6 @@ public class DiskData {
         try {
             for (int i = 0; i < photos.length; i++) {
                 File file = photos[i];
-                 Bitmap bitmap = null;
-                 byte[] mContent = null;
-                ContentResolver resolver = TApp.getInstance().getContentResolver();
-
                 if (file.isDirectory()) {
                     String path = file.getAbsolutePath();
                     infos.addAll(getThumbnailDataWhere(path));
@@ -131,8 +124,6 @@ public class DiskData {
                     ThumbnailInfo info = new ThumbnailInfo();
                     info.mItemName = file.getName();
                     info.mItemPath = file.getAbsolutePath();
-
-                    Uri uri = Uri.fromFile(file);
                     info.mItemIcon = FileUtils.getBitmap(file.getAbsolutePath(),true);
                     infos.add(info);
                 }
