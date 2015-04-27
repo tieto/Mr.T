@@ -20,7 +20,7 @@ package com.tieto.systemmanagement.diskmonitor.utils;
 
 import android.util.Log;
 
-import com.tieto.systemmanagement.diskmonitor.data.DiskData;
+import com.tieto.systemmanagement.TApp;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -36,6 +36,8 @@ import java.util.Stack;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * This class is completely modular, which is to say that it has
@@ -384,12 +386,16 @@ public class TFileManager {
 
         if (target.exists() && target.isFile() && target.canWrite()) {
             target.delete();
+
+            DebugToast.debugToast("can write",target.getName());
+
             return 0;
         } else if (target.exists() && target.isDirectory() && target.canRead()) {
             String[] file_list = target.list();
 
             if (file_list != null && file_list.length == 0) {
                 target.delete();
+                DebugToast.debugToast("can canRead",target.getName());
                 return 0;
 
             } else if (file_list != null && file_list.length > 0) {
@@ -397,17 +403,37 @@ public class TFileManager {
                 for (int i = 0; i < file_list.length; i++) {
                     File temp_f = new File(target.getAbsolutePath() + "/" + file_list[i]);
 
-                    if (temp_f.isDirectory())
+                    if (temp_f.isDirectory()) {
+                        DebugToast.debugToast("can 3333", target.getName());
                         deleteTarget(temp_f.getAbsolutePath());
-                    else if (temp_f.isFile())
+                    }
+                    else if (temp_f.isFile()) {
                         temp_f.delete();
+                        DebugToast.debugToast("can 4444",target.getName());
+                    }
                 }
             }
 
             if (target.exists())
-                if (target.delete())
+                if (target.delete()) {
+                    DebugToast.debugToast("can 555",target.getName());
                     return 0;
+                }
         }
+        DebugToast.debugToast("can -1111",target.getName()+ " -- " + target.exists() +" -- " +target.isFile() + "-" +target.canWrite());
+
+//        new SweetAlertDialog(TApp.getInstance(), SweetAlertDialog.WARNING_TYPE)
+//                .setTitleText("请ROOT后再执行操作")
+//                .setCancelText("知道啦")
+//                .showCancelButton(true)
+//                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                    @Override
+//                    public void onClick(SweetAlertDialog sDialog) {
+//                        sDialog.cancel();
+//                    }
+//                })
+//                .show();
+
         return -1;
     }
 

@@ -17,10 +17,12 @@ import android.widget.Toast;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.diskmonitor.adapter.GalleryItemAdapter;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
-import com.tieto.systemmanagement.diskmonitor.entity.ThumbNailInfo;
+import com.tieto.systemmanagement.diskmonitor.entity.ThumbnailInfo;
+import com.tieto.systemmanagement.diskmonitor.model.AsyncItemRemoved;
 import com.tieto.systemmanagement.diskmonitor.utils.FileUtils;
 
 import java.net.URL;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -57,17 +59,47 @@ public class DiskGalleryActivity extends Activity implements OnItemClickListener
         final ImageButton btnCleanup = (ImageButton) findViewById(R.id.btnCleanup);
         btnCleanup.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-            FileUtils.getItemSelected(imageAdapter.getItemsChecked(), imageAdapter.mPaths);
+                final String[] pathSelected = FileUtils.getItemSelected(imageAdapter.getItemsChecked(),
+                        imageAdapter.getItemsPath());
+
+                try {
+                    if (pathSelected.length > 0) {
+                        new SweetAlertDialog(DiskGalleryActivity.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("删除图片")
+                                .setContentText("删除后，图片将不可找回，确认删除")
+                                .setCancelText("取消")
+                                .setConfirmText("任性一次")
+                                .showCancelButton(true)
+                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.cancel();
+                                    }
+                                })
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.cancel();
+                                        AsyncItemRemoved itemRemoved = new AsyncItemRemoved(DiskGalleryActivity.this, imageAdapter);
+                                        itemRemoved.execute(pathSelected);
+                                    }
+                                })
+                                .show();
+                    }
+                }
+                catch (Exception e) {
+
+                }
             }
         });
     }
 
-    class ASyncImages extends AsyncTask<URL, Integer, ThumbNailInfo> {
-        protected ThumbNailInfo doInBackground(URL... arg0) {
+    class ASyncImages extends AsyncTask<URL, Integer, List<ThumbnailInfo>> {
+        protected List<ThumbnailInfo> doInBackground(URL... arg0) {
             return DiskData.getInstance().getThumbnailData();
         }
 
-        protected void onPostExecute(ThumbNailInfo result) {
+        protected void onPostExecute(List<ThumbnailInfo> result) {
             try {
                 imageAdapter = new GalleryItemAdapter(result);
                 mImageGrid.setAdapter(imageAdapter);
@@ -79,7 +111,7 @@ public class DiskGalleryActivity extends Activity implements OnItemClickListener
                 public void run() {
                     mDialog.dismiss();
                 }
-            },2);
+            }, 2);
         }
     }
 

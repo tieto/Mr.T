@@ -5,23 +5,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.diskmonitor.entity.AudioInfo;
+import com.tieto.systemmanagement.diskmonitor.model.BasicAdapter;
+import com.tieto.systemmanagement.diskmonitor.utils.Utils;
 import com.tieto.systemmanagement.diskmonitor.views.AudioItemViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by wangbo on 4/20/15.
  */
-public class AudioItemAdapter  extends BaseAdapter {
+public class AudioItemAdapter  extends BasicAdapter {
     private Context mContext = null;
     private List<AudioInfo> mItems = null;
-    private boolean [] mItemsChecked = null;
+    private List<Integer> mItemsChecked = null;
 
     private static LayoutInflater mInflater = null;
     final String LOG_TAG = this.toString();
@@ -29,7 +31,11 @@ public class AudioItemAdapter  extends BaseAdapter {
     public AudioItemAdapter(Context context, List<AudioInfo> list) {
         mContext = context;
         mItems = list;
-        mItemsChecked = new boolean[mItems.size()];
+        mItemsChecked = new ArrayList<Integer>();
+
+        for (int i=0; i<mItems.size();i++) {
+            mItemsChecked.add(0);
+        }
 
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -64,13 +70,13 @@ public class AudioItemAdapter  extends BaseAdapter {
                     Log.e(LOG_TAG, "audio item " + " - "+ info);
                     CheckBox cb = (CheckBox)v;
                     int id = cb.getId();
-                    if (mItemsChecked[id]){
+                    if (Utils.int2Bool(mItemsChecked.get(id))){
                         cb.setChecked(false);
-                        mItemsChecked[id] = false;
+                        mItemsChecked.set(id,0);
                     } else {
                         cb.setChecked(true);
                         cb.setVisibility(View.VISIBLE);
-                        mItemsChecked[id] = true;
+                        mItemsChecked.set(id,1);
                     }
 
                 }
@@ -81,19 +87,30 @@ public class AudioItemAdapter  extends BaseAdapter {
         }
 
         holder.mCheckBox.setId(position);
-        holder.mCheckBox.setChecked(mItemsChecked[position]);
+        holder.mCheckBox.setChecked(Utils.int2Bool(mItemsChecked.get(position)));
         return convertView;
     }
 
-    public boolean[] getItemsChecked( ) {
+    public List<Integer> getItemsChecked( ) {
         return mItemsChecked;
     }
 
-    public String[] getItemsPath() {
-        String[] paths = new String[mItems.size()];
+    public List<String> getItemsPath() {
+        List<String> paths = new ArrayList<String>();
         for (int i=0; i< mItems.size();i++) {
-            paths[i] = mItems.get(i).mPath;
+            paths.add(mItems.get(i).mItemPath);
         }
         return paths;
+    }
+
+    public void deleteItem(String path) {
+        String[] paths = new String[mItems.size()];
+        for (int i=0; i< mItems.size();i++) {
+            paths[i] = mItems.get(i).mItemPath;
+            if (paths[i].equalsIgnoreCase(path)) {
+                mItems.remove(i);
+                mItemsChecked.remove(i);
+            }
+        }
     }
 }

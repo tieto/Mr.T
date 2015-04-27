@@ -15,6 +15,7 @@ import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.diskmonitor.adapter.DiskPackageAdapter;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
 import com.tieto.systemmanagement.diskmonitor.entity.ProcessInfo;
+import com.tieto.systemmanagement.diskmonitor.model.AsyncItemRemoved;
 import com.tieto.systemmanagement.diskmonitor.utils.FileUtils;
 
 import java.net.URL;
@@ -50,7 +51,32 @@ public class DiskPackagesInstalledFragment extends Fragment {
         final ImageButton btnCleanup = (ImageButton) getView().findViewById(R.id.btnCleanup);
         btnCleanup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                FileUtils.getItemSelected(adapter.getItemsChecked(), adapter.getItemsPath());
+                final String[] pathSelected =  FileUtils.getItemSelected(adapter.getItemsChecked(),
+                        adapter.getItemsPath());
+
+                if(pathSelected.length > 0) {
+                    new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("删除安装包")
+                            .setContentText("删除后，安装包将不可找回，确认删除")
+                            .setCancelText("取消")
+                            .setConfirmText("任性一次")
+                            .showCancelButton(true)
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.cancel();
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.cancel();
+                                    AsyncItemRemoved itemRemoved = new AsyncItemRemoved(mContext, adapter);
+                                    itemRemoved.execute(pathSelected);
+                                }
+                            })
+                            .show();
+                }
             }
         });
 

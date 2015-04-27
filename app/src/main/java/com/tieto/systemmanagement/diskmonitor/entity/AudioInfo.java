@@ -6,5 +6,5 @@ package com.tieto.systemmanagement.diskmonitor.entity;
 public class AudioInfo {
     public String   mFileName;
     public String   mSizeDisplay;
-    public  String   mPath;
+    public String   mItemPath;
 }

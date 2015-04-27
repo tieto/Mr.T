@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,29 +11,35 @@ import android.widget.TextView;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
 import com.tieto.systemmanagement.diskmonitor.entity.ProcessInfo;
+import com.tieto.systemmanagement.diskmonitor.model.BasicAdapter;
+import com.tieto.systemmanagement.diskmonitor.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by wangbo on 4/3/15.
  */
-public class DiskPackageAdapter extends BaseAdapter {
+public class DiskPackageAdapter extends BasicAdapter {
     private Context mContext = null;
-    private List<ProcessInfo> mPackages = null;
+    private List<ProcessInfo> mItems = null;
     private static LayoutInflater mInflater = null;
-    Integer count =0;
-    private boolean[] mItemsChecked;
+    private List<Integer> mItemsChecked;
 
     public DiskPackageAdapter(Context context, List<ProcessInfo> list) {
         mContext = context;
-        mPackages = list;
-        count = mPackages.size();
-        mItemsChecked = new boolean[count];
+        mItems = list;
+        mItemsChecked = new ArrayList<Integer>();
+
+        for (int i=0; i<mItems.size();i++) {
+            mItemsChecked.add(0);
+        }
+
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public int getCount() {
-        return mPackages.size();
+        return mItems.size();
     }
 
     public Object getItem(int position) {
@@ -57,44 +62,59 @@ public class DiskPackageAdapter extends BaseAdapter {
             holder.mTitle = (TextView) convertView.findViewById(R.id.disk_package_title);
             holder.mSizeDisplay = (TextView) convertView.findViewById(R.id.disk_package_summary);
             convertView.setTag(holder);
+
+            holder.mCheckbox.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    CheckBox cb = (CheckBox)v;
+                    int id = cb.getId();
+                    if (Utils.int2Bool(mItemsChecked.get(id))){
+                        cb.setChecked(false);
+
+                        //TODO: how to solve the usage issue from List<String> and String[]
+                        mItemsChecked.set(id,0);
+                    } else {
+                        cb.setChecked(true);
+                        cb.setVisibility(View.VISIBLE);
+                        mItemsChecked.set(id,1);
+                    }
+                }
+            });
         }
         else {
             holder = (PackageItemViewHolder) convertView.getTag();
         }
 
-       ProcessInfo info = mPackages.get(position);
+        ProcessInfo info = mItems.get(position);
         holder.mImageView.setImageDrawable(info.icon);
         holder.mSizeDisplay.setText(DiskData.getInstance().displaySize(info.mSize));
         holder.mTitle.setText(info.mAppName);
 
-        holder.mCheckbox.setChecked(mItemsChecked[position]);
+        holder.mCheckbox.setChecked(Utils.int2Bool(mItemsChecked.get(position)));
         holder.mCheckbox.setId(position);
-        holder.mCheckbox.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                CheckBox cb = (CheckBox)v;
-                int id = cb.getId();
-                if (mItemsChecked[id]){
-                    cb.setChecked(false);
-                    mItemsChecked[id] = false;
-                } else {
-                    cb.setChecked(true);
-                    cb.setVisibility(View.VISIBLE);
-                    mItemsChecked[id] = true;
-                }
-            }
-        });
+
         return convertView;
     }
 
-    public boolean[] getItemsChecked() {
+    public List<Integer> getItemsChecked() {
         return mItemsChecked;
     }
 
-    public String[] getItemsPath() {
-        String[] itemsPath = new String[count];
-        for (int i=0; i<count; i++) {
-            itemsPath[i] = mPackages.get(i).mPath;
+    public List<String> getItemsPath() {
+        List<String> paths = new ArrayList<String>();
+        for (int i=0; i< mItems.size();i++) {
+            paths.add(mItems.get(i).mPath);
         }
-        return itemsPath;
+        return paths;
+    }
+
+    public void deleteItem(String path) {
+        String[] paths = new String[mItems.size()];
+        for (int i=0; i< mItems.size();i++) {
+            paths[i] = mItems.get(i).mPath;
+            if (paths[i].equalsIgnoreCase(path)) {
+                mItems.remove(i);
+                mItemsChecked.remove(i);
+            }
+        }
     }
 }
