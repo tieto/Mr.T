@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.tieto.systemmanagement.R;
 
-public class DiskPackagesUninstalledFragment extends Fragment {
+public class DiskAppsUninstalledFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

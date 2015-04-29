@@ -6,7 +6,7 @@ import android.util.Log;
 /**
  * Created by wangbo on 4/21/15.
  */
-public class ProcessInfo {
+public class TSWInfo {
     public String mAppName = "";
     public String mName = "";
     public String mVersionName = "";
@@ -16,7 +16,7 @@ public class ProcessInfo {
     public long   mSize = 0;
 
     public void prettyPrint() {
-        Log.v("App - ",mAppName + mName  + mVersionName + + mVersionCode);
+        Log.v("package - ",mAppName + mName  + mVersionName + + mVersionCode);
     }
 }
 

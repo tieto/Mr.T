@@ -4,15 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
-import com.tieto.systemmanagement.TApp;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by wangbo on 4/9/15.
@@ -67,31 +63,21 @@ public class FileUtils {
         }
 
         if (cnt == 0) {
-            DebugToast.debugToast("",
-                    "Please select at least one item");
-            new SweetAlertDialog(TApp.getInstance(), SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("没有要删除的东西？")
-                    .setCancelText("知道啦")
-                    .showCancelButton(true)
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.cancel();
-                        }
-                    })
-                    .show();
-        } else {
+            DebugToast.releaseToast("","请先选择项目");
+        }
+        else {
             DebugToast.debugToast("",
                     "You've selected Total " + cnt + "----" +
                             itemsPathSelected + " item(s).");
 
+            String[] results = new String[itemsPathSelected.size()];
+            for (int i = 0; i < itemsPathSelected.size(); i++) {
+                results[i] = itemsPathSelected.get(i);
+            }
+            return results;
         }
 
-        String[] results = new String[itemsPathSelected.size()];
-        for (int i = 0; i < itemsPathSelected.size(); i++) {
-            results[i] = itemsPathSelected.get(i);
-        }
-        return results;
+        return null;
     }
 
     /**
@@ -150,11 +136,11 @@ public class FileUtils {
         int contentHeight = 0;
         int contentWidth = 0;
         if (isLargeFlg) {
-            contentHeight = (int) (ops.outHeight * 0.45);
-            contentWidth = (int) (ops.outWidth * 0.45);
+            contentHeight = 1000;
+            contentWidth = 800;
         } else {
-            contentHeight = 250;
-            contentHeight = 200;
+            contentHeight = 500;
+            contentHeight = 400;
         }
         if (((float) oHeight / contentHeight) < ((float) oWidth / contentWidth)) {
             ops.inSampleSize = (int) Math.ceil((float) oWidth / contentWidth);

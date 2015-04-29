@@ -1,6 +1,8 @@
 package com.tieto.systemmanagement.diskmonitor.data;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -8,8 +10,9 @@ import android.os.StatFs;
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.TApp;
 import com.tieto.systemmanagement.diskmonitor.entity.AudioInfo;
-import com.tieto.systemmanagement.diskmonitor.entity.ProcessInfo;
 import com.tieto.systemmanagement.diskmonitor.entity.StorageInfo;
+import com.tieto.systemmanagement.diskmonitor.entity.TApplicationInfo;
+import com.tieto.systemmanagement.diskmonitor.entity.TSWInfo;
 import com.tieto.systemmanagement.diskmonitor.entity.ThumbnailInfo;
 import com.tieto.systemmanagement.diskmonitor.utils.FileUtils;
 
@@ -120,7 +123,7 @@ public class DiskData {
                 if (file.isDirectory()) {
                     String path = file.getAbsolutePath();
                     infos.addAll(getThumbnailDataWhere(path));
-                } else if(file.getAbsolutePath().contains("jpg")){
+                } else if(file.getAbsolutePath().toLowerCase().contains(".jpg")){
                     ThumbnailInfo info = new ThumbnailInfo();
                     info.mItemName = file.getName();
                     info.mItemPath = file.getAbsolutePath();
@@ -144,8 +147,8 @@ public class DiskData {
         return audioList;
     }
 
-    public ArrayList<ProcessInfo> getPackages() {
-        ArrayList<ProcessInfo> apps = getInstalledApps(false); /* false = no system packages */
+    public ArrayList<TSWInfo> getUserInstalledSW() {
+        ArrayList<TSWInfo> apps = getInstalledSW(false); /* false = no system packages */
         final int max = apps.size();
         for (int i = 0; i < max; i++) {
             apps.get(i).prettyPrint();
@@ -153,28 +156,22 @@ public class DiskData {
         return apps;
     }
 
-    public ArrayList<ProcessInfo> getInstalledApps(boolean getSysPackages) {
-        ArrayList<ProcessInfo> res = new ArrayList<ProcessInfo>();
-        List<PackageInfo> packs = TApp.getInstance().getPackageManager().getInstalledPackages(0);
-        for (int i = 0; i < packs.size(); i++) {
-            PackageInfo p = packs.get(i);
-            if ((!getSysPackages) && (p.versionName == null)) {
-                continue;
-            }
-
-            ProcessInfo newInfo = new ProcessInfo();
-            newInfo.mAppName = p.applicationInfo.loadLabel(TApp.getInstance().getPackageManager()).toString();
-            newInfo.mName = p.packageName;
-            newInfo.mVersionName = p.versionName;
-            newInfo.mVersionCode = p.versionCode;
-            newInfo.mPath = p.applicationInfo.sourceDir;
-            newInfo.icon = p.applicationInfo.loadIcon(TApp.getInstance().getPackageManager());
-            File file = new File(newInfo.mPath);
-            long sizeinByte = file.length();
-            newInfo.mSize = sizeinByte;
-            res.add(newInfo);
+    public ArrayList<TSWInfo> getPreInstalledSW() {
+        ArrayList<TSWInfo> apps = getInstalledSW(true); /* false = no system packages */
+        final int max = apps.size();
+        for (int i = 0; i < max; i++) {
+            apps.get(i).prettyPrint();
         }
-        return res;
+        return apps;
+    }
+
+    public ArrayList<TApplicationInfo> getApps(boolean isInstalled) {
+        ArrayList<TApplicationInfo> apps = getInstalledApps(isInstalled);
+        final int max = apps.size();
+        for (int i = 0; i < max; i++) {
+            apps.get(i).prettyPrint();
+        }
+        return apps;
     }
 
     public long getInstalledAppSize(boolean getSysPackages) {
@@ -254,5 +251,64 @@ public class DiskData {
             }
         }
         return audioList;
+    }
+
+    private ArrayList<TSWInfo> getInstalledSW(boolean isSysPackages) {
+        ArrayList<TSWInfo> res = new ArrayList<TSWInfo>();
+        List<PackageInfo> packs = TApp.getInstance().getPackageManager().getInstalledPackages(0);
+        for (int i = 0; i < packs.size(); i++) {
+            PackageInfo p = packs.get(i);
+            if ((!isSysPackages) && isSystemApp(p.applicationInfo)) {
+                continue;
+            }
+
+            TSWInfo newInfo = new TSWInfo();
+            newInfo.mAppName = p.applicationInfo.loadLabel(TApp.getInstance().getPackageManager()).toString();
+            newInfo.mName = p.packageName;
+            newInfo.mVersionName = p.versionName;
+            newInfo.mVersionCode = p.versionCode;
+            newInfo.mPath = p.applicationInfo.sourceDir;
+            newInfo.icon = p.applicationInfo.loadIcon(TApp.getInstance().getPackageManager());
+            File file = new File(newInfo.mPath);
+            long sizeinByte = file.length();
+            newInfo.mSize = sizeinByte;
+            res.add(newInfo);
+        }
+        return res;
+    }
+
+    private ArrayList<TApplicationInfo> getInstalledApps(boolean isInstalled) {
+        ArrayList<TApplicationInfo> res = new ArrayList<TApplicationInfo>();
+        List<ApplicationInfo> packs;
+
+        if(isInstalled) {
+           packs = TApp.getInstance().getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA);
+        }
+        else {
+           packs = TApp.getInstance().getPackageManager().getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+        }
+
+        for (int i = 0; i < packs.size(); i++) {
+            ApplicationInfo p = packs.get(i);
+
+            File file = new File(p.sourceDir);
+            if(!isSystemApp(p)) {
+                long sizeByte = file.length();
+                TApplicationInfo newInfo = new TApplicationInfo();
+                newInfo.mAppName = p.sourceDir;
+                newInfo.mName = p.packageName;
+                newInfo.mPath = p.sourceDir;
+                newInfo.icon = p.loadIcon(TApp.getInstance().getPackageManager());
+                newInfo.mSize = sizeByte;
+                res.add(newInfo);
+            }
+
+        }
+        return res;
+    }
+
+    private boolean isSystemApp(ApplicationInfo appInfo) {
+        return ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ? true
+                : false;
     }
 }

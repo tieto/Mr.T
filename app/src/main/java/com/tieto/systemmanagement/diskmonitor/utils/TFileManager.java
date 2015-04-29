@@ -20,8 +20,6 @@ package com.tieto.systemmanagement.diskmonitor.utils;
 
 import android.util.Log;
 
-import com.tieto.systemmanagement.TApp;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -36,8 +34,6 @@ import java.util.Stack;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * This class is completely modular, which is to say that it has

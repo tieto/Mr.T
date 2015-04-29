@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.tieto.systemmanagement.R;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
-import com.tieto.systemmanagement.diskmonitor.entity.ProcessInfo;
+import com.tieto.systemmanagement.diskmonitor.entity.TApplicationInfo;
 import com.tieto.systemmanagement.diskmonitor.model.BasicAdapter;
 import com.tieto.systemmanagement.diskmonitor.utils.Utils;
 
@@ -20,13 +20,13 @@ import java.util.List;
 /**
  * Created by wangbo on 4/3/15.
  */
-public class DiskPackageAdapter extends BasicAdapter {
+public class DiskAppAdapter extends BasicAdapter {
     private Context mContext = null;
-    private List<ProcessInfo> mItems = null;
+    private List<TApplicationInfo> mItems = null;
     private static LayoutInflater mInflater = null;
     private List<Integer> mItemsChecked;
 
-    public DiskPackageAdapter(Context context, List<ProcessInfo> list) {
+    public DiskAppAdapter(Context context, List<TApplicationInfo> list) {
         mContext = context;
         mItems = list;
         mItemsChecked = new ArrayList<Integer>();
@@ -52,11 +52,11 @@ public class DiskPackageAdapter extends BasicAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        PackageItemViewHolder holder;
+        AppItemViewHolder holder;
         if (convertView == null) {
-            holder = new PackageItemViewHolder();
+            holder = new AppItemViewHolder();
             convertView = mInflater.inflate(
-                    R.layout.item_disk_package, null);
+                    R.layout.item_disk_app, null);
             holder.mImageView = (ImageView) convertView.findViewById(R.id.disk_package_icon);
             holder.mCheckbox = (CheckBox) convertView.findViewById(R.id.disk_package_checkBox);
             holder.mTitle = (TextView) convertView.findViewById(R.id.disk_package_title);
@@ -81,10 +81,10 @@ public class DiskPackageAdapter extends BasicAdapter {
             });
         }
         else {
-            holder = (PackageItemViewHolder) convertView.getTag();
+            holder = (AppItemViewHolder) convertView.getTag();
         }
 
-        ProcessInfo info = mItems.get(position);
+        TApplicationInfo info = mItems.get(position);
         holder.mImageView.setImageDrawable(info.icon);
         holder.mSizeDisplay.setText(DiskData.getInstance().displaySize(info.mSize));
         holder.mTitle.setText(info.mAppName);

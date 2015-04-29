@@ -33,6 +33,7 @@ public class AudioItemAdapter  extends BasicAdapter {
         mItems = list;
         mItemsChecked = new ArrayList<Integer>();
 
+        //TODO:tricky to let Integer list to Integer array
         for (int i=0; i<mItems.size();i++) {
             mItemsChecked.add(0);
         }

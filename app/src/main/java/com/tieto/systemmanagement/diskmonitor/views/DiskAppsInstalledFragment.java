@@ -12,10 +12,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.tieto.systemmanagement.R;
-import com.tieto.systemmanagement.diskmonitor.adapter.DiskPackageAdapter;
+import com.tieto.systemmanagement.diskmonitor.adapter.DiskAppAdapter;
 import com.tieto.systemmanagement.diskmonitor.data.DiskData;
-import com.tieto.systemmanagement.diskmonitor.entity.ProcessInfo;
-import com.tieto.systemmanagement.diskmonitor.model.AsyncItemRemoved;
+import com.tieto.systemmanagement.diskmonitor.entity.TApplicationInfo;
+import com.tieto.systemmanagement.diskmonitor.model.AsyncItemRemovedPermission;
 import com.tieto.systemmanagement.diskmonitor.utils.FileUtils;
 
 import java.net.URL;
@@ -23,9 +23,9 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class DiskPackagesInstalledFragment extends Fragment {
+public class DiskAppsInstalledFragment extends Fragment {
     private ListView listView;
-    private DiskPackageAdapter adapter;
+    private DiskAppAdapter adapter;
     private Context mContext;
     private SweetAlertDialog mDialog;
 
@@ -54,33 +54,38 @@ public class DiskPackagesInstalledFragment extends Fragment {
                 final String[] pathSelected =  FileUtils.getItemSelected(adapter.getItemsChecked(),
                         adapter.getItemsPath());
 
-                if(pathSelected.length > 0) {
-                    new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("删除安装包")
-                            .setContentText("删除后，安装包将不可找回，确认删除")
-                            .setCancelText("取消")
-                            .setConfirmText("任性一次")
-                            .showCancelButton(true)
-                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    sDialog.cancel();
-                                }
-                            })
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    sDialog.cancel();
-                                    AsyncItemRemoved itemRemoved = new AsyncItemRemoved(mContext, adapter);
-                                    itemRemoved.execute(pathSelected);
-                                }
-                            })
-                            .show();
+                try {
+                    if(pathSelected.length > 0) {
+                        new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("删除安装包")
+                                .setContentText("删除后，安装包将不可找回，确认删除")
+                                .setCancelText("取消")
+                                .setConfirmText("任性一次")
+                                .showCancelButton(true)
+                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.cancel();
+                                    }
+                                })
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.cancel();
+                                        AsyncItemRemovedPermission itemRemoved = new AsyncItemRemovedPermission(mContext, adapter);
+                                        itemRemoved.execute(pathSelected);
+                                    }
+                                })
+                                .show();
+                    }
                 }
-            }
+                catch (Exception e) {
+
+                }
+             }
         });
 
-        ASyncPackages syncPackages = new ASyncPackages();
+        ASyncApps syncPackages = new ASyncApps();
         syncPackages.execute();
     }
 
@@ -95,14 +100,14 @@ public class DiskPackagesInstalledFragment extends Fragment {
         super.onDestroy();
     }
 
-    class ASyncPackages extends AsyncTask<URL, Integer, List<ProcessInfo>> {
-        protected List<ProcessInfo> doInBackground(URL... arg0) {
-            return DiskData.getInstance().getPackages();
+    class ASyncApps extends AsyncTask<URL, Integer, List<TApplicationInfo>> {
+        protected List<TApplicationInfo> doInBackground(URL... arg0) {
+            return DiskData.getInstance().getApps(true);
         }
 
-        protected void onPostExecute(List<ProcessInfo> result) {
+        protected void onPostExecute(List<TApplicationInfo> result) {
             try {
-                adapter = new DiskPackageAdapter(mContext,result);
+                adapter = new DiskAppAdapter(mContext,result);
                 listView.setAdapter(adapter);
             } catch (Exception e) {
                 e.printStackTrace();

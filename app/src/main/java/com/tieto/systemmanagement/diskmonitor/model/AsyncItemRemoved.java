@@ -19,9 +19,25 @@ public class AsyncItemRemoved extends AsyncTask<String[], Void, ArrayList<String
     private Context mContext;
     private BasicAdapter mAdapter;
 
+    public  AsyncItemRemoved() {
+
+    }
+
     public  AsyncItemRemoved(Context context,BasicAdapter adapter) {
         mContext = context;
         mAdapter = adapter;
+    }
+
+    public BasicAdapter getAdapter() {
+        return mAdapter;
+    }
+
+    public void setAdapter(BasicAdapter ba){
+        mAdapter = ba;
+    }
+
+    public void setContext(Context c){
+        mContext = c;
     }
 
     @Override

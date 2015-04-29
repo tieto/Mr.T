@@ -24,16 +24,16 @@ public class DiskAudioActivity extends BasicActivity {
         setContentView(R.layout.activity_disk_audio);
         final String LOG_TAG = this.toString();
 
-        listView = (ListView)findViewById(R.id.listView);
+        listView = (ListView) findViewById(R.id.listView);
         adapter = new AudioItemAdapter(this, DiskData.getInstance().getAudioData());
         listView.setAdapter(adapter);
 
-        ImageButton btnCleanup = (ImageButton)findViewById(R.id.btnCleanup);
+        ImageButton btnCleanup = (ImageButton) findViewById(R.id.btnCleanup);
         btnCleanup.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-               final String[] pathSelected =  FileUtils.getItemSelected(adapter.getItemsChecked(),
+                final String[] pathSelected = FileUtils.getItemSelected(adapter.getItemsChecked(),
                         adapter.getItemsPath());
 
                 try {
@@ -60,8 +60,7 @@ public class DiskAudioActivity extends BasicActivity {
                                 })
                                 .show();
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
 
                 }
             }

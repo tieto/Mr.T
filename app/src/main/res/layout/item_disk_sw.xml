@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="#ffffff">
+
+    <RelativeLayout
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_marginLeft="8dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+
+            android:id="@+id/disk_sw_icon"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_toRightOf="@+id/disk_package_icon"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="160dp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Large Text"
+            android:ellipsize="marquee"
+            android:singleLine="false"
+            android:id="@+id/disk_sw_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="120dp"
+            android:layout_centerVertical="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Large Text"
+            android:id="@+id/disk_sw_size" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="卸载"
+            android:id="@+id/disk_sw_remove"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"/>
+
+    </RelativeLayout>
+</LinearLayout>
